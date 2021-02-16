@@ -222,6 +222,34 @@ public class QueryMaps1 extends QueryMapTabs {
         }
     }
     //**********************************************************************
+    /**
+     * Inserts a new Map Point Location into the database.
+     * @param ptloc
+     * @throws Exception 
+     */
+    protected void insertPointLocation (PointLocation ptloc) throws Exception {
+        SQLInsert insert = new SQLInsert(DBMaps.MapObjects.TABLE);
+        insert.addValue(DBMaps.MapObjects.RECORDID, ptloc.recordid);
+        insert.addValue(DBMaps.MapObjects.OBJECTCODE, ptloc.objcode);
+        insert.addValue(DBMaps.MapObjects.POINTINDEX, ptloc.ptindex);
+        insert.addValue(DBMaps.MapObjects.LATITUDE, ptloc.latitude);
+        insert.addValue(DBMaps.MapObjects.LONGITUDE, ptloc.longitude);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(insert.getText());
+            insert.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to insert new map point location\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }
+    }
+    //**********************************************************************
 }
 //**************************************************************************
 

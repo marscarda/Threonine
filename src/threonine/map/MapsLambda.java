@@ -129,5 +129,46 @@ public class MapsLambda extends QueryMaps1 {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * Creats a Map Object for a given Map Record.
+     * @param recordid
+     * @param points
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void createMapObject (long recordid, PointLocation[] points) throws AppException, Exception {
+        //=============================================================
+        connection = electra.masterConnection();
+        setDataBase();
+        //=============================================================
+        SQLLockTables lock = new SQLLockTables();
+        lock.setDataBase(databasename);
+        lock.addTable(DBMaps.MapRecords.TABLE);
+        lock.addTable(DBMaps.MapObjects.TABLE);
+        this.getExclusiveTableAccess(lock);
+        //-------------------------------------------------------------
+        if (this.checkValueCount(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.RECORDID, recordid)  == 0) {
+            this.releaseExclusiveTableAccess();
+            throw new AppException("Map Record Not Found", AppException.MAPRECORDNOTFOUND);
+        }
+        //-------------------------------------------------------------
+        String objcode;
+        while (true) {
+            objcode = Celaeno.randomString(10);
+            if (checkValueCount(DBMaps.MapObjects.TABLE, DBMaps.MapObjects.OBJECTCODE, objcode) == 0) break;
+        }
+        //=============================================================
+        this.startTransaction();
+        for (PointLocation point : points) {
+            point.recordid = recordid;
+            point.objcode = objcode;
+            this.insertPointLocation(point);
+        }
+        this.commitTransaction();
+        //=============================================================
+        this.releaseExclusiveTableAccess();
+        //=============================================================
+    }
+    //**********************************************************************
 }
 //**************************************************************************
