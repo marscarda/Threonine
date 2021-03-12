@@ -63,6 +63,20 @@ public class MapView {
     }
     public float getCenterLatitude () { return clatitude; }
     public float getCenterLongitude () { return clongitude; }
+    //============================================================
+    /**
+     * Calculates the geo location from a given cartesian coordinates.
+     * @param refx
+     * @param refy 
+     */
+    public void calculateLocationFromPlane (int refx, int refy) {
+        //========================================================
+        float frompole = (float)(topcanvasy + refy) / (float)scale;
+        clatitude = 90 - frompole;
+        float auxlon = (float)((refx - halfcanvasx) / Math.cos(Math.toRadians(clatitude)));
+        clongitude += (auxlon / scale);
+        //========================================================
+    }
     //************************************************************
     public int recordsCount () { return recount; }
     //============================================================
@@ -88,7 +102,7 @@ public class MapView {
                 try {
                     points = mobj.getPoints();
                     for (PointLocation point: points)
-                        this.getMapCartesianPoint(point);
+                        this.getMapPlanePoint(point);
                 }
                 catch (Exception e) {}
             }            
@@ -103,7 +117,7 @@ public class MapView {
      * @param longitude
      * @return 
      */
-    void getMapCartesianPoint (PointLocation mappoint) {
+    void getMapPlanePoint (PointLocation mappoint) {
         //========================================================
         //DrawPoint pt = new DrawPoint();
         //========================================================
