@@ -77,6 +77,28 @@ public class MapView {
         clongitude += (auxlon / scale);
         //========================================================
     }
+    //============================================================
+    /**
+     * Calculates the center geo location.
+     * @param downx
+     * @param downy
+     * @param upx
+     * @param upy 
+     */
+    public void calculateDisplacement (int downx, int downy, int upx, int upy) {
+        //========================================================
+        //Mouse down geographic coordinates.
+        float downlat = 90 - ((float)(topcanvasy + downy) / (float)scale);
+        float auxlon = (float)((downx - halfcanvasx) / Math.cos(Math.toRadians(clatitude)));
+        float downlon = clongitude + (auxlon / scale);
+        //========================================================
+        clatitude += (float)(upy - downy) / (float)scale;
+        //--------------------------------------------------------
+        int difx = upx - halfcanvasx;
+        float diflon = (float)difx / (float)scale / (float)Math.cos(Math.toRadians(downlat));
+        clongitude = downlon - diflon;
+        //========================================================
+    }
     //************************************************************
     public int recordsCount () { return recount; }
     //============================================================
@@ -224,5 +246,6 @@ public class MapView {
         //========================================================
     }
     //************************************************************
+    
 }
 //**************************************************************************
