@@ -24,6 +24,7 @@ public class QueryMaps1 extends QueryMapTabs {
     protected void insertMapFolder (MapFolder folder) throws Exception {
         SQLInsert insert = new SQLInsert(DBMaps.FolderTree.TABLE);
         insert.addValue(DBMaps.FolderTree.FOLDERID, folder.folderid);
+        insert.addValue(DBMaps.FolderTree.PROJECTID, folder.projectid);
         insert.addValue(DBMaps.FolderTree.PARENTFOLDER, folder.parentid);
         insert.addValue(DBMaps.FolderTree.FOLDERNAME, folder.name);
         PreparedStatement st = null;
@@ -53,6 +54,7 @@ public class QueryMaps1 extends QueryMapTabs {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.FolderTree.TABLE);
         select.addItem(DBMaps.FolderTree.FOLDERID);
+        select.addItem(DBMaps.FolderTree.PROJECTID);
         select.addItem(DBMaps.FolderTree.PARENTFOLDER);
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
         SQLWhere whr = new SQLWhere();
@@ -72,6 +74,7 @@ public class QueryMaps1 extends QueryMapTabs {
             MapFolder folder;
             folder = new MapFolder();
             folder.folderid = rs.getLong(DBMaps.FolderTree.FOLDERID);
+            folder.projectid = rs.getLong(DBMaps.FolderTree.PROJECTID);
             folder.parentid = rs.getLong(DBMaps.FolderTree.PARENTFOLDER);
             folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
             return folder;
@@ -89,18 +92,21 @@ public class QueryMaps1 extends QueryMapTabs {
     //**********************************************************************
     /**
      * Selects and returns a list of mapfolders given their parentid.
+     * @param projectid
      * @param parentid
      * @return
      * @throws Exception 
      */
-    protected MapFolder[] selectMapFolders (long parentid) throws Exception {
+    protected MapFolder[] selectMapFolders (long projectid, long parentid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.FolderTree.TABLE);
         select.addItem(DBMaps.FolderTree.FOLDERID);
+        select.addItem(DBMaps.FolderTree.PROJECTID);
         select.addItem(DBMaps.FolderTree.PARENTFOLDER);
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBMaps.FolderTree.PARENTFOLDER, "=", parentid));
+        if (parentid == 0) whr.addCondition(new SQLCondition(DBMaps.FolderTree.PROJECTID, "=", projectid));
         //-------------------------------------------------------
         SQLOrderBy order = new SQLOrderBy();
         order.addColumn(DBMaps.FolderTree.FOLDERNAME);
@@ -121,6 +127,7 @@ public class QueryMaps1 extends QueryMapTabs {
             while (rs.next()) {
                 folder = new MapFolder();
                 folder.folderid = rs.getLong(DBMaps.FolderTree.FOLDERID);
+                folder.projectid = rs.getLong(DBMaps.FolderTree.PROJECTID);
                 folder.parentid = rs.getLong(DBMaps.FolderTree.PARENTFOLDER);
                 folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
                 records.add(folder);
@@ -146,6 +153,7 @@ public class QueryMaps1 extends QueryMapTabs {
     protected void insertMapRecord (MapRecord record) throws Exception {
         SQLInsert insert = new SQLInsert(DBMaps.MapRecords.TABLE);
         insert.addValue(DBMaps.MapRecords.RECORDID, record.recordid);
+        insert.addValue(DBMaps.MapRecords.PROJECTID, record.projectid);
         insert.addValue(DBMaps.MapRecords.FOLDERID, record.folderid);
         insert.addValue(DBMaps.MapRecords.NAME, record.name);
         insert.addValue(DBMaps.MapRecords.EXTRADATA, record.extradata);
@@ -178,6 +186,7 @@ public class QueryMaps1 extends QueryMapTabs {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapRecords.TABLE);
         select.addItem(DBMaps.MapRecords.RECORDID);
+        select.addItem(DBMaps.MapRecords.PROJECTID);
         select.addItem(DBMaps.MapRecords.FOLDERID);
         select.addItem(DBMaps.MapRecords.NAME);
         select.addItem(DBMaps.MapRecords.EXTRADATA);
@@ -204,6 +213,7 @@ public class QueryMaps1 extends QueryMapTabs {
             while (rs.next()) {
                 record = new MapRecord();
                 record.recordid = rs.getLong(DBMaps.MapRecords.RECORDID);
+                record.projectid = rs.getLong(DBMaps.MapRecords.PROJECTID);
                 record.folderid = rs.getLong(DBMaps.MapRecords.FOLDERID);
                 record.name = rs.getString(DBMaps.MapRecords.NAME);
                 record.extradata = rs.getString(DBMaps.MapRecords.EXTRADATA);

@@ -68,16 +68,17 @@ public class MapsLambda extends QueryMaps1 {
     //**********************************************************************
     /**
      * Returns a list of folders given their parent.
+     * @param projectid
      * @param parentid
      * @return
      * @throws Exception 
      */
-    public MapFolder[] getChildrenFolders (long parentid) throws Exception {
+    public MapFolder[] getChildrenFolders (long projectid, long parentid) throws Exception {
         //------------------------------------------------------------------
         connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
-        return this.selectMapFolders(parentid);
+        return this.selectMapFolders(projectid, parentid);
         //------------------------------------------------------------------
     }
     //**********************************************************************

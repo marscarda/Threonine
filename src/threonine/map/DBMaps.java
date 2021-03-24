@@ -5,6 +5,7 @@ public class DBMaps {
     public static class FolderTree {
         static final String TABLE = "mapfoldertree";
         static final String FOLDERID = "folderid";
+        static final String PROJECTID = "projectid";
         static final String PARENTFOLDER = "parentfolder";
         static final String FOLDERNAME = "foldername";
     }
@@ -12,6 +13,7 @@ public class DBMaps {
     public static class MapRecords {
         static final String TABLE = "maprecords";
         static final String RECORDID = "recordid";
+        static final String PROJECTID = "projectid";
         static final String FOLDERID = "folderid";
         static final String NAME = "name";
         static final String EXTRADATA = "extradata";
