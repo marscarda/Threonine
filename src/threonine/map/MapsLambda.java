@@ -121,8 +121,6 @@ public class MapsLambda extends QueryMaps1 {
      */
     public MapRecord[] getMapRecords (long folderid) throws Exception {
         //------------------------------------------------------------------
-        if (folderid == 0) return new MapRecord[0];
-        //------------------------------------------------------------------
         connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------

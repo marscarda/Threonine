@@ -83,5 +83,29 @@ public class NewClass {
         return mapslambda.getChildrenFolders(projectid, parentid);
     }
     //**********************************************************************
+    /**
+     * Returns map records given a folder.
+     * @param folderid
+     * @param projectid
+     * @param userid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public MapRecord[] getMapRecords(long folderid, long projectid, long userid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        if (folderid == 0) return new MapRecord[0];
+        //------------------------------------------------------------------
+        //We check the user has access to the project where the folder belongs.
+        //If projectID is specified (!= 0) it must match the the project in wich the folder is.
+        MapFolder folder = mapslambda.getMapFolder(folderid);
+        if (projectid != 0)
+            if (projectid != folder.projectID()) return new MapRecord[0];
+        projectlambda.checkAccess(folder.projectID(), userid, 1);
+        //------------------------------------------------------------------
+        return mapslambda.getMapRecords(folderid);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
 }
 //**************************************************************************
