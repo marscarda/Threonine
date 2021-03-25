@@ -35,6 +35,8 @@ public class NewClass {
     public void createRecord (MapRecord record, long userid) throws AppException, Exception {
         MapFolder folder = mapslambda.getMapFolder(record.getFolderID());
         projectlambda.checkAccess(folder.projectID(), userid, 2);
+        record.setProjectId(folder.projectID());//Since project ID must macht with folder we assign here
+        mapslambda.createMapRecord(record);
     }
     //**********************************************************************
     public MapFolder getMapFolder (long folderid, long userid) throws AppException, Exception {
@@ -54,6 +56,15 @@ public class NewClass {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * 
+     * @param parentid
+     * @param projectid
+     * @param userid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
     public MapFolder[] getMapFolders(long parentid, long projectid, long userid) throws AppException, Exception {
         //------------------------------------------------------------------
         //Check the user has access to the project to this root
@@ -63,9 +74,11 @@ public class NewClass {
         //If children folders we check the user has access to the parent's project
         projectlambda.checkAccess(projectid, userid, 1);
         //------------------------------------------------------------------
-        //Parent folder must match with the current project.
-        MapFolder folder = mapslambda.getMapFolder(parentid);
-        if (folder.projectID() != projectid) return new MapFolder[0];
+        //If not root Parent folder must match the current project.
+        if (parentid != 0) {
+            MapFolder folder = mapslambda.getMapFolder(parentid);
+            if (folder.projectID() != projectid) return new MapFolder[0];
+        }
         //------------------------------------------------------------------
         return mapslambda.getChildrenFolders(projectid, parentid);
     }
