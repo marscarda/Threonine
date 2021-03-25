@@ -1,4 +1,4 @@
-package tobenamed;
+package threonine.tobenamed;
 //**************************************************************************
 import methionine.AppException;
 import threonine.map.PointLocation;
