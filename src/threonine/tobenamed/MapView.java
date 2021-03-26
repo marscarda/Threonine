@@ -17,10 +17,10 @@ public class MapView {
     float east = -180;
     //************************************************************
     int recount = 0;
-    NewClassRec[] records = null;
+    MapRecordGraphic[] records = null;
     //============================================================
-    public void addRecord (NewClassRec record) {
-        NewClassRec[] newrecords = new NewClassRec[recount + 1];
+    public void addRecord (MapRecordGraphic record) {
+        MapRecordGraphic[] newrecords = new MapRecordGraphic[recount + 1];
         if (records != null)
             System.arraycopy(records, 0, newrecords, 0, recount);
         newrecords[recount] = record;
@@ -28,7 +28,7 @@ public class MapView {
         recount++;
     }
     //============================================================
-    public void setRecords (NewClassRec[] records) { 
+    public void setRecords (MapRecordGraphic[] records) { 
         this.records = records; 
         recount = records.length;
     }
@@ -102,8 +102,8 @@ public class MapView {
     //************************************************************
     public int recordsCount () { return recount; }
     //============================================================
-    public NewClassRec[] getRecords () {
-        if (records == null) return new NewClassRec[0];
+    public MapRecordGraphic[] getRecords () {
+        if (records == null) return new MapRecordGraphic[0];
         return records;
     }
     //************************************************************
@@ -115,12 +115,12 @@ public class MapView {
     }    
     //************************************************************
     public void makeDraw () {
-        NewClassObj[] objects;
+        MapObjectGraphic[] objects;
         PointLocation[] points;
-        for (NewClassRec record : records) {
+        for (MapRecordGraphic record : records) {
             objects = record.getMapObjects();
             //===============================================
-            for (NewClassObj mobj : objects) {
+            for (MapObjectGraphic mobj : objects) {
                 try {
                     points = mobj.getPoints();
                     for (PointLocation point: points)
@@ -172,7 +172,7 @@ public class MapView {
         if (west != 180) return false;
         if (east != -180) return false;
         //---------------------------------------------
-        for (NewClassRec record : records) {
+        for (MapRecordGraphic record : records) {
             if (record.getSouth() < south) south = record.getSouth();
             if (record.getNorth() > north) north = record.getNorth();
             if (record.getWest() < west) west = record.getWest();

@@ -6,7 +6,7 @@ import threonine.map.MapFolder;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
 //**************************************************************************
-public class NewClass {
+public class MapCenter {
     //**********************************************************************
     ProjectLambda projectlambda = null;
     MapsLambda mapslambda = null;

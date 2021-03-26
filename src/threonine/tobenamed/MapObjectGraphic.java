@@ -3,7 +3,7 @@ package threonine.tobenamed;
 import methionine.AppException;
 import threonine.map.PointLocation;
 //**************************************************************************
-public class NewClassObj {
+public class MapObjectGraphic {
     //**********************************************************************
     int ptcount = 0;
     PointLocation[] mappoints = null;

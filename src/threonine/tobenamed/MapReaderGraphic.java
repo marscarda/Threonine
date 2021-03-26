@@ -3,7 +3,7 @@ package threonine.tobenamed;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
 //**************************************************************************
-public class NewClassReader {
+public class MapReaderGraphic {
     //**********************************************************************
     MapsLambda mapslambda = null;
     public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
@@ -14,24 +14,24 @@ public class NewClassReader {
      * @return
      * @throws Exception 
      */
-    public NewClassRec[] getRecordsByFolder (long folderid) throws Exception {
+    public MapRecordGraphic[] getRecordsByFolder (long folderid) throws Exception {
         //------------------------------------------------------------------
         MapRecord[] records = mapslambda.getMapRecords(folderid);
-        if (records.length == 0) return new NewClassRec[0];
+        if (records.length == 0) return new MapRecordGraphic[0];
         //------------------------------------------------------------------
         int rcount = records.length;
-        NewClassRec[] recordsg = new NewClassRec[rcount];
+        MapRecordGraphic[] recordsg = new MapRecordGraphic[rcount];
         //------------------------------------------------------------------
         String[] objcodes;
         MapRecord record;
-        NewClassObj obj;
+        MapObjectGraphic obj;
         //------------------------------------------------------------------
         for (int r = 0; r < rcount; r++) {
             record = records[r];
-            recordsg[r] = new NewClassRec();
+            recordsg[r] = new MapRecordGraphic();
             objcodes = mapslambda.getMapObjectCodes(record.getID());
             for (String objcode : objcodes) {
-                obj = new NewClassObj();
+                obj = new MapObjectGraphic();
                 obj.setPoints(mapslambda.getObjectPoints(record.getID(), objcode));
                 recordsg[r].addMapObject(obj);
             }
