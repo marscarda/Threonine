@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
 import methionine.sql.SQLCondition;
-import methionine.sql.SQLGroupBy;
 import methionine.sql.SQLInsert;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
@@ -175,6 +174,59 @@ public class QueryMaps1 extends QueryMapTabs {
         
     }
     //**********************************************************************
+    /**
+     * Selects and return a MapRecord given its ID.
+     * @param recordid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    protected MapRecord selectMapRecord (long recordid) throws AppException, Exception {
+        
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapRecords.TABLE);
+        select.addItem(DBMaps.MapRecords.RECORDID);
+        select.addItem(DBMaps.MapRecords.PROJECTID);
+        select.addItem(DBMaps.MapRecords.FOLDERID);
+        select.addItem(DBMaps.MapRecords.NAME);
+        select.addItem(DBMaps.MapRecords.EXTRADATA);
+        select.addItem(DBMaps.MapRecords.ADMINDIV);
+        //-------------------------------------------------------
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.MapRecords.RECORDID, "=", recordid));
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            if (!rs.next())
+                throw new AppException("Folder not found", AppException.OBJECTNOTFOUND);
+            MapRecord record = new MapRecord();
+            record.recordid = rs.getLong(DBMaps.MapRecords.RECORDID);
+            record.projectid = rs.getLong(DBMaps.MapRecords.PROJECTID);
+            record.folderid = rs.getLong(DBMaps.MapRecords.FOLDERID);
+            record.name = rs.getString(DBMaps.MapRecords.NAME);
+            record.extradata = rs.getString(DBMaps.MapRecords.EXTRADATA);
+            record.admindiv = rs.getString(DBMaps.MapRecords.ADMINDIV);
+            return record;
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map record. Code: vtefytrfh\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+        //-------------------------------------------------------
+    }
     //**********************************************************************
     /**
      * Selects and returns map records given the folder id
@@ -223,7 +275,7 @@ public class QueryMaps1 extends QueryMapTabs {
             return records.toArray(new MapRecord[0]);
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to select map records. Code: qiujhjgh \n");
+            StringBuilder msg = new StringBuilder("Failed to select map records. Code: qiujhjgh\n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
@@ -233,18 +285,17 @@ public class QueryMaps1 extends QueryMapTabs {
         }
     }
     //**********************************************************************
+    //**********************************************************************
     /**
-     * Inserts a new Map Point Location into the database.
-     * @param ptloc
+     * Inserts a new map object in the DB.
+     * @param object
      * @throws Exception 
      */
-    protected void insertPointLocation (PointLocation ptloc) throws Exception {
-        SQLInsert insert = new SQLInsert(DBMaps.MapObjects.TABLE);
-        insert.addValue(DBMaps.MapObjects.RECORDID, ptloc.recordid);
-        insert.addValue(DBMaps.MapObjects.OBJECTCODE, ptloc.objcode);
-        insert.addValue(DBMaps.MapObjects.POINTINDEX, ptloc.ptindex);
-        insert.addValue(DBMaps.MapObjects.LATITUDE, ptloc.latitude);
-        insert.addValue(DBMaps.MapObjects.LONGITUDE, ptloc.longitude);
+    protected void insertMapObject (MapObject object) throws Exception {
+        SQLInsert insert = new SQLInsert(DBMaps.Objects.TABLE);
+        insert.addValue(DBMaps.Objects.OBJECTID, object.objectid);
+        insert.addValue(DBMaps.Objects.RECORDID, object.recordid);
+        insert.addValue(DBMaps.Objects.OBJTYPE, object.objtype);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -252,21 +303,51 @@ public class QueryMaps1 extends QueryMapTabs {
             st.execute();            
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to insert new map point location\n");
+            StringBuilder msg = new StringBuilder("Failed to insert new map object \n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
-        }
+        }        
     }
     //**********************************************************************
+    /**
+     * Inserts a new map point into de DB.
+     * @param point
+     * @throws Exception 
+     */
+    protected void insertPointLocation (PointAdd point) throws Exception {
+        SQLInsert insert = new SQLInsert(DBMaps.LocationPoints.TABLE);
+        insert.addValue(DBMaps.LocationPoints.RECORDID, point.recordid);
+        insert.addValue(DBMaps.LocationPoints.OBJECTID, point.objectid);
+        insert.addValue(DBMaps.LocationPoints.POINTINDEX, point.index);
+        insert.addValue(DBMaps.LocationPoints.LATITUDE, point.latitude);
+        insert.addValue(DBMaps.LocationPoints.LONGITUDE, point.longitude);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(insert.getText());
+            insert.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to insert new map object point\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //**********************************************************************
+    /*
     /**
      * Selects and returns an array of strings representing map object codes
      * @param recordid
      * @return
      * @throws Exception 
      */
+    /*
     protected String[] selectMapObjectCodes (long recordid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapObjects.TABLE);
@@ -301,6 +382,8 @@ public class QueryMaps1 extends QueryMapTabs {
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
     }    
+    */
+    
     //**********************************************************************
     /**
      * Selects and returns map points for a given object.
@@ -309,6 +392,8 @@ public class QueryMaps1 extends QueryMapTabs {
      * @return
      * @throws Exception 
      */
+    
+    /*
     protected PointLocation[] selectLocationPoints (long recordid, String code) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapObjects.TABLE);
@@ -357,6 +442,7 @@ public class QueryMaps1 extends QueryMapTabs {
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
     }
+    */
     //**********************************************************************
 }
 //**************************************************************************

@@ -1,7 +1,6 @@
-package threonine.qqqq;
+package threonine.map;
 //**************************************************************************
 import methionine.AppException;
-import threonine.map.PointLocation;
 //**************************************************************************
 public class MapObjectMaker {
     //**************************************************************

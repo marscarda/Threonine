@@ -3,8 +3,10 @@ package threonine.tobenamed;
 import methionine.AppException;
 import methionine.project.ProjectLambda;
 import threonine.map.MapFolder;
+import threonine.map.MapObject;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
+import threonine.map.PointAdd;
 //**************************************************************************
 public class MapCenter {
     //**********************************************************************
@@ -38,6 +40,14 @@ public class MapCenter {
         record.setProjectId(folder.projectID());//Since project ID must macht with folder we assign here
         mapslambda.createMapRecord(record);
     }
+    //**********************************************************************
+    
+    public void createObject (PointAdd[] points, long recordid, long userid) throws AppException, Exception {
+        MapRecord record = mapslambda.getMapRecord(recordid);
+        projectlambda.checkAccess(record.getProjectID(), userid, 2);
+        mapslambda.createMapObject(recordid, points);
+    }
+
     //**********************************************************************
     public MapFolder getMapFolder (long folderid, long userid) throws AppException, Exception {
         //------------------------------------------------------------------

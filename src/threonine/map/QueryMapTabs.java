@@ -21,7 +21,8 @@ public class QueryMapTabs extends Alcyone {
         //===================================================================
         if (!checkTableExists(DBMaps.FolderTree.TABLE, tables)) createFolderTree();
         if (!checkTableExists(DBMaps.MapRecords.TABLE, tables)) createMapRecords();
-        if (!checkTableExists(DBMaps.MapObjects.TABLE, tables)) createMapObjects();
+        if (!checkTableExists(DBMaps.Objects.TABLE, tables)) createMapObjects();
+        if (!checkTableExists(DBMaps.LocationPoints.TABLE, tables)) createLocationPoints();
         //===================================================================
     }
     //***********************************************************************
@@ -84,13 +85,11 @@ public class QueryMapTabs extends Alcyone {
     //***********************************************************************
     private void createMapObjects () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBMaps.MapObjects.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBMaps.Objects.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBMaps.MapObjects.RECORDID, "BIGINT NOT NULL");
-        create.addField(DBMaps.MapObjects.OBJECTCODE, "VARCHAR (20) NOT NULL");
-        create.addField(DBMaps.MapObjects.POINTINDEX, "INTEGER NOT NULL");
-        create.addField(DBMaps.MapObjects.LATITUDE, "FLOAT NOT NULL DEFAULT 0");
-        create.addField(DBMaps.MapObjects.LONGITUDE, "FLOAT NOT NULL DEFAULT 0");
+        create.addField(DBMaps.Objects.OBJECTID, "BIGINT NOT NULL");
+        create.addField(DBMaps.Objects.RECORDID, "BIGINT NOT NULL");
+        create.addField(DBMaps.Objects.OBJTYPE, "INTEGER NOT NULL");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -100,7 +99,37 @@ public class QueryMapTabs extends Alcyone {
         }
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBMaps.MapObjects.TABLE);
+            err.append(DBMaps.Objects.TABLE);
+            err.append(" table\n");
+            err.append(e.getMessage());
+            throw new Exception(err.toString());
+        }
+        finally {
+            try { if (st != null) st.close(); } catch (Exception e) {}
+        }
+        //-------------------------------------------------------------------
+    }    
+    //***********************************************************************
+    private void createLocationPoints () throws Exception {
+        //-------------------------------------------------------------------
+        SQLCreateTable create = new SQLCreateTable(DBMaps.LocationPoints.TABLE);
+        create.setEngine(MySQLEngine.INNODB);
+        create.addField(DBMaps.LocationPoints.RECORDID, "BIGINT NOT NULL");
+        create.addField(DBMaps.LocationPoints.OBJECTID, "BIGINT NOT NULL");
+        create.addField(DBMaps.LocationPoints.POINTINDEX, "INTEGER NOT NULL");
+        create.addField(DBMaps.LocationPoints.LATITUDE, "FLOAT NOT NULL DEFAULT 0");
+        create.addField(DBMaps.LocationPoints.LONGITUDE, "FLOAT NOT NULL DEFAULT 0");
+        
+        //-------------------------------------------------------------------
+        PreparedStatement st = null;
+        this.setDataBase();
+        try {
+            st = connection.prepareStatement(create.getText());
+            st.execute();
+        }
+        catch (SQLException e) {
+            StringBuilder err = new StringBuilder("Failed to create ");
+            err.append(DBMaps.LocationPoints.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());

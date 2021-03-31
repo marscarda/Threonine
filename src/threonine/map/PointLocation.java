@@ -3,6 +3,7 @@ package threonine.map;
 public class PointLocation {
     //==========================================================
     long recordid = 0;
+    long objectid = 0;
     String objcode = null;
     int ptindex = 0;
     float latitude = 0;

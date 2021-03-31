@@ -112,6 +112,21 @@ public class MapsLambda extends QueryMaps1 {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * Returns a map record given its ID.
+     * @param recordid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public MapRecord getMapRecord (long recordid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        connection = electra.slaveConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        return this.selectMapRecord(recordid);
+        //------------------------------------------------------------------
+    }
     //**********************************************************************
     /**
      * Returns map records given a folder
@@ -128,14 +143,7 @@ public class MapsLambda extends QueryMaps1 {
         //------------------------------------------------------------------
     }
     //**********************************************************************
-    /**
-     * Creats a Map Object for a given Map Record.
-     * @param recordid
-     * @param points
-     * @throws AppException
-     * @throws Exception 
-     */
-    public void createMapObject (long recordid, PointLocation[] points) throws AppException, Exception {
+    public void createMapObject (long recordid, PointAdd[] points) throws AppException, Exception {
         //=============================================================
         connection = electra.masterConnection();
         setDataBase();
@@ -143,29 +151,27 @@ public class MapsLambda extends QueryMaps1 {
         SQLLockTables lock = new SQLLockTables();
         lock.setDataBase(databasename);
         lock.addTable(DBMaps.MapRecords.TABLE);
-        lock.addTable(DBMaps.MapObjects.TABLE);
+        lock.addTable(DBMaps.Objects.TABLE);
+        lock.addTable(DBMaps.LocationPoints.TABLE);
         this.getExclusiveTableAccess(lock);
         //-------------------------------------------------------------
-        if (this.checkValueCount(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.RECORDID, recordid)  == 0) {
-            this.releaseExclusiveTableAccess();
-            throw new AppException("Map Record Not Found", AppException.MAPRECORDNOTFOUND);
-        }
-        //-------------------------------------------------------------
-        String objcode;
+        MapObject object = new MapObject();
+        object.recordid = recordid;
         while (true) {
-            objcode = Celaeno.randomString(10);
-            if (checkValueCount(DBMaps.MapObjects.TABLE, DBMaps.MapObjects.OBJECTCODE, objcode) == 0) break;
+            object.objectid = Celaeno.getUniqueID();
+            if (checkValueCount(DBMaps.Objects.TABLE, DBMaps.Objects.OBJECTID, object.objectid) == 0) break;
         }
         //=============================================================
         this.startTransaction();
-        for (PointLocation point : points) {
+        this.insertMapObject(object);
+        for (PointAdd point : points) {
             point.recordid = recordid;
-            point.objcode = objcode;
+            point.objectid = object.objectid;
             this.insertPointLocation(point);
         }
         this.commitTransaction();
         //=============================================================
-        this.releaseExclusiveTableAccess();
+        this.releaseExclusiveTableAccess();        
         //=============================================================
     }
     //**********************************************************************
@@ -175,11 +181,13 @@ public class MapsLambda extends QueryMaps1 {
      * @return
      * @throws Exception 
      */
+    /*
     public String[] getMapObjectCodes (long recordid) throws Exception {
         connection = electra.slaveConnection();
         setDataBase();
         return this.selectMapObjectCodes(recordid);
     }
+    */
     //**********************************************************************
     /**
      * Returns the array of points given a record id and name
@@ -188,11 +196,59 @@ public class MapsLambda extends QueryMaps1 {
      * @return
      * @throws Exception 
      */
+    /*
     public PointLocation[] getObjectPoints (long recordid, String code) throws Exception {
         connection = electra.slaveConnection();
         setDataBase();
         return this.selectLocationPoints(recordid, code);
     }
+    */
     //**********************************************************************
+    public static PointAdd[] createPoints (String txtpoints, long recordid) throws AppException {
+        //=============================================================
+        String[] ptrows = txtpoints.split("\\r?\\n");
+        int count = ptrows.length;
+        PointAdd[] points = new PointAdd[count];
+        String[] values;
+        //=============================================================
+        for (int n = 0; n < count; n++) {
+            values = ptrows[n].split(",");
+            if (values.length < 2) 
+                throw new AppException("Invalid format", AppException.INVALIDFORMAT);
+            points[n] = new PointAdd();
+            points[n].recordid = count;
+            points[n].index = n;
+            try {
+                points[n].latitude = Float.parseFloat(values[0]);
+                points[n].longitude = Float.parseFloat(values[1]);
+            }
+            catch (Exception e) {
+                throw new AppException("Invalid format", AppException.INVALIDFORMAT);
+            }
+        }        
+        //=============================================================
+        return points;
+        //=============================================================
+    }
+    //**********************************************************************
+    
+    
+    //**********************************************************************
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 //**************************************************************************

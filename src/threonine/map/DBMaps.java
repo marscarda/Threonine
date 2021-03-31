@@ -20,10 +20,17 @@ public class DBMaps {
         static final String ADMINDIV = "admindivision";
     }
     //**********************************************************************
-    public static class MapObjects {
+    public static class Objects {
         static final String TABLE = "mapobjects";
+        static final String OBJECTID = "objectid";
         static final String RECORDID = "recordid";
-        static final String OBJECTCODE = "objcode";
+        static final String OBJTYPE = "objtype";
+    }
+    //**********************************************************************
+    public static class LocationPoints {
+        static final String TABLE = "locationpoints";
+        static final String RECORDID = "recordid";
+        static final String OBJECTID = "objectid";
         static final String POINTINDEX = "pointindex";
         static final String LATITUDE = "latitude";
         static final String LONGITUDE = "longitude";

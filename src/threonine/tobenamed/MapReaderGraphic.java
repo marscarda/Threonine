@@ -14,6 +14,10 @@ public class MapReaderGraphic {
      * @return
      * @throws Exception 
      */
+    
+    
+    
+    /*
     public MapRecordGraphic[] getRecordsByFolder (long folderid) throws Exception {
         //------------------------------------------------------------------
         MapRecord[] records = mapslambda.getMapRecords(folderid);
@@ -40,6 +44,7 @@ public class MapReaderGraphic {
         return recordsg;
         //------------------------------------------------------------------
     }
+    */
     //======================================================================
     //**********************************************************************
 }

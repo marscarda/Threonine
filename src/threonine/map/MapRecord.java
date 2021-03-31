@@ -18,6 +18,7 @@ public class MapRecord {
     public void setAdminDivision (String admindiv) { this.admindiv = admindiv; }
     //----------------------------------------------------------------------
     public long getFolderID () { return folderid; }
+    public long getProjectID () { return projectid; }
     public String getName () {
         if (name == null) return "";
         return name;
