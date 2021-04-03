@@ -176,6 +176,28 @@ public class MapsLambda extends QueryMaps1 {
     }
     //**********************************************************************
     /**
+     * 
+     * @param recordid
+     * @param fillpoints
+     * @return
+     * @throws Exception 
+     */
+    public MapObject[] getObjectsByRecord (long recordid, boolean fillpoints) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.slaveConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        MapObject[] objects = this.selectMapObjects(recordid);
+        if (!fillpoints) return objects;
+        //------------------------------------------------------------------
+        for (MapObject object : objects)
+            object.points = this.selectPointLocations(object.objectid);
+        //------------------------------------------------------------------
+        return objects;
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
      * Returns the object codes for a given record id
      * @param recordid
      * @return
@@ -231,24 +253,5 @@ public class MapsLambda extends QueryMaps1 {
         //=============================================================
     }
     //**********************************************************************
-    
-    
-    //**********************************************************************
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
 //**************************************************************************

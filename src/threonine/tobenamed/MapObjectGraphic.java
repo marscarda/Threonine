@@ -7,13 +7,16 @@ public class MapObjectGraphic {
     //**********************************************************************
     int ptcount = 0;
     PointLocation[] mappoints = null;
-    String code = null;
+    long objectid = 0;
+    int objecttype = 3;
     //**********************************************************************
     void setPoints (PointLocation[] points) {
         this.mappoints = points;
         ptcount = this.mappoints.length;
     }
     //**********************************************************************
+    public int obectType () { return objecttype; }
+    public int pointsCount () { return ptcount; }
     public PointLocation[] getPoints () throws AppException {
         //------------------------------------------------------------------
         if (mappoints == null) 

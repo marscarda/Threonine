@@ -1,4 +1,4 @@
-package threonine.map;
+    package threonine.map;
 //**************************************************************************
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -182,7 +182,6 @@ public class QueryMaps1 extends QueryMapTabs {
      * @throws Exception 
      */
     protected MapRecord selectMapRecord (long recordid) throws AppException, Exception {
-        
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapRecords.TABLE);
         select.addItem(DBMaps.MapRecords.RECORDID);
@@ -338,6 +337,162 @@ public class QueryMaps1 extends QueryMapTabs {
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
         }        
+    }
+    //**********************************************************************
+    /**
+     * Selects a MapObject given its ID.
+     * @param objectid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    protected MapObject selectMapObject (long objectid) throws AppException, Exception {
+        //-------------------------------------------------------
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.Objects.TABLE);
+        select.addItem(DBMaps.Objects.OBJECTID);
+        select.addItem(DBMaps.Objects.RECORDID);
+        select.addItem(DBMaps.Objects.OBJTYPE);
+        //-------------------------------------------------------
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.Objects.OBJECTID, "=", objectid));
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            if (!rs.next())
+                throw new AppException("Map Object not found", AppException.OBJECTNOTFOUND);
+            MapObject object = new MapObject();
+            object.objectid = rs.getLong(DBMaps.Objects.OBJECTID);
+            object.recordid = rs.getLong(DBMaps.Objects.RECORDID);
+            object.objtype = rs.getInt(DBMaps.Objects.OBJTYPE);
+            return object;
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map record. Code: vtefytrfh\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+        //-------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Returns an array of MapObjects given the recordid
+     * @param recordid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    protected MapObject[] selectMapObjects (long recordid) throws AppException, Exception {
+        //-------------------------------------------------------
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.Objects.TABLE);
+        select.addItem(DBMaps.Objects.OBJECTID);
+        select.addItem(DBMaps.Objects.RECORDID);
+        select.addItem(DBMaps.Objects.OBJTYPE);
+        //-------------------------------------------------------
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.Objects.RECORDID, "=", recordid));
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<MapObject> objects = new ArrayList<>();
+            MapObject object;
+            while (rs.next()) {
+                object = new MapObject();
+                object.objectid = rs.getLong(DBMaps.Objects.OBJECTID);
+                object.recordid = rs.getLong(DBMaps.Objects.RECORDID);
+                object.objtype = rs.getInt(DBMaps.Objects.OBJTYPE);
+                objects.add(object);
+            }            
+            return objects.toArray(new MapObject[0]);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map record. Code: vtefytrfh\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+        //-------------------------------------------------------
+    }    
+    //**********************************************************************
+    /**
+     * Selects and return point locations.
+     * @param objectid
+     * @return
+     * @throws Exception 
+     */
+    protected PointLocation[] selectPointLocations (long objectid) throws Exception {
+        //-------------------------------------------------------
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.LocationPoints.TABLE);
+        select.addItem(DBMaps.LocationPoints.OBJECTID);
+        select.addItem(DBMaps.LocationPoints.RECORDID);
+        select.addItem(DBMaps.LocationPoints.POINTINDEX);
+        select.addItem(DBMaps.LocationPoints.LATITUDE);
+        select.addItem(DBMaps.LocationPoints.LONGITUDE);
+        //-------------------------------------------------------
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.LocationPoints.OBJECTID, "=", objectid));
+        //-------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBMaps.LocationPoints.POINTINDEX);
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        sql.addClause(order);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<PointLocation> points = new ArrayList<>();
+            PointLocation point;
+            while (rs.next()) {
+                point = new PointLocation();
+                point.objectid = objectid;
+                point.recordid = rs.getLong(DBMaps.LocationPoints.RECORDID);
+                point.ptindex = rs.getInt(DBMaps.LocationPoints.POINTINDEX);
+                point.latitude = rs.getFloat(DBMaps.LocationPoints.LATITUDE);
+                point.longitude = rs.getFloat(DBMaps.LocationPoints.LONGITUDE);
+                points.add(point);
+            }            
+            return points.toArray(new PointLocation[0]);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map point locations. Code: tyhgdytrfh\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
     }
     //**********************************************************************
     /*

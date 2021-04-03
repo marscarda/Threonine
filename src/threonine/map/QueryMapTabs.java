@@ -117,9 +117,8 @@ public class QueryMapTabs extends Alcyone {
         create.addField(DBMaps.LocationPoints.RECORDID, "BIGINT NOT NULL");
         create.addField(DBMaps.LocationPoints.OBJECTID, "BIGINT NOT NULL");
         create.addField(DBMaps.LocationPoints.POINTINDEX, "INTEGER NOT NULL");
-        create.addField(DBMaps.LocationPoints.LATITUDE, "FLOAT NOT NULL DEFAULT 0");
-        create.addField(DBMaps.LocationPoints.LONGITUDE, "FLOAT NOT NULL DEFAULT 0");
-        
+        create.addField(DBMaps.LocationPoints.LATITUDE, "FLOAT (10,6) NOT NULL DEFAULT 0");
+        create.addField(DBMaps.LocationPoints.LONGITUDE, "FLOAT (10,6) NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
