@@ -20,6 +20,7 @@ public class QueryMapTabs extends Alcyone {
         }
         //===================================================================
         if (!checkTableExists(DBMaps.FolderTree.TABLE, tables)) createFolderTree();
+        if (!checkTableExists(DBMaps.FolderShare.TABLE, tables)) createFolderShares();
         if (!checkTableExists(DBMaps.MapRecords.TABLE, tables)) createMapRecords();
         if (!checkTableExists(DBMaps.Objects.TABLE, tables)) createMapObjects();
         if (!checkTableExists(DBMaps.LocationPoints.TABLE, tables)) createLocationPoints();
@@ -44,6 +45,33 @@ public class QueryMapTabs extends Alcyone {
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
             err.append(DBMaps.FolderTree.TABLE);
+            err.append(" table\n");
+            err.append(e.getMessage());
+            throw new Exception(err.toString());
+        }
+        finally {
+            try { if (st != null) st.close(); } catch (Exception e) {}
+        }
+        //-------------------------------------------------------------------
+    }
+    //***********************************************************************
+    private void createFolderShares () throws Exception {
+        //-------------------------------------------------------------------
+        SQLCreateTable create = new SQLCreateTable(DBMaps.FolderShare.TABLE);
+        create.setEngine(MySQLEngine.INNODB);
+        create.addField(DBMaps.FolderShare.PROJECTID, "BIGINT NOT NULL");
+        create.addField(DBMaps.FolderShare.FOLDERID, "BIGINT NOT NULL");
+        create.addField(DBMaps.FolderShare.SHAREPASS, "VARCHAR (100) NOT NULL");
+        //-------------------------------------------------------------------
+        PreparedStatement st = null;
+        this.setDataBase();
+        try {
+            st = connection.prepareStatement(create.getText());
+            st.execute();
+        }
+        catch (SQLException e) {
+            StringBuilder err = new StringBuilder("Failed to create ");
+            err.append(DBMaps.FolderShare.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());
