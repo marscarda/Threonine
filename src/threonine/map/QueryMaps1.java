@@ -58,6 +58,8 @@ public class QueryMaps1 extends QueryMapTabs {
         select.addItem(DBMaps.FolderTree.PROJECTID);
         select.addItem(DBMaps.FolderTree.PARENTFOLDER);
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
+        select.addItem(DBMaps.FolderTree.SHAREID);
+        select.addItem(DBMaps.FolderTree.SHAREPASS);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBMaps.FolderTree.FOLDERID, "=", folderid));
         sql.addClause(select);
@@ -78,6 +80,8 @@ public class QueryMaps1 extends QueryMapTabs {
             folder.projectid = rs.getLong(DBMaps.FolderTree.PROJECTID);
             folder.parentid = rs.getLong(DBMaps.FolderTree.PARENTFOLDER);
             folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
+            folder.shareid = rs.getString(DBMaps.FolderTree.SHAREID);
+            folder.sharepass = rs.getString(DBMaps.FolderTree.SHAREPASS);
             return folder;
         }
         catch (SQLException e) {
