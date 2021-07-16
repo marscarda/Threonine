@@ -26,6 +26,8 @@ public class QueryMaps1 extends QueryMapTabs {
         insert.addValue(DBMaps.FolderTree.PROJECTID, folder.projectid);
         insert.addValue(DBMaps.FolderTree.PARENTFOLDER, folder.parentid);
         insert.addValue(DBMaps.FolderTree.FOLDERNAME, folder.name);
+        insert.addValue(DBMaps.FolderTree.SHAREID, folder.shareid);
+        insert.addValue(DBMaps.FolderTree.SHAREPASS, folder.sharepass);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());

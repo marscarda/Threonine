@@ -25,11 +25,17 @@ public class MapsLambda extends QueryMaps1 {
         if (folder.parentid != 0) {
             if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERID, folder.parentid) == 0)
                 throw new AppException("Parent Folder Not Found", AppException.OBJECTNOTFOUND);
+            if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, folder.name, 
+                DBMaps.FolderTree.PARENTFOLDER, folder.parentid) != 0)
+                    throw new AppException("Folder Name already exists", AppException.IDENTIFIERALREADYEXISTS);
+        } else {
+            if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, folder.name, 
+                DBMaps.FolderTree.PROJECTID, folder.projectid) != 0)
+                    throw new AppException("Folder Name already exists", AppException.IDENTIFIERALREADYEXISTS);
         }
         //------------------------------------------------------------------
-        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, folder.name, 
-            DBMaps.FolderTree.PARENTFOLDER, folder.parentid) != 0)
-                throw new AppException("Folder Name already exists", AppException.IDENTIFIERALREADYEXISTS);
+        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.SHAREID, folder.shareid) != 0)
+            throw new AppException("Share ID name already used", AppException.IDENTIFIERALREADYEXISTS);
         //------------------------------------------------------------------
         while (true) {
             folder.folderid = Celaeno.getUniqueID();

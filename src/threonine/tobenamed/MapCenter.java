@@ -1,6 +1,7 @@
 package threonine.tobenamed;
 //**************************************************************************
 import methionine.AppException;
+import methionine.Celaeno;
 import methionine.project.ProjectLambda;
 import threonine.map.MapFolder;
 import threonine.map.MapObject;
@@ -24,6 +25,10 @@ public class MapCenter {
      */
     public void createFolder (MapFolder folder, long userid) throws AppException, Exception {
         projectlambda.checkAccess(folder.projectID(), userid, 2);
+        if (folder.shareID().length() == 0)
+            throw new AppException("Share ID cannot be empty", AppException.INVALIDDATASUBMITED);
+        if (folder.sharePass().length() == 0)
+            folder.setSharePass(Celaeno.randomString(8));
         mapslambda.createFolder(folder);
     }
     //**********************************************************************
@@ -41,13 +46,11 @@ public class MapCenter {
         mapslambda.createMapRecord(record);
     }
     //**********************************************************************
-    
     public void createObject (PointAdd[] points, long recordid, long userid) throws AppException, Exception {
         MapRecord record = mapslambda.getMapRecord(recordid);
         projectlambda.checkAccess(record.getProjectID(), userid, 2);
         mapslambda.createMapObject(recordid, points);
     }
-
     //**********************************************************************
     public MapFolder getMapFolder (long folderid, long userid) throws AppException, Exception {
         //------------------------------------------------------------------
