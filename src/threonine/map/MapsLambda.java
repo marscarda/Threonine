@@ -4,7 +4,7 @@ import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
 //**************************************************************************
-public class MapsLambda extends QueryMaps1 {
+public class MapsLambda extends QueryMaps2 {
     //**********************************************************************
     /**
      * Creates a new map folder
@@ -86,6 +86,20 @@ public class MapsLambda extends QueryMaps1 {
         //------------------------------------------------------------------
         return this.selectMapFolders(projectid, parentid);
         //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Returns a list of folders given a key search
+     * @param searchkey
+     * @return
+     * @throws Exception 
+     */
+    public MapFolder[] searchFoldersByShareID (String searchkey) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.slaveConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        return this.selectMapFoldersByShareID(searchkey);
     }
     //**********************************************************************
     /**
@@ -202,35 +216,6 @@ public class MapsLambda extends QueryMaps1 {
         return objects;
         //------------------------------------------------------------------
     }
-    //**********************************************************************
-    /**
-     * Returns the object codes for a given record id
-     * @param recordid
-     * @return
-     * @throws Exception 
-     */
-    /*
-    public String[] getMapObjectCodes (long recordid) throws Exception {
-        connection = electra.slaveConnection();
-        setDataBase();
-        return this.selectMapObjectCodes(recordid);
-    }
-    */
-    //**********************************************************************
-    /**
-     * Returns the array of points given a record id and name
-     * @param recordid
-     * @param code
-     * @return
-     * @throws Exception 
-     */
-    /*
-    public PointLocation[] getObjectPoints (long recordid, String code) throws Exception {
-        connection = electra.slaveConnection();
-        setDataBase();
-        return this.selectLocationPoints(recordid, code);
-    }
-    */
     //**********************************************************************
     public static PointAdd[] createPoints (String txtpoints, long recordid) throws AppException {
         //=============================================================
