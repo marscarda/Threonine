@@ -35,7 +35,7 @@ public class MapsLambda extends QueryMaps2 {
         }
         //------------------------------------------------------------------
         if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, folder.publicname) != 0)
-            throw new AppException("Share ID name already used", AppException.IDENTIFIERALREADYEXISTS);
+            throw new AppException("Public name already used", AppException.IDENTIFIERALREADYEXISTS);
         //------------------------------------------------------------------
         while (true) {
             folder.folderid = Celaeno.getUniqueID();
@@ -53,7 +53,37 @@ public class MapsLambda extends QueryMaps2 {
         connection = electra.masterConnection();
         setDataBase();
         //------------------------------------------------------------------
+        SQLLockTables lock = new SQLLockTables();
+        lock.setDataBase(databasename);
+        lock.addTable(DBMaps.FolderTree.TABLE);
+        this.getExclusiveTableAccess(lock);
+        //------------------------------------------------------------------
+        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, value) != 0)
+            throw new AppException("Public name already used", AppException.IDENTIFIERALREADYEXISTS);
+        //------------------------------------------------------------------
         super.updateMapFolderPublicName(folderid, value);
+        //------------------------------------------------------------------
+        this.releaseExclusiveTableAccess();
+        //------------------------------------------------------------------
+    }
+    //======================================================================
+    @Override
+    public void updateMapFolderSharePass (long folderid, String value) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        super.updateMapFolderSharePass(folderid, value);
+        //------------------------------------------------------------------
+    }
+    //======================================================================
+    @Override
+    public void updateMapFolderCostPerUse (long folderid, int value) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        super.updateMapFolderCostPerUse(folderid, value);
         //------------------------------------------------------------------
     }
     //======================================================================
@@ -65,11 +95,6 @@ public class MapsLambda extends QueryMaps2 {
         super.updateMapFolderSearchable(folderid, value);
         //------------------------------------------------------------------
     }
-    //======================================================================
-    
-    
-    
-    
     //**********************************************************************
     /**
      * Returns a map folder given its ID.

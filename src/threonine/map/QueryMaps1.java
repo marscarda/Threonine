@@ -46,7 +46,7 @@ public class QueryMaps1 extends QueryMapTabs {
     }
     //**********************************************************************
     /**
-     * Updates a folder searchable field to a given map folde.
+     * Updates a folder public name field to a given map folder id.
      * @param folderid
      * @param value
      * @throws Exception 
@@ -76,7 +76,67 @@ public class QueryMaps1 extends QueryMapTabs {
     }
     //======================================================================
     /**
-     * Updates a folder searchable field to a given map folde.
+     * Updates a folder share pass field to a given map folder id.
+     * @param folderid
+     * @param value
+     * @throws Exception 
+     */
+    protected void updateMapFolderSharePass (long folderid, String value) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBMaps.FolderTree.TABLE);
+        update.addSetColumn(DBMaps.FolderTree.SHAREPASS, value);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.FOLDERID, "=", folderid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update map folder share pass\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //======================================================================
+    /**
+     * Updates a folder searchable field to a given map folder id.
+     * @param folderid
+     * @param value
+     * @throws Exception 
+     */
+    protected void updateMapFolderCostPerUse (long folderid, int value) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBMaps.FolderTree.TABLE);
+        update.addSetColumn(DBMaps.FolderTree.COSTPERUSE, value);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.FOLDERID, "=", folderid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update map folder cosst per use\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //======================================================================
+    /**
+     * Updates a folder searchable field to a given map folder id.
      * @param folderid
      * @param value
      * @throws Exception 
@@ -104,10 +164,6 @@ public class QueryMaps1 extends QueryMapTabs {
             if (st != null) try {st.close();} catch(Exception e){}
         }        
     }
-    //======================================================================
-    
-    
-    
     //**********************************************************************
     /**
      * Selects and returns a map folder given its ID.

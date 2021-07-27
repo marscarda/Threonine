@@ -131,6 +131,20 @@ public class MapCenter {
                 updateattr.searchable = folder.isSearchableInt();
                 break;
             //--------------------------------------------------
+            case UpdateMapFolderAttr.SHAREPASS:
+                mapslambda.updateMapFolderSharePass(folderid, updateattr.sharepass);
+                updateattr.publicname = folder.publicName();
+                updateattr.costperuse = folder.costPerUse();
+                updateattr.searchable = folder.isSearchableInt();
+                break;
+            //--------------------------------------------------
+            case UpdateMapFolderAttr.COSTPERUSE:
+                mapslambda.updateMapFolderCostPerUse(folderid, updateattr.costperuse);
+                updateattr.publicname = folder.publicName();
+                updateattr.sharepass = folder.sharePass();
+                updateattr.searchable = folder.isSearchableInt();
+                break;
+            //--------------------------------------------------
             case UpdateMapFolderAttr.SEARCHABLE:
                 mapslambda.updateSearchable(folderid, updateattr.searchable);
                 updateattr.publicname = folder.publicName();
