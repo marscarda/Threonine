@@ -1,4 +1,4 @@
-    package threonine.map;
+package threonine.map;
 //**************************************************************************
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +11,7 @@ import methionine.sql.SQLInsert;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
+import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
 //**************************************************************************
 public class QueryMaps1 extends QueryMapTabs {
@@ -26,7 +27,7 @@ public class QueryMaps1 extends QueryMapTabs {
         insert.addValue(DBMaps.FolderTree.PROJECTID, folder.projectid);
         insert.addValue(DBMaps.FolderTree.PARENTFOLDER, folder.parentid);
         insert.addValue(DBMaps.FolderTree.FOLDERNAME, folder.name);
-        insert.addValue(DBMaps.FolderTree.SHAREID, folder.shareid);
+        insert.addValue(DBMaps.FolderTree.PUBLICNAME, folder.publicname);
         insert.addValue(DBMaps.FolderTree.SHAREPASS, folder.sharepass);
         PreparedStatement st = null;
         try {
@@ -45,6 +46,70 @@ public class QueryMaps1 extends QueryMapTabs {
     }
     //**********************************************************************
     /**
+     * Updates a folder searchable field to a given map folde.
+     * @param folderid
+     * @param value
+     * @throws Exception 
+     */
+    protected void updateMapFolderPublicName (long folderid, String value) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBMaps.FolderTree.TABLE);
+        update.addSetColumn(DBMaps.FolderTree.PUBLICNAME, value);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.FOLDERID, "=", folderid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update map folder public name\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //======================================================================
+    /**
+     * Updates a folder searchable field to a given map folde.
+     * @param folderid
+     * @param value
+     * @throws Exception 
+     */
+    protected void updateMapFolderSearchable (long folderid, int value) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBMaps.FolderTree.TABLE);
+        update.addSetColumn(DBMaps.FolderTree.SEARCHABLE, value);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.FOLDERID, "=", folderid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update map folder searchable\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //======================================================================
+    
+    
+    
+    //**********************************************************************
+    /**
      * Selects and returns a map folder given its ID.
      * @param folderid
      * @return
@@ -58,8 +123,12 @@ public class QueryMaps1 extends QueryMapTabs {
         select.addItem(DBMaps.FolderTree.PROJECTID);
         select.addItem(DBMaps.FolderTree.PARENTFOLDER);
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
-        select.addItem(DBMaps.FolderTree.SHAREID);
+        select.addItem(DBMaps.FolderTree.PUBLICNAME);
         select.addItem(DBMaps.FolderTree.SHAREPASS);
+        
+        select.addItem(DBMaps.FolderTree.COSTPERUSE);
+        select.addItem(DBMaps.FolderTree.SEARCHABLE);
+        
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBMaps.FolderTree.FOLDERID, "=", folderid));
         sql.addClause(select);
@@ -80,8 +149,10 @@ public class QueryMaps1 extends QueryMapTabs {
             folder.projectid = rs.getLong(DBMaps.FolderTree.PROJECTID);
             folder.parentid = rs.getLong(DBMaps.FolderTree.PARENTFOLDER);
             folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
-            folder.shareid = rs.getString(DBMaps.FolderTree.SHAREID);
+            folder.publicname = rs.getString(DBMaps.FolderTree.PUBLICNAME);
             folder.sharepass = rs.getString(DBMaps.FolderTree.SHAREPASS);
+            folder.costperuse = rs.getInt(DBMaps.FolderTree.COSTPERUSE);
+            folder.searcheable = rs.getInt(DBMaps.FolderTree.SEARCHABLE);
             return folder;
         }
         catch (SQLException e) {
@@ -163,9 +234,9 @@ public class QueryMaps1 extends QueryMapTabs {
         select.addItem(DBMaps.FolderTree.PROJECTID);
         select.addItem(DBMaps.FolderTree.PARENTFOLDER);
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
-        select.addItem(DBMaps.FolderTree.SHAREID);
+        select.addItem(DBMaps.FolderTree.PUBLICNAME);
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBMaps.FolderTree.SHAREID, "LIKE", "%" + searchkey + "%"));
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.PUBLICNAME, "LIKE", "%" + searchkey + "%"));
         sql.addClause(select);
         sql.addClause(whr);
         //-------------------------------------------------------
@@ -184,7 +255,7 @@ public class QueryMaps1 extends QueryMapTabs {
                 folder.projectid = rs.getLong(DBMaps.FolderTree.PROJECTID);
                 folder.parentid = rs.getLong(DBMaps.FolderTree.PARENTFOLDER);
                 folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
-                folder.shareid = rs.getString(DBMaps.FolderTree.SHAREID);
+                folder.publicname = rs.getString(DBMaps.FolderTree.PUBLICNAME);
                 records.add(folder);
             }
             return records.toArray(new MapFolder[0]);

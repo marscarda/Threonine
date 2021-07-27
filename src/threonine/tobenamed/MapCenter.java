@@ -4,7 +4,6 @@ import methionine.AppException;
 import methionine.Celaeno;
 import methionine.project.ProjectLambda;
 import threonine.map.MapFolder;
-import threonine.map.MapObject;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
 import threonine.map.PointAdd;
@@ -25,7 +24,7 @@ public class MapCenter {
      */
     public void createFolder (MapFolder folder, long userid) throws AppException, Exception {
         projectlambda.checkAccess(folder.projectID(), userid, 2);
-        if (folder.shareID().length() == 0)
+        if (folder.publicName().length() == 0)
             throw new AppException("Share ID cannot be empty", AppException.INVALIDDATASUBMITED);
         if (folder.sharePass().length() == 0)
             folder.setSharePass(Celaeno.randomString(8));
@@ -118,6 +117,33 @@ public class MapCenter {
         //------------------------------------------------------------------
         return mapslambda.getMapRecords(folderid);
         //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    public void updateFolderAttribute (long folderid, UpdateMapFolderAttr updateattr, long userid) throws AppException, Exception {
+        MapFolder folder = mapslambda.getMapFolder(folderid);
+        projectlambda.checkAccess(folder.projectID(), userid, 3);
+        switch (updateattr.attrib) {
+            //--------------------------------------------------
+            case UpdateMapFolderAttr.PUBNAME:
+                mapslambda.updateMapFolderPublicName(folderid, updateattr.publicname);
+                updateattr.sharepass = folder.sharePass();
+                updateattr.costperuse = folder.costPerUse();
+                updateattr.searchable = folder.isSearchableInt();
+                break;
+            //--------------------------------------------------
+            case UpdateMapFolderAttr.SEARCHABLE:
+                mapslambda.updateSearchable(folderid, updateattr.searchable);
+                updateattr.publicname = folder.publicName();
+                updateattr.sharepass = folder.sharePass();
+                updateattr.costperuse = folder.costPerUse();
+                break;
+            //--------------------------------------------------
+        }
+        
+        
+        
+        
+        
     }
     //**********************************************************************
 }

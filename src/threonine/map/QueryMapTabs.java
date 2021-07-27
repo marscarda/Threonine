@@ -35,8 +35,10 @@ public class QueryMapTabs extends Alcyone {
         create.addField(DBMaps.FolderTree.PROJECTID, "BIGINT NOT NULL");
         create.addField(DBMaps.FolderTree.PARENTFOLDER, "BIGINT NOT NULL");
         create.addField(DBMaps.FolderTree.FOLDERNAME, "VARCHAR (100) NOT NULL");
-        create.addField(DBMaps.FolderTree.SHAREID, "VARCHAR (100) NOT NULL");
+        create.addField(DBMaps.FolderTree.PUBLICNAME, "VARCHAR (100) NOT NULL");
         create.addField(DBMaps.FolderTree.SHAREPASS, "VARCHAR (100) NOT NULL");
+        create.addField(DBMaps.FolderTree.COSTPERUSE, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBMaps.FolderTree.SEARCHABLE, "INTEGER NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();

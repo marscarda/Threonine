@@ -8,8 +8,10 @@ public class DBMaps {
         static final String PROJECTID = "projectid";
         static final String PARENTFOLDER = "parentfolder";
         static final String FOLDERNAME = "foldername";
-        static final String SHAREID = "shareid";
+        static final String PUBLICNAME = "publicname";
         static final String SHAREPASS = "sharepass";
+        static final String COSTPERUSE = "costperuse";
+        static final String SEARCHABLE = "searchable";
     }
     //**********************************************************************
     public static class FolderShare {

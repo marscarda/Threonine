@@ -6,14 +6,16 @@ public class MapFolder {
     long parentid = 0;
     long projectid = 0;
     String name = null;
-    String shareid = null;
+    String publicname = null;
     String sharepass = null;
+    int costperuse = 0;
+    int searcheable = 0;
     boolean valid = false;
     //======================================================================
     public void setParentID (long parentid) { this.parentid = parentid; }
     public void setProjectID (long projectid) { this.projectid = projectid; }
     public void setName (String name) { this.name = name; }
-    public void setShareName (String sharename) { this.shareid = sharename; }
+    public void setPublicName (String publicname) { this.publicname = publicname; }
     public void setSharePass (String sharepass) { this.sharepass = sharepass; }
     //======================================================================
     public long getID () { return folderid; }
@@ -23,14 +25,17 @@ public class MapFolder {
         if (name == null) return "";
         return name;
     }
-    public String shareID () {
-        if (shareid == null) return "";
-        return shareid;
+    public String publicName () {
+        if (publicname == null) return "";
+        return publicname;
     }
     public String sharePass () {
         if (sharepass == null) return "";
         return sharepass;
     }
+    public int costPerUse () { return costperuse; }
+    public int isSearchableInt () { return searcheable; }
+    public boolean isSearcheable () { return searcheable != 0; }
     public void setValid() { valid = valid; }
     //======================================================================
     public boolean isRoot () { return folderid == 0; }

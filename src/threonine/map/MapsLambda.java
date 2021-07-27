@@ -34,7 +34,7 @@ public class MapsLambda extends QueryMaps2 {
                     throw new AppException("Folder Name already exists", AppException.IDENTIFIERALREADYEXISTS);
         }
         //------------------------------------------------------------------
-        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.SHAREID, folder.shareid) != 0)
+        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, folder.publicname) != 0)
             throw new AppException("Share ID name already used", AppException.IDENTIFIERALREADYEXISTS);
         //------------------------------------------------------------------
         while (true) {
@@ -46,6 +46,30 @@ public class MapsLambda extends QueryMaps2 {
         this.releaseExclusiveTableAccess();
         //--------------------------------------------------------------
     }
+    //**********************************************************************
+    @Override
+    public void updateMapFolderPublicName (long folderid, String value) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        super.updateMapFolderPublicName(folderid, value);
+        //------------------------------------------------------------------
+    }
+    //======================================================================
+    public void updateSearchable (long folderid, int value) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        super.updateMapFolderSearchable(folderid, value);
+        //------------------------------------------------------------------
+    }
+    //======================================================================
+    
+    
+    
+    
     //**********************************************************************
     /**
      * Returns a map folder given its ID.
