@@ -25,7 +25,7 @@ public class MapReaderGraphic {
         //------------------------------------------------------------------
         if (folderid == 0) return new MapRecordGraphic[0]; //This prevents the exception of No Project Selected.
         MapFolder folder = mapslambda.getMapFolder(folderid);
-        projectlambda.checkAccess(folder.projectID(), userid, 1);
+        //projectlambda.checkAccess(folder.projectID(), userid, 1);
         //------------------------------------------------------------------
         MapRecord[] records = mapslambda.getMapRecords(folderid);
         if (records.length == 0) return new MapRecordGraphic[0];
