@@ -143,7 +143,7 @@ public class MapsLambda extends QueryMaps2 {
      * @return
      * @throws Exception 
      */
-    public MapFolder[] searchFoldersByShareID (String searchkey) throws Exception {
+    public MapFolder[] searchFolders (String searchkey) throws Exception {
         //------------------------------------------------------------------
         connection = electra.slaveConnection();
         setDataBase();

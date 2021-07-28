@@ -2,6 +2,9 @@ package threonine.tobenamed;
 //**************************************************************************
 import methionine.AppException;
 import methionine.Celaeno;
+import methionine.auth.AuthLamda;
+import methionine.auth.User;
+import methionine.project.Project;
 import methionine.project.ProjectLambda;
 import threonine.map.MapFolder;
 import threonine.map.MapRecord;
@@ -10,8 +13,10 @@ import threonine.map.PointAdd;
 //**************************************************************************
 public class MapCenter {
     //**********************************************************************
+    AuthLamda authlambda = null;
     ProjectLambda projectlambda = null;
     MapsLambda mapslambda = null;
+    public void setAuthLambda (AuthLamda authlambda) { this.authlambda = authlambda; }
     public void setProjectLambda (ProjectLambda projectlambda) { this.projectlambda = projectlambda; }
     public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
     //**********************************************************************
@@ -158,6 +163,23 @@ public class MapCenter {
         
         
         
+    }
+    //**********************************************************************
+    public MapFolder[] searchFolders (String searchkey) throws Exception {
+        //-------------------------------------------------
+        Project project;
+        User user;
+        //-------------------------------------------------
+        MapFolder[] folders = mapslambda.searchFolders(searchkey);
+        for (MapFolder folder : folders) {
+            project = projectlambda.getProject(folder.projectID(), 0);
+            user = authlambda.getUser(project.getOwner(), false);
+            folder.setUserID(user.userID());
+            folder.setUserName(user.loginName());
+        }
+        //-------------------------------------------------
+        return folders;
+        //-------------------------------------------------
     }
     //**********************************************************************
 }

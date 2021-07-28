@@ -292,6 +292,7 @@ public class QueryMaps1 extends QueryMapTabs {
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
         select.addItem(DBMaps.FolderTree.PUBLICNAME);
         SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.SEARCHABLE, "!=", 0));
         whr.addCondition(new SQLCondition(DBMaps.FolderTree.PUBLICNAME, "LIKE", "%" + searchkey + "%"));
         sql.addClause(select);
         sql.addClause(whr);

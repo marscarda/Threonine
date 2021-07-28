@@ -11,6 +11,9 @@ public class MapFolder {
     int costperuse = 0;
     int searcheable = 0;
     boolean valid = false;
+    //----------------------------------------------------------------------
+    long userid = 0;
+    String username = null;
     //======================================================================
     public void setParentID (long parentid) { this.parentid = parentid; }
     public void setProjectID (long projectid) { this.projectid = projectid; }
@@ -36,10 +39,30 @@ public class MapFolder {
     public int costPerUse () { return costperuse; }
     public int isSearchableInt () { return searcheable; }
     public boolean isSearcheable () { return searcheable != 0; }
+    //======================================================================
+    //This methods are not necesarily called from all methods tha deal with it
+    //This fields are not present in folders table.
+    public void setUserID (long userid) { this.userid = userid; }
+    public void setUserName (String username) { this.username = username; }
+    //======================================================================
     public void setValid() { valid = valid; }
     //======================================================================
     public boolean isRoot () { return folderid == 0; }
     public boolean isValid () { return valid; }
+    //======================================================================
+    /**
+     * Availability depends on the method that was called.
+     * @return 
+     */
+    public long userID () { return userid; }
+    /**
+     * Availability depends on the method that was called.
+     * @return 
+     */
+    public String userName () {
+        if (username == null) return "";
+        return username;
+    }
     //======================================================================
 }
 //**************************************************************************
