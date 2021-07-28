@@ -291,6 +291,7 @@ public class QueryMaps1 extends QueryMapTabs {
         select.addItem(DBMaps.FolderTree.PARENTFOLDER);
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
         select.addItem(DBMaps.FolderTree.PUBLICNAME);
+        select.addItem(DBMaps.FolderTree.COSTPERUSE);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBMaps.FolderTree.SEARCHABLE, "!=", 0));
         whr.addCondition(new SQLCondition(DBMaps.FolderTree.PUBLICNAME, "LIKE", "%" + searchkey + "%"));
@@ -313,6 +314,7 @@ public class QueryMaps1 extends QueryMapTabs {
                 folder.parentid = rs.getLong(DBMaps.FolderTree.PARENTFOLDER);
                 folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
                 folder.publicname = rs.getString(DBMaps.FolderTree.PUBLICNAME);
+                folder.costperuse = rs.getInt(DBMaps.FolderTree.COSTPERUSE);
                 records.add(folder);
             }
             return records.toArray(new MapFolder[0]);
