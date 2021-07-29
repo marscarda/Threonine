@@ -4,7 +4,7 @@ import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
 //**************************************************************************
-public class MapsLambda extends QueryMaps2 {
+public class MapsLambda extends QueryMaps3 {
     //**********************************************************************
     /**
      * Creates a new map folder
@@ -97,6 +97,21 @@ public class MapsLambda extends QueryMaps2 {
     }
     //**********************************************************************
     /**
+     * 
+     * @param usage
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void createFolderUsage (FolderUsage usage) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        this.insertFolderUsage(usage);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
      * Returns a map folder given its ID.
      * @param folderid
      * @return
@@ -118,6 +133,15 @@ public class MapsLambda extends QueryMaps2 {
         //------------------------------------------------------------------
         folder = this.selectMapFolder(folderid);
         return folder;
+        //------------------------------------------------------------------
+    }
+    //======================================================================
+    public MapFolder getMapFolder (String publicname) throws AppException, Exception {
+        //------------------------------------------------------------------
+        connection = electra.slaveConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        return this.selectMapFolder(publicname);
         //------------------------------------------------------------------
     }
     //**********************************************************************

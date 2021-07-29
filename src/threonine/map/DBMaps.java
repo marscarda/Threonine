@@ -14,10 +14,11 @@ public class DBMaps {
         static final String SEARCHABLE = "searchable";
     }
     //**********************************************************************
-    public static class FolderShare {
-        static final String TABLE = "foldershare";
+    public static class FolderUse {
+        static final String TABLE = "folderuse";
         static final String PROJECTID = "projectid";
         static final String FOLDERID = "folderid";
+        static final String COSTPERUSE = "costperuse";
     }
     //**********************************************************************
     public static class MapRecords {

@@ -50,6 +50,12 @@ public class MapFolder {
     public boolean isRoot () { return folderid == 0; }
     public boolean isValid () { return valid; }
     //======================================================================
+    public boolean checkPassword (String pass) {
+        if (sharepass == null) return false;
+        if (sharepass.length() == 0) return false;
+        return sharepass.compareTo(pass) == 0;
+    }
+    //======================================================================
     /**
      * Availability depends on the method that was called.
      * @return 

@@ -181,10 +181,8 @@ public class QueryMaps1 extends QueryMapTabs {
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
         select.addItem(DBMaps.FolderTree.PUBLICNAME);
         select.addItem(DBMaps.FolderTree.SHAREPASS);
-        
         select.addItem(DBMaps.FolderTree.COSTPERUSE);
         select.addItem(DBMaps.FolderTree.SEARCHABLE);
-        
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBMaps.FolderTree.FOLDERID, "=", folderid));
         sql.addClause(select);
@@ -212,7 +210,62 @@ public class QueryMaps1 extends QueryMapTabs {
             return folder;
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to select map folders. Code: hrnfgsa \n");
+            StringBuilder msg = new StringBuilder("Failed to select map folder by ID. Code: hrnfgsa \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+    }
+    //**********************************************************************
+    /**
+     * Selects and returns a map folder given its Public name.
+     * @param publicname
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    protected MapFolder selectMapFolder (String publicname) throws AppException, Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.FolderTree.TABLE);
+        select.addItem(DBMaps.FolderTree.FOLDERID);
+        select.addItem(DBMaps.FolderTree.PROJECTID);
+        select.addItem(DBMaps.FolderTree.PARENTFOLDER);
+        select.addItem(DBMaps.FolderTree.FOLDERNAME);
+        select.addItem(DBMaps.FolderTree.PUBLICNAME);
+        select.addItem(DBMaps.FolderTree.SHAREPASS);
+        select.addItem(DBMaps.FolderTree.COSTPERUSE);
+        select.addItem(DBMaps.FolderTree.SEARCHABLE);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.PUBLICNAME, "=", publicname));
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            if (!rs.next())
+                throw new AppException("Folder not found", AppException.OBJECTNOTFOUND);
+            MapFolder folder;
+            folder = new MapFolder();
+            folder.folderid = rs.getLong(DBMaps.FolderTree.FOLDERID);
+            folder.projectid = rs.getLong(DBMaps.FolderTree.PROJECTID);
+            folder.parentid = rs.getLong(DBMaps.FolderTree.PARENTFOLDER);
+            folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
+            folder.publicname = rs.getString(DBMaps.FolderTree.PUBLICNAME);
+            folder.sharepass = rs.getString(DBMaps.FolderTree.SHAREPASS);
+            folder.costperuse = rs.getInt(DBMaps.FolderTree.COSTPERUSE);
+            folder.searcheable = rs.getInt(DBMaps.FolderTree.SEARCHABLE);
+            return folder;
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map folder by public name. Code: hrkjesa \n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }

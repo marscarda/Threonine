@@ -6,6 +6,7 @@ import methionine.auth.AuthLamda;
 import methionine.auth.User;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
+import threonine.map.FolderUsage;
 import threonine.map.MapFolder;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
@@ -180,6 +181,58 @@ public class MapCenter {
         //-------------------------------------------------
         return folders;
         //-------------------------------------------------
+    }
+    //**********************************************************************
+    public void createFolderUsage (FolderUsage usage, long userid) throws AppException, Exception {
+        
+        System.out.println("Map center A");
+
+        //------------------------------------------------------------------
+        //We check the user has access to the project 
+        //where the folder is being added
+        projectlambda.checkAccess(usage.projectID(), userid, 3);
+        
+        System.out.println("Map center B");
+        //------------------------------------------------------------------
+        //We try to find the folder somehow.
+        MapFolder folder = null;
+        //We first try by ID.
+        if (usage.folderID() != 0)
+            folder = mapslambda.getMapFolder(usage.folderID());
+        //If we didn't get it by ID. We try by public name
+        if (folder == null) {
+            System.out.println("By name");
+            folder = mapslambda.getMapFolder(usage.publicName());
+        }
+
+        System.out.println("Map center C");
+        //------------------------------------------------------------------
+        //We make sure we add the usage Folder ID.
+        usage.setFolderID(folder.getID());//We make sure we have the ID.        
+        //------------------------------------------------------------------
+        //If we received a Folder Password We try to add it
+        if (usage.hasPassword()) {
+            if (folder.checkPassword(usage.sharePassword())) {
+                mapslambda.createFolderUsage(usage);
+                return;
+            }
+            throw new AppException("Invalid Share Password for this folder", AppException.UNAUTHORIZED);
+        }
+        
+        System.out.println("Map center C");
+        //------------------------------------------------------------------
+        //If folder has no established usage cost. We reject it.
+        if (folder.costPerUse() == 0) 
+            throw new AppException("Not authorized to use this map objects folder", AppException.UNAUTHORIZED);
+        
+        System.out.println("Map center D");
+        //------------------------------------------------------------------
+        //We Add the folder with usage cost.
+        usage.setCost(folder.costPerUse());
+        mapslambda.createFolderUsage(usage);
+        //------------------------------------------------------------------
+        
+        System.out.println("Map center E");
     }
     //**********************************************************************
 }
