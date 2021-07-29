@@ -20,6 +20,8 @@ public class MapFolder {
     public void setName (String name) { this.name = name; }
     public void setPublicName (String publicname) { this.publicname = publicname; }
     public void setSharePass (String sharepass) { this.sharepass = sharepass; }
+    //public void setUserID (long userid) { this.userid = userid; }
+    //public void setUserName (String username) { this.username = username; }
     //======================================================================
     public long getID () { return folderid; }
     public long getParentID () { return parentid; }

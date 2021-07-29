@@ -184,7 +184,7 @@ public class MapCenter {
         //-------------------------------------------------
     }
     //**********************************************************************
-    public void createFolderUsage (FolderUsage usage, long userid) throws AppException, Exception {
+    public MapFolder createFolderUsage (FolderUsage usage, long userid) throws AppException, Exception {
         //------------------------------------------------------------------
         //We check the user has access to the project 
         //where the folder is being added
@@ -205,8 +205,13 @@ public class MapCenter {
         //If we received a Folder Password We try to add it
         if (usage.hasPassword()) {
             if (folder.checkPassword(usage.sharePassword())) {
+                //We find out the user owner of the folder
+                Project project = projectlambda.getProject(folder.projectID(), 0);
+                User user = authlambda.getUser(project.getOwner(), false);
+                folder.setUserID(user.userID());
+                folder.setUserName(user.loginName());
                 mapslambda.createFolderUsage(usage);
-                return;
+                return folder;
             }
             throw new AppException("Invalid Share Password for this folder", AppException.UNAUTHORIZED);
         }
@@ -215,11 +220,39 @@ public class MapCenter {
         if (folder.costPerUse() == 0) 
             throw new AppException("Not authorized to use this map objects folder", AppException.UNAUTHORIZED);
         //------------------------------------------------------------------
+        //We find out the user owner of the folder
+        Project project = projectlambda.getProject(folder.projectID(), 0);
+        User user = authlambda.getUser(project.getOwner(), false);
+        folder.setUserID(user.userID());
+        folder.setUserName(user.loginName());
+        //------------------------------------------------------------------
         //We Add the folder with usage cost.
         usage.setCost(folder.costPerUse());
         mapslambda.createFolderUsage(usage);
         //------------------------------------------------------------------
+        return folder;
+        //------------------------------------------------------------------
     }
+    //**********************************************************************
+    public MapFolder[] getUsedFoldersInProject (long projectid, long userid) throws Exception {
+        //-------------------------------------------------
+        //We check the user has access to the project
+        projectlambda.checkAccess(projectid, userid, 1);
+        //-------------------------------------------------
+        Project project;
+        User user;
+        //-------------------------------------------------
+        MapFolder[] folders = mapslambda.getFolderUsed(projectid);
+        for (MapFolder folder : folders) {
+            project = projectlambda.getProject(folder.projectID(), 0);
+            user = authlambda.getUser(project.getOwner(), false);
+            folder.setUserID(user.userID());
+            folder.setUserName(user.loginName());
+        }
+        //-------------------------------------------------
+        return folders;
+        //-------------------------------------------------
+    } 
     //**********************************************************************
 }
 //**************************************************************************
