@@ -32,8 +32,6 @@ public class MapCenter {
         projectlambda.checkAccess(folder.projectID(), userid, 2);
         if (folder.publicName().length() == 0)
             throw new AppException("Share ID cannot be empty", AppException.INVALIDDATASUBMITED);
-        if (folder.sharePass().length() == 0)
-            folder.setSharePass(Celaeno.randomString(8));
         mapslambda.createFolder(folder);
     }
     //**********************************************************************
@@ -131,6 +129,10 @@ public class MapCenter {
         switch (updateattr.attrib) {
             //--------------------------------------------------
             case UpdateMapFolderAttr.PUBNAME:
+                if (updateattr.publicname == null)
+                    throw new AppException("Public name cannot be empty", AppException.INVALIDDATASUBMITED);
+                if (updateattr.publicname.length() == 0)
+                    throw new AppException("Public name cannot be empty", AppException.INVALIDDATASUBMITED);
                 mapslambda.updateMapFolderPublicName(folderid, updateattr.publicname);
                 updateattr.sharepass = folder.sharePass();
                 updateattr.costperuse = folder.costPerUse();
@@ -146,9 +148,13 @@ public class MapCenter {
             //--------------------------------------------------
             case UpdateMapFolderAttr.COSTPERUSE:
                 mapslambda.updateMapFolderCostPerUse(folderid, updateattr.costperuse);
+                if (updateattr.costperuse != 0) {
+                    updateattr.searchable = 1;
+                    mapslambda.updateSearchable(folderid, updateattr.searchable);
+                }
+                else updateattr.searchable = folder.isSearchableInt();
                 updateattr.publicname = folder.publicName();
                 updateattr.sharepass = folder.sharePass();
-                updateattr.searchable = folder.isSearchableInt();
                 break;
             //--------------------------------------------------
             case UpdateMapFolderAttr.SEARCHABLE:
@@ -159,11 +165,6 @@ public class MapCenter {
                 break;
             //--------------------------------------------------
         }
-        
-        
-        
-        
-        
     }
     //**********************************************************************
     public MapFolder[] searchFolders (String searchkey) throws Exception {
@@ -184,15 +185,10 @@ public class MapCenter {
     }
     //**********************************************************************
     public void createFolderUsage (FolderUsage usage, long userid) throws AppException, Exception {
-        
-        System.out.println("Map center A");
-
         //------------------------------------------------------------------
         //We check the user has access to the project 
         //where the folder is being added
         projectlambda.checkAccess(usage.projectID(), userid, 3);
-        
-        System.out.println("Map center B");
         //------------------------------------------------------------------
         //We try to find the folder somehow.
         MapFolder folder = null;
@@ -200,12 +196,8 @@ public class MapCenter {
         if (usage.folderID() != 0)
             folder = mapslambda.getMapFolder(usage.folderID());
         //If we didn't get it by ID. We try by public name
-        if (folder == null) {
-            System.out.println("By name");
+        if (folder == null)
             folder = mapslambda.getMapFolder(usage.publicName());
-        }
-
-        System.out.println("Map center C");
         //------------------------------------------------------------------
         //We make sure we add the usage Folder ID.
         usage.setFolderID(folder.getID());//We make sure we have the ID.        
@@ -218,21 +210,15 @@ public class MapCenter {
             }
             throw new AppException("Invalid Share Password for this folder", AppException.UNAUTHORIZED);
         }
-        
-        System.out.println("Map center C");
         //------------------------------------------------------------------
         //If folder has no established usage cost. We reject it.
         if (folder.costPerUse() == 0) 
             throw new AppException("Not authorized to use this map objects folder", AppException.UNAUTHORIZED);
-        
-        System.out.println("Map center D");
         //------------------------------------------------------------------
         //We Add the folder with usage cost.
         usage.setCost(folder.costPerUse());
         mapslambda.createFolderUsage(usage);
         //------------------------------------------------------------------
-        
-        System.out.println("Map center E");
     }
     //**********************************************************************
 }

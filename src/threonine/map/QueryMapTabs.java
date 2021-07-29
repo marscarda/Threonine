@@ -20,7 +20,7 @@ public class QueryMapTabs extends Alcyone {
         }
         //===================================================================
         if (!checkTableExists(DBMaps.FolderTree.TABLE, tables)) createFolderTree();
-        if (!checkTableExists(DBMaps.FolderUse.TABLE, tables)) createFolderShares();
+        if (!checkTableExists(DBMaps.FolderUsage.TABLE, tables)) createFolderShares();
         if (!checkTableExists(DBMaps.MapRecords.TABLE, tables)) createMapRecords();
         if (!checkTableExists(DBMaps.Objects.TABLE, tables)) createMapObjects();
         if (!checkTableExists(DBMaps.LocationPoints.TABLE, tables)) createLocationPoints();
@@ -36,7 +36,7 @@ public class QueryMapTabs extends Alcyone {
         create.addField(DBMaps.FolderTree.PARENTFOLDER, "BIGINT NOT NULL");
         create.addField(DBMaps.FolderTree.FOLDERNAME, "VARCHAR (100) NOT NULL");
         create.addField(DBMaps.FolderTree.PUBLICNAME, "VARCHAR (100) NOT NULL");
-        create.addField(DBMaps.FolderTree.SHAREPASS, "VARCHAR (100) NOT NULL");
+        create.addField(DBMaps.FolderTree.SHAREPASS, "VARCHAR (100) NULL DEFAULT NULL");
         create.addField(DBMaps.FolderTree.COSTPERUSE, "INTEGER NOT NULL DEFAULT 0");
         create.addField(DBMaps.FolderTree.SEARCHABLE, "INTEGER NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
@@ -61,11 +61,11 @@ public class QueryMapTabs extends Alcyone {
     //***********************************************************************
     private void createFolderShares () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBMaps.FolderUse.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBMaps.FolderUsage.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBMaps.FolderUse.PROJECTID, "BIGINT NOT NULL");
-        create.addField(DBMaps.FolderUse.FOLDERID, "BIGINT NOT NULL");
-        create.addField(DBMaps.FolderUse.COSTPERUSE, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBMaps.FolderUsage.PROJECTID, "BIGINT NOT NULL");
+        create.addField(DBMaps.FolderUsage.FOLDERID, "BIGINT NOT NULL");
+        create.addField(DBMaps.FolderUsage.COSTPERUSE, "INTEGER NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -75,7 +75,7 @@ public class QueryMapTabs extends Alcyone {
         }
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBMaps.FolderUse.TABLE);
+            err.append(DBMaps.FolderUsage.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());

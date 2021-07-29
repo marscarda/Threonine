@@ -14,8 +14,8 @@ public class DBMaps {
         static final String SEARCHABLE = "searchable";
     }
     //**********************************************************************
-    public static class FolderUse {
-        static final String TABLE = "folderuse";
+    public static class FolderUsage {
+        static final String TABLE = "folderusage";
         static final String PROJECTID = "projectid";
         static final String FOLDERID = "folderid";
         static final String COSTPERUSE = "costperuse";

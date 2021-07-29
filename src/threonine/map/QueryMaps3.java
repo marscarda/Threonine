@@ -12,10 +12,10 @@ public class QueryMaps3 extends QueryMaps2 {
      * @throws Exception 
      */
     protected void insertFolderUsage (FolderUsage usage) throws Exception {
-        SQLInsert insert = new SQLInsert(DBMaps.FolderUse.TABLE);
-        insert.addValue(DBMaps.FolderUse.PROJECTID, usage.projectid);
-        insert.addValue(DBMaps.FolderUse.FOLDERID, usage.folderid);
-        insert.addValue(DBMaps.FolderUse.COSTPERUSE, usage.costperuse);
+        SQLInsert insert = new SQLInsert(DBMaps.FolderUsage.TABLE);
+        insert.addValue(DBMaps.FolderUsage.PROJECTID, usage.projectid);
+        insert.addValue(DBMaps.FolderUsage.FOLDERID, usage.folderid);
+        insert.addValue(DBMaps.FolderUsage.COSTPERUSE, usage.costperuse);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());

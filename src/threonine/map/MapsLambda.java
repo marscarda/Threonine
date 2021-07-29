@@ -17,9 +17,11 @@ public class MapsLambda extends QueryMaps3 {
         connection = electra.masterConnection();
         setDataBase();
         //------------------------------------------------------------------
+        this.setAutoCommit(0);
         SQLLockTables lock = new SQLLockTables();
         lock.setDataBase(databasename);
         lock.addTable(DBMaps.FolderTree.TABLE);
+        lock.addTable(DBMaps.FolderUsage.TABLE);
         this.getExclusiveTableAccess(lock);
         //------------------------------------------------------------------
         if (folder.parentid != 0) {
@@ -41,10 +43,16 @@ public class MapsLambda extends QueryMaps3 {
             folder.folderid = Celaeno.getUniqueID();
             if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERID, folder.folderid) == 0) break;
         }
-        //--------------------------------------------------------------
+        //------------------------------------------------------------------
+        FolderUsage usage = new FolderUsage();
+        usage.projectid = folder.projectid;
+        usage.folderid = folder.folderid;
+        //------------------------------------
         this.insertMapFolder(folder);
+        this.insertFolderUsage(usage);
+        this.commitTransaction();
         this.releaseExclusiveTableAccess();
-        //--------------------------------------------------------------
+        //------------------------------------------------------------------
     }
     //**********************************************************************
     @Override
@@ -107,8 +115,18 @@ public class MapsLambda extends QueryMaps3 {
         connection = electra.masterConnection();
         setDataBase();
         //------------------------------------------------------------------
+        SQLLockTables lock = new SQLLockTables();
+        lock.setDataBase(databasename);
+        lock.addTable(DBMaps.FolderUsage.TABLE);
+        this.getExclusiveTableAccess(lock);
+        //------------------------------------------------------------------
+        if (this.checkValueCount(DBMaps.FolderUsage.TABLE, DBMaps.FolderUsage.PROJECTID, usage.projectid, 
+                DBMaps.FolderUsage.FOLDERID, usage.folderid) != 0)
+            throw new AppException("The folder is already in the project", AppException.ALREADYADDED);
+        //------------------------------------------------------------------
         this.insertFolderUsage(usage);
         //------------------------------------------------------------------
+        this.releaseExclusiveTableAccess();
     }
     //**********************************************************************
     /**
