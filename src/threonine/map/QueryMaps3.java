@@ -116,7 +116,6 @@ public class QueryMaps3 extends QueryMaps2 {
         columnusage = new SQLColumn(DBMaps.FolderUsage.TABLE, DBMaps.FolderUsage.PROJECTID);
         condition = new SQLCondition(columnusage, "=", projectid);
         join.addCondition(condition);
-        join.addCondition(condition);
         //----------------------------------------------------------
         SQLOrderBy order = new SQLOrderBy();
         order.addColumn(DBMaps.FolderTree.PUBLICNAME);
@@ -144,7 +143,7 @@ public class QueryMaps3 extends QueryMaps2 {
             return records.toArray(new MapFolder[0]);
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to used folders used in project jrvjuys\n");
+            StringBuilder msg = new StringBuilder("Failed to select folders used in project jrvjuys\n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
@@ -154,99 +153,78 @@ public class QueryMaps3 extends QueryMaps2 {
         }
     }
     //**********************************************************************
-    
-    
-    
-    
-    
-    
-/*
-        //----------------------------------------------------------------------
-        SQLMainText sql = new SQLMainText();
-        SQLSelect select = new SQLSelect(DBRoads.TABLE);
-        select.addItem(DBRoads.IDROAD);
-        select.addItem(DBRoads.LONFROM);
-        select.addItem(DBRoads.LATTO);
-        select.addItem(DBRoads.LONTO);
-        sql.addClause(select);
-        //----------------------------------------------------------------------
-        SQLInnerJoin join = new SQLInnerJoin(DBRegionRoadUnions.TABLE);
-        SQLColumn columnroad, columnunion;
+    /**
+     * Returns records belonging to folders that are in use in a given project
+     * and the name contains de given searchkey.
+     * @param projectid
+     * @param searchkey
+     * @return
+     * @throws Exception 
+     */
+    protected MapRecord[] selectRecordsByKey (long projectid, String searchkey) throws Exception {
+        //----------------------------------------------------------
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapRecords.TABLE);
+        select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.RECORDID);
+        select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.NAME);
+        select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.EXTRADATA);
+        select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.ADMINDIV);
+        select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.FOLDERID);
+        select.addItem(DBMaps.FolderUsage.TABLE, DBMaps.FolderUsage.COSTPERUSE);
+        //-------------------------
+        SQLInnerJoin join = new SQLInnerJoin(DBMaps.FolderUsage.TABLE);
+        SQLColumn columnrecord, columnusage;
         SQLCondition condition;
-        //---------------------------
-        columnroad = new SQLColumn(DBRoads.TABLE, DBRoads.IDROAD);
-        columnunion = new SQLColumn(DBRegionRoadUnions.TABLE, DBRegionRoadUnions.IDROAD);
-        condition = new SQLCondition(columnroad, "=", columnunion);
+        //-------------------------
+        columnrecord = new SQLColumn(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.FOLDERID);
+        columnusage = new SQLColumn(DBMaps.FolderUsage.TABLE, DBMaps.FolderUsage.FOLDERID);
+        condition = new SQLCondition(columnrecord, "=", columnusage);
         join.addCondition(condition);
-        //---------------------------
-        columnroad = new SQLColumn(DBRoads.TABLE, DBRoads.IDITEM);
-        columnunion = new SQLColumn(DBRegionRoadUnions.TABLE, DBRegionRoadUnions.IDITEM);
-        condition = new SQLCondition(columnroad, "=", columnunion);
+        //-------------------------
+        columnusage = new SQLColumn(DBMaps.FolderUsage.TABLE, DBMaps.FolderUsage.PROJECTID);
+        condition = new SQLCondition(columnusage, "=", projectid);
         join.addCondition(condition);
-        //---------------------------
-        columnroad = new SQLColumn(DBRoads.TABLE, DBRoads.DICTIONARYCODE);
-        condition = new SQLCondition(columnroad, "=", country);
+        //-------------------------
+        columnrecord = new SQLColumn(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.NAME);
+        condition = new SQLCondition(columnrecord, "LIKE", "%" + searchkey + "%");
         join.addCondition(condition);
-        //---------------------------
-        columnunion = new SQLColumn(DBRegionRoadUnions.TABLE, DBRegionRoadUnions.COUNTRYCODE);
-        condition = new SQLCondition(columnunion, "=", country);
-        join.addCondition(condition);
-        //---------------------------
-        columnunion = new SQLColumn(DBRegionRoadUnions.TABLE, DBRegionRoadUnions.PARENTIDCODE);
-        condition = new SQLCondition(columnunion, "=", parent);
-        join.addCondition(condition);
-        //---------------------------
-        columnunion = new SQLColumn(DBRegionRoadUnions.TABLE, DBRegionRoadUnions.IDROAD);
-        condition = new SQLCondition(columnunion, "=", idroad);
-        join.addCondition(condition);
-        //---------------------------
+        //----------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBMaps.FolderTree.PUBLICNAME);
+        //----------------------------------------------------------
+        sql.addClause(select);
         sql.addClause(join);
-        //----------------------------------------------------------------------
+        sql.addClause(order);
+        //----------------------------------------------------------
         PreparedStatement st = null;
         ResultSet rs = null;
-        try
-        {
-            st = this.getDBConnection().prepareStatement(sql.getText());
+        try {
+            st = connection.prepareStatement(sql.getText());
             sql.setParameters(st, 1);
-            st.execute(this.getUsedbText());
             rs = st.executeQuery();
-            List<RoadItem> items = new ArrayList<>();
-            RoadItem road;
+            List<MapRecord> records = new ArrayList<>();
+            MapRecord record;
             while (rs.next()) {
-                road = new RoadItem();
-                road.idroad = rs.getString(DBRoads.IDROAD);
-                road.iditem = rs.getString(DBRoads.IDITEM);
-                road.name = rs.getString(DBRoads.NAME);
-                road.setSide(rs.getString(DBRoads.SIDE));
-                road.setAllowEven(rs.getString(DBRoads.ALLOWEVEN));
-                road.setAllowOdd(rs.getString(DBRoads.ALLOWODD));
-                road.numberfrom = rs.getInt(DBRoads.NUMBERFROM);
-                road.numberto = rs.getInt(DBRoads.NUMBERTO);
-                road.latfrom = rs.getFloat(DBRoads.LATFROM);
-                road.lonfrom = rs.getFloat(DBRoads.LONFROM);
-                road.latto = rs.getFloat(DBRoads.LATTO);
-                road.lonto = rs.getFloat(DBRoads.LONTO);
-                items.add(road);
+                record = new MapRecord();
+                record.recordid = rs.getLong(1);
+                record.name = rs.getString(2);
+                record.extradata = rs.getString(3);
+                record.admindiv = rs.getString(4);
+                record.folderid = rs.getLong(5);
+                records.add(record);
             }
-            return items.toArray(new RoadItem[0]);
+            return records.toArray(new MapRecord[0]);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to used folders used in project jrvjuys\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
     }
-*/
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     //**********************************************************************
 }
 //**************************************************************************
