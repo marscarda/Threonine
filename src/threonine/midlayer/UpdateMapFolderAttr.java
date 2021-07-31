@@ -1,4 +1,4 @@
-package threonine.tobenamed;
+package threonine.midlayer;
 //***************************************************************************
 public class UpdateMapFolderAttr {
     //**********************************************************
