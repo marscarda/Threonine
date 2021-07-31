@@ -31,8 +31,14 @@ public class UniverseCenter {
         universelambda.createUniverse(universe);
     }
     //**********************************************************************
+    public Universe getUniverse (long universeid, long userid) throws AppException, Exception {
+        Universe universe = universelambda.getUniverse(universeid);
+        projectlambda.checkAccess(universe.projectID(), userid, 1);
+        return universe;
+    }
+    //**********************************************************************
     public Universe[] getUniversesByProject (long projectid, long userid) throws AppException, Exception {
-        
+        projectlambda.checkAccess(projectid, userid, 1);
         return universelambda.getUniverses(projectid);
     }
     //**********************************************************************
