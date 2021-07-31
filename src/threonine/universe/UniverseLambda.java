@@ -23,26 +23,39 @@ public class UniverseLambda extends MapQueryInterface {
         connection = electra.masterConnection();
         setDataBase();
         //-------------------------------------------------------------------
+        this.setAutoCommit(0);
         SQLLockTables lock = new SQLLockTables();
         lock.setDataBase(databasename);
         lock.addTable(DBUniverse.Universe.TABLE);
+        lock.addTable(DBUniverse.DBSubSets.TABLE);
         this.getExclusiveTableAccess(lock);
         //-------------------------------------------------------------------
+        //We create the universe in the database.
         while (true) {
             universe.univerid = Celaeno.getUniqueID();
             if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, universe.univerid) == 0) break;
         }
         //-------------------------------------------------------------------
+        //We now create the first subset.
+        SubSet subset = new SubSet();
+        subset.name = universe.name;
+        subset.description = universe.description;
+        subset.universeid = universe.univerid;
+        subset.weight = 1;
+        while (true) {
+            subset.subsetid = Celaeno.getUniqueID();
+            if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.SUBSETID, subset.subsetid) == 0) break;
+        }
+        //-------------------------------------------------------------------
         this.insertUniverse(universe);
+        this.insertSubSet(subset);
+        this.commitTransaction();
         this.releaseExclusiveTableAccess();
         //-------------------------------------------------------------------
         return universe.univerid;
         //-------------------------------------------------------------------
     }
     //**********************************************************************
-    
-    
-    
     /**
      * Returns a universe given its ID.
      * @param universeid
@@ -113,6 +126,7 @@ public class UniverseLambda extends MapQueryInterface {
     /**
      * Checks the user access to a given universe.
      * @param universeid
+     * @param projectid
      * @param owner
      * @return
      * @throws Exception 
@@ -148,7 +162,7 @@ public class UniverseLambda extends MapQueryInterface {
         SQLLockTables lock = new SQLLockTables();
         lock.setDataBase(databasename);
         lock.addTable(DBUniverse.Universe.TABLE);
-        lock.addTable(DBSubSets.TABLE);
+        lock.addTable(DBUniverse.DBSubSets.TABLE);
         this.getExclusiveTableAccess(lock);
         //-------------------------------------------------------------------
         if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, subset.universeid) == 0) {
@@ -157,14 +171,14 @@ public class UniverseLambda extends MapQueryInterface {
         }
         //-------------------------------------------------------------------
         if (subset.parentsubset == 0) {
-            if (checkValueCount(DBSubSets.TABLE, DBSubSets.UNIVERSEID, subset.universeid, DBSubSets.PARENTSUBSET, 0) != 0) {
+            if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.UNIVERSEID, subset.universeid, DBUniverse.DBSubSets.PARENTSUBSET, 0) != 0) {
             //if (checkValueCount(DBSubSets.TABLE, DBSubSets.PARENTSUBSET, 0) != 0) {
                 this.releaseExclusiveTableAccess();
                 throw new AppException("Root subset already exists", AppException.ROOTSUBSETALREADYEXISTS);
             }
         }
         else {
-            if (checkValueCount(DBSubSets.TABLE, DBSubSets.SUBSETID, subset.parentsubset) == 0) {
+            if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.SUBSETID, subset.parentsubset) == 0) {
                 this.releaseExclusiveTableAccess();
                 throw new AppException("Parent subset not found", AppException.SUBSETNOTFOUND);
             }
@@ -172,7 +186,7 @@ public class UniverseLambda extends MapQueryInterface {
         //-------------------------------------------------------------------
         while (true) {
             subset.subsetid = Celaeno.getUniqueID();
-            if (checkValueCount(DBSubSets.TABLE, DBSubSets.SUBSETID, subset.subsetid) == 0) break;
+            if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.SUBSETID, subset.subsetid) == 0) break;
         }
         //-------------------------------------------------------------------
         this.insertSubSet(subset);

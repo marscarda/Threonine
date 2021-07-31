@@ -18,11 +18,21 @@ public class UniverseCenter {
     public void setUniverseLambda (UniverseLambda universelambda) { this.universelambda = universelambda; }
     public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
     //**********************************************************************
-    public void createUniverse (Universe universe) throws AppException, Exception {
+    /**
+     * Creates a new Universe. 
+     * @param universe
+     * @param userid
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void createUniverse (Universe universe, long userid) throws AppException, Exception {
+        //We check the user thai is trying has write access to the project
+        projectlambda.checkAccess(universe.projectID(), userid, 2);
         universelambda.createUniverse(universe);
     }
     //**********************************************************************
     public Universe[] getUniversesByProject (long projectid, long userid) throws AppException, Exception {
+        
         return universelambda.getUniverses(projectid);
     }
     //**********************************************************************

@@ -20,7 +20,7 @@ public class QueryUniverseTabs extends Alcyone {
         }
         //===================================================================
         if (!checkTableExists(DBUniverse.Universe.TABLE, tables)) createUniverses();
-        if (!checkTableExists(DBSubSets.TABLE, tables)) createSubSets();
+        if (!checkTableExists(DBUniverse.DBSubSets.TABLE, tables)) createSubSets();
         if (!checkTableExists(DBUniverseUsers.TABLE, tables)) createUniverseUsers();
         if (!checkTableExists(DBMapRecords.TABLE, tables)) createMapRecords();
         if (!checkTableExists(DBMapObjects.TABLE, tables)) createMapObjects();
@@ -58,16 +58,16 @@ public class QueryUniverseTabs extends Alcyone {
     //***********************************************************************
     private void createSubSets () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBSubSets.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.DBSubSets.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBSubSets.SUBSETID, "BIGINT NOT NULL");
-        create.addField(DBSubSets.UNIVERSEID, "BIGINT NOT NULL");
-        create.addField(DBSubSets.PARENTSUBSET, "BIGINT NOT NULL");
-        create.addField(DBSubSets.NAME, "VARCHAR (50) NOT NULL");
-        create.addField(DBSubSets.DESCRIPTION, "VARCHAR (100) NULL");
-        create.addField(DBSubSets.POPULATION, "INTEGER NOT NULL DEFAULT 0");
-        create.addField(DBSubSets.WEIGHT, "INTEGER NOT NULL DEFAULT 0");
-        create.addField(DBSubSets.MAPRECORDID, "BIGINT NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.DBSubSets.SUBSETID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.DBSubSets.UNIVERSEID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.DBSubSets.PARENTSUBSET, "BIGINT NOT NULL");
+        create.addField(DBUniverse.DBSubSets.NAME, "VARCHAR (50) NOT NULL");
+        create.addField(DBUniverse.DBSubSets.DESCRIPTION, "VARCHAR (100) NULL");
+        create.addField(DBUniverse.DBSubSets.POPULATION, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.DBSubSets.WEIGHT, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.DBSubSets.MAPRECORDID, "BIGINT NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -77,7 +77,7 @@ public class QueryUniverseTabs extends Alcyone {
         }
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBSubSets.TABLE);
+            err.append(DBUniverse.DBSubSets.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());
