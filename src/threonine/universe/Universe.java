@@ -11,14 +11,14 @@ public class Universe extends ValidData {
     //------------------------------------------------------
     public long universeID () { return univerid; }
     //------------------------------------------------------
-    public void setOwner (long owner) { this.projectid = owner; }
+    public void setProjectId (long projectid) { this.projectid = projectid; }
     public void setName (String name) { this.name = name; }
     public String getName () {
         if (name == null) return "";
         return name;
     }
     //------------------------------------------------------
-    public long getOwner () { return projectid; }
+    public long projectID () { return projectid; }
     public void setDescription (String description) { this.description = description; }
     public String getDescription () {
         if (description == null) return "";

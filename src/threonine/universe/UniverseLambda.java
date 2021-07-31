@@ -117,7 +117,7 @@ public class UniverseLambda extends MapQueryInterface {
      * @return
      * @throws Exception 
      */
-    public int checkUserAccessToUniverse (long universeid, long owner) throws Exception {
+    public int checkUserAccessToUniverse (long universeid, long projectid) throws Exception {
         //-------------------------------------------------------------------
         connection = electra.slaveConnection();
         setDataBase();
@@ -125,7 +125,7 @@ public class UniverseLambda extends MapQueryInterface {
         try { universe = this.selectUniverse(universeid); }
         catch (AppException e) { return 0; }
         //-------------------------------------------------------------------
-        if (universe.getOwner() != owner) return 0;
+        if (universe.projectid  != projectid) return 0;
         //-------------------------------------------------------------------
         return 2;
         //-------------------------------------------------------------------
