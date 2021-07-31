@@ -22,5 +22,9 @@ public class UniverseCenter {
         universelambda.createUniverse(universe);
     }
     //**********************************************************************
+    public Universe[] getUniversesByProject (long projectid, long userid) throws AppException, Exception {
+        return universelambda.getUniverses(projectid);
+    }
+    //**********************************************************************
 }
 //**************************************************************************

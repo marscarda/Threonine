@@ -98,7 +98,7 @@ public class QueryUniverse1 extends QueryUniverseTabs {
      * @return
      * @throws Exception 
      */
-    protected Universe[] selectUniverses (long owner) throws Exception {
+    protected Universe[] selectUniverses (long projectid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBUniverse.Universe.TABLE);
         select.addItem(DBUniverse.Universe.UNIVERSEID);
@@ -106,9 +106,9 @@ public class QueryUniverse1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.NAME);
         select.addItem(DBUniverse.Universe.DESCRIPTION);
         sql.addClause(select);
-        if (owner != 0) {
+        if (projectid != 0) {
             SQLWhere whr = new SQLWhere();
-            whr.addCondition(new SQLCondition(DBUniverse.Universe.PROJECTID, "=", owner));
+            whr.addCondition(new SQLCondition(DBUniverse.Universe.PROJECTID, "=", projectid));
             sql.addClause(whr);
         }
         //-------------------------------------------------------

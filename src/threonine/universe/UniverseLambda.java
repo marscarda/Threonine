@@ -62,11 +62,11 @@ public class UniverseLambda extends MapQueryInterface {
      * @return
      * @throws Exception 
      */
-    public Universe[] getUniverses (long owner) throws Exception {
+    public Universe[] getUniverses (long projectid) throws Exception {
         //----------------------------------------------------
         connection = electra.slaveConnection();
         setDataBase();
-        return this.selectUniverses(owner);
+        return this.selectUniverses(projectid);
         //----------------------------------------------------
     }
     //**********************************************************************
