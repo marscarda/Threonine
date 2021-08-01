@@ -11,6 +11,7 @@ public class SubSet {
     int weight = 0;
     long maprecordid = 0;
     boolean valid = false;
+    boolean root = false;
     //===============================================
     public long getSubsetID () { return subsetid; }
     //-----------------------------------------------
@@ -37,7 +38,11 @@ public class SubSet {
         return description;
     }
     //===============================================
+    public void setValid () { valid = true; }
     public boolean isValid () { return valid; }
+    //===============================================
+    public void setROOT () { root = true; }
+    public boolean isROOT () { return root; }
     //===============================================
 }
 //**************************************************************************

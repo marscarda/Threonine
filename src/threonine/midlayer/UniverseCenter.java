@@ -72,6 +72,25 @@ public class UniverseCenter {
         universelambda.createSubSet(subset);
     }
     //**********************************************************************
+    public SubSet getSubset (long universeid, long subsetid, long userid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        //We check the user has access to the project.
+        if (userid != 0) {
+            Universe universe = universelambda.getUniverse(universeid);
+            projectlambda.checkAccess(universe.projectID(), userid, 1);
+        }
+        //------------------------------------------------------------------
+        SubSet subset;
+        if (subsetid == 0) {
+            subset = new SubSet();
+            subset.setValid();
+            subset.setROOT();
+        }
+        else subset = universelambda.getSubset(universeid, subsetid);
+        return subset;
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
     public SubSet[] getSubsets (long universeid, long parentid, long userid) throws AppException, Exception {
 
         SubSet[] subsets = universelambda.getSubsets(universeid, parentid);
