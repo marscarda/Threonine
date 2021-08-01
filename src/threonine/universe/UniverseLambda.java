@@ -170,18 +170,10 @@ public class UniverseLambda extends MapQueryInterface {
             throw new AppException("Universe not found", AppException.UNIVERSENOTFOUND);
         }
         //-------------------------------------------------------------------
-        if (subset.parentsubset == 0) {
-            if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.UNIVERSEID, subset.universeid, DBUniverse.DBSubSets.PARENTSUBSET, 0) != 0) {
-            //if (checkValueCount(DBSubSets.TABLE, DBSubSets.PARENTSUBSET, 0) != 0) {
-                this.releaseExclusiveTableAccess();
-                throw new AppException("Root subset already exists", AppException.ROOTSUBSETALREADYEXISTS);
-            }
-        }
-        else {
-            if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.SUBSETID, subset.parentsubset) == 0) {
-                this.releaseExclusiveTableAccess();
-                throw new AppException("Parent subset not found", AppException.SUBSETNOTFOUND);
-            }
+        if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.SUBSETID, subset.parentsubset,
+            DBUniverse.DBSubSets.UNIVERSEID, subset.universeid) == 0) {
+            this.releaseExclusiveTableAccess();
+            throw new AppException("Parent subset not found", AppException.SUBSETNOTFOUND);
         }
         //-------------------------------------------------------------------
         while (true) {
