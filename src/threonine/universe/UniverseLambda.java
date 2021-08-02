@@ -4,7 +4,7 @@ import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
 //**************************************************************************
-public class UniverseLambda extends MapQueryInterface {
+public class UniverseLambda extends QueryUniverse2 {
     //**********************************************************************
     //UNIVERSES
     //**********************************************************************
@@ -24,7 +24,7 @@ public class UniverseLambda extends MapQueryInterface {
         SQLLockTables lock = new SQLLockTables();
         lock.setDataBase(databasename);
         lock.addTable(DBUniverse.Universe.TABLE);
-        lock.addTable(DBUniverse.DBSubSets.TABLE);
+        lock.addTable(DBUniverse.SubSets.TABLE);
         this.getExclusiveTableAccess(lock);
         //-------------------------------------------------------------------
         //We create the universe in the database.
@@ -41,7 +41,7 @@ public class UniverseLambda extends MapQueryInterface {
         subset.weight = 1;
         while (true) {
             subset.subsetid = Celaeno.getUniqueID();
-            if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.SUBSETID, subset.subsetid) == 0) break;
+            if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.subsetid) == 0) break;
         }
         //-------------------------------------------------------------------
         this.insertUniverse(universe);
@@ -154,7 +154,7 @@ public class UniverseLambda extends MapQueryInterface {
         SQLLockTables lock = new SQLLockTables();
         lock.setDataBase(databasename);
         lock.addTable(DBUniverse.Universe.TABLE);
-        lock.addTable(DBUniverse.DBSubSets.TABLE);
+        lock.addTable(DBUniverse.SubSets.TABLE);
         this.getExclusiveTableAccess(lock);
         //-------------------------------------------------------------------
         if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, subset.universeid) == 0) {
@@ -162,15 +162,15 @@ public class UniverseLambda extends MapQueryInterface {
             throw new AppException("Universe not found", AppException.UNIVERSENOTFOUND);
         }
         //-------------------------------------------------------------------
-        if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.SUBSETID, subset.parentsubset,
-            DBUniverse.DBSubSets.UNIVERSEID, subset.universeid) == 0) {
+        if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.parentsubset,
+            DBUniverse.SubSets.UNIVERSEID, subset.universeid) == 0) {
             this.releaseExclusiveTableAccess();
             throw new AppException("Parent subset not found", AppException.SUBSETNOTFOUND);
         }
         //-------------------------------------------------------------------
         while (true) {
             subset.subsetid = Celaeno.getUniqueID();
-            if (checkValueCount(DBUniverse.DBSubSets.TABLE, DBUniverse.DBSubSets.SUBSETID, subset.subsetid) == 0) break;
+            if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.subsetid) == 0) break;
         }
         //-------------------------------------------------------------------
         this.insertSubSet(subset);

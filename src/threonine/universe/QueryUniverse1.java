@@ -209,14 +209,14 @@ public class QueryUniverse1 extends QueryUniverseTabs {
      * @throws Exception 
      */
     protected void insertSubSet (SubSet subset) throws Exception {
-        SQLInsert insert = new SQLInsert(DBUniverse.DBSubSets.TABLE);
-        insert.addValue(DBUniverse.DBSubSets.SUBSETID, subset.subsetid);
-        insert.addValue(DBUniverse.DBSubSets.UNIVERSEID, subset.universeid);
-        insert.addValue(DBUniverse.DBSubSets.PARENTSUBSET, subset.parentsubset);
-        insert.addValue(DBUniverse.DBSubSets.NAME, subset.name);
-        insert.addValue(DBUniverse.DBSubSets.DESCRIPTION, subset.description);
-        insert.addValue(DBUniverse.DBSubSets.POPULATION, subset.population);
-        insert.addValue(DBUniverse.DBSubSets.WEIGHT, subset.weight);
+        SQLInsert insert = new SQLInsert(DBUniverse.SubSets.TABLE);
+        insert.addValue(DBUniverse.SubSets.SUBSETID, subset.subsetid);
+        insert.addValue(DBUniverse.SubSets.UNIVERSEID, subset.universeid);
+        insert.addValue(DBUniverse.SubSets.PARENTSUBSET, subset.parentsubset);
+        insert.addValue(DBUniverse.SubSets.NAME, subset.name);
+        insert.addValue(DBUniverse.SubSets.DESCRIPTION, subset.description);
+        insert.addValue(DBUniverse.SubSets.POPULATION, subset.population);
+        insert.addValue(DBUniverse.SubSets.WEIGHT, subset.weight);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -243,19 +243,19 @@ public class QueryUniverse1 extends QueryUniverseTabs {
      */
     protected SubSet selectSubset (long universeid, long subsetid) throws AppException, Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBUniverse.DBSubSets.TABLE);
-        select.addItem(DBUniverse.DBSubSets.SUBSETID);
-        select.addItem(DBUniverse.DBSubSets.UNIVERSEID);
-        select.addItem(DBUniverse.DBSubSets.PARENTSUBSET);
-        select.addItem(DBUniverse.DBSubSets.NAME);
-        select.addItem(DBUniverse.DBSubSets.DESCRIPTION);
-        select.addItem(DBUniverse.DBSubSets.POPULATION);
-        select.addItem(DBUniverse.DBSubSets.WEIGHT);
-        select.addItem(DBUniverse.DBSubSets.MAPRECORDID);
+        SQLSelect select = new SQLSelect(DBUniverse.SubSets.TABLE);
+        select.addItem(DBUniverse.SubSets.SUBSETID);
+        select.addItem(DBUniverse.SubSets.UNIVERSEID);
+        select.addItem(DBUniverse.SubSets.PARENTSUBSET);
+        select.addItem(DBUniverse.SubSets.NAME);
+        select.addItem(DBUniverse.SubSets.DESCRIPTION);
+        select.addItem(DBUniverse.SubSets.POPULATION);
+        select.addItem(DBUniverse.SubSets.WEIGHT);
+        select.addItem(DBUniverse.SubSets.MAPRECORDID);
         sql.addClause(select);
         SQLWhere whr = new SQLWhere();
-        if (universeid != 0) whr.addCondition(new SQLCondition(DBUniverse.DBSubSets.UNIVERSEID, "=", universeid));
-        if (subsetid != 0) whr.addCondition(new SQLCondition(DBUniverse.DBSubSets.SUBSETID, "=", subsetid));
+        if (universeid != 0) whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        if (subsetid != 0) whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
         sql.addClause(whr);
         //-------------------------------------------------------
         PreparedStatement st = null;
@@ -269,14 +269,14 @@ public class QueryUniverse1 extends QueryUniverseTabs {
                 throw new AppException("Subset not found", AppException.SUBSETNOTFOUND);
             SubSet subset;
             subset = new SubSet();
-            subset.subsetid = rs.getLong(DBUniverse.DBSubSets.SUBSETID);
-            subset.universeid = rs.getLong(DBUniverse.DBSubSets.UNIVERSEID);
-            subset.parentsubset = rs.getLong(DBUniverse.DBSubSets.PARENTSUBSET);
-            subset.name = rs.getString(DBUniverse.DBSubSets.NAME);
-            subset.description = rs.getString(DBUniverse.DBSubSets.DESCRIPTION);
-            subset.population = rs.getInt(DBUniverse.DBSubSets.POPULATION);
-            subset.weight = rs.getInt(DBUniverse.DBSubSets.WEIGHT);
-            subset.maprecordid = rs.getLong(DBUniverse.DBSubSets.MAPRECORDID);
+            subset.subsetid = rs.getLong(DBUniverse.SubSets.SUBSETID);
+            subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
+            subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
+            subset.name = rs.getString(DBUniverse.SubSets.NAME);
+            subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
+            subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
+            subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+            subset.maprecordid = rs.getLong(DBUniverse.SubSets.MAPRECORDID);
             return subset;
         }
         catch (SQLException e) {
@@ -299,22 +299,22 @@ public class QueryUniverse1 extends QueryUniverseTabs {
      */
     protected SubSet[] selectSubsets (long universeid, long parentid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBUniverse.DBSubSets.TABLE);
-        select.addItem(DBUniverse.DBSubSets.SUBSETID);
-        select.addItem(DBUniverse.DBSubSets.UNIVERSEID);
-        select.addItem(DBUniverse.DBSubSets.PARENTSUBSET);
-        select.addItem(DBUniverse.DBSubSets.NAME);
-        select.addItem(DBUniverse.DBSubSets.DESCRIPTION);
-        select.addItem(DBUniverse.DBSubSets.POPULATION);
-        select.addItem(DBUniverse.DBSubSets.WEIGHT);
-        select.addItem(DBUniverse.DBSubSets.MAPRECORDID);
+        SQLSelect select = new SQLSelect(DBUniverse.SubSets.TABLE);
+        select.addItem(DBUniverse.SubSets.SUBSETID);
+        select.addItem(DBUniverse.SubSets.UNIVERSEID);
+        select.addItem(DBUniverse.SubSets.PARENTSUBSET);
+        select.addItem(DBUniverse.SubSets.NAME);
+        select.addItem(DBUniverse.SubSets.DESCRIPTION);
+        select.addItem(DBUniverse.SubSets.POPULATION);
+        select.addItem(DBUniverse.SubSets.WEIGHT);
+        select.addItem(DBUniverse.SubSets.MAPRECORDID);
         sql.addClause(select);
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.DBSubSets.UNIVERSEID, "=", universeid));
-        whr.addCondition(new SQLCondition(DBUniverse.DBSubSets.PARENTSUBSET, "=", parentid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.PARENTSUBSET, "=", parentid));
         sql.addClause(whr);
         SQLOrderBy order = new SQLOrderBy();
-        order.addColumn(DBUniverse.DBSubSets.NAME);
+        order.addColumn(DBUniverse.SubSets.NAME);
         sql.addClause(order);
         //-------------------------------------------------------
         PreparedStatement st = null;
@@ -328,14 +328,14 @@ public class QueryUniverse1 extends QueryUniverseTabs {
             SubSet subset;
             while (rs.next()) {
                 subset = new SubSet();
-                subset.subsetid = rs.getLong(DBUniverse.DBSubSets.SUBSETID);
-                subset.universeid = rs.getLong(DBUniverse.DBSubSets.UNIVERSEID);
-                subset.parentsubset = rs.getLong(DBUniverse.DBSubSets.PARENTSUBSET);
-                subset.name = rs.getString(DBUniverse.DBSubSets.NAME);
-                subset.description = rs.getString(DBUniverse.DBSubSets.DESCRIPTION);
-                subset.population = rs.getInt(DBUniverse.DBSubSets.POPULATION);
-                subset.weight = rs.getInt(DBUniverse.DBSubSets.WEIGHT);
-                subset.maprecordid = rs.getLong(DBUniverse.DBSubSets.MAPRECORDID);
+                subset.subsetid = rs.getLong(DBUniverse.SubSets.SUBSETID);
+                subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
+                subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
+                subset.name = rs.getString(DBUniverse.SubSets.NAME);
+                subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
+                subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
+                subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+                subset.maprecordid = rs.getLong(DBUniverse.SubSets.MAPRECORDID);
                 subsets.add(subset);
             }
             return subsets.toArray(new SubSet[0]);
@@ -358,10 +358,10 @@ public class QueryUniverse1 extends QueryUniverseTabs {
      */
     protected void deleteSubsetsByUniverse (long universeid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLDelete delete = new SQLDelete(DBUniverse.DBSubSets.TABLE);
+        SQLDelete delete = new SQLDelete(DBUniverse.SubSets.TABLE);
         sql.addClause(delete);
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.DBSubSets.UNIVERSEID, "=", universeid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
         sql.addClause(whr);
         PreparedStatement st = null;
         try {
@@ -388,11 +388,11 @@ public class QueryUniverse1 extends QueryUniverseTabs {
     @Deprecated
     protected void updateSubsetSetMapRecord (long subsetid, long recorid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLUpdate update = new SQLUpdate(DBUniverse.DBSubSets.TABLE);
-        update.addSetColumn(DBUniverse.DBSubSets.MAPRECORDID, recorid);
+        SQLUpdate update = new SQLUpdate(DBUniverse.SubSets.TABLE);
+        update.addSetColumn(DBUniverse.SubSets.MAPRECORDID, recorid);
         sql.addClause(update);
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.DBSubSets.SUBSETID, "=", subsetid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
         sql.addClause(whr);
         PreparedStatement st = null;
         try {

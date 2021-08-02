@@ -20,10 +20,9 @@ public class QueryUniverseTabs extends Alcyone {
         }
         //===================================================================
         if (!checkTableExists(DBUniverse.Universe.TABLE, tables)) createUniverses();
-        if (!checkTableExists(DBUniverse.DBSubSets.TABLE, tables)) createSubSets();
-        if (!checkTableExists(DBUniverseUsers.TABLE, tables)) createUniverseUsers();
-        if (!checkTableExists(DBMapRecords.TABLE, tables)) createMapRecords();
-        if (!checkTableExists(DBMapObjects.TABLE, tables)) createMapObjects();
+        if (!checkTableExists(DBUniverse.SubSets.TABLE, tables)) createSubSets();
+        if (!checkTableExists(DBUniverse.SubsetMapObject.TABLE, tables)) createMapObject();
+        if (!checkTableExists(DBUniverse.LocationPoints.TABLE, tables)) createLocationPoints();
         //===================================================================
     }
     //***********************************************************************
@@ -58,16 +57,16 @@ public class QueryUniverseTabs extends Alcyone {
     //***********************************************************************
     private void createSubSets () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBUniverse.DBSubSets.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.SubSets.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBUniverse.DBSubSets.SUBSETID, "BIGINT NOT NULL");
-        create.addField(DBUniverse.DBSubSets.UNIVERSEID, "BIGINT NOT NULL");
-        create.addField(DBUniverse.DBSubSets.PARENTSUBSET, "BIGINT NOT NULL");
-        create.addField(DBUniverse.DBSubSets.NAME, "VARCHAR (50) NOT NULL");
-        create.addField(DBUniverse.DBSubSets.DESCRIPTION, "VARCHAR (100) NULL");
-        create.addField(DBUniverse.DBSubSets.POPULATION, "INTEGER NOT NULL DEFAULT 0");
-        create.addField(DBUniverse.DBSubSets.WEIGHT, "INTEGER NOT NULL DEFAULT 0");
-        create.addField(DBUniverse.DBSubSets.MAPRECORDID, "BIGINT NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.SubSets.SUBSETID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubSets.UNIVERSEID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubSets.PARENTSUBSET, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubSets.NAME, "VARCHAR (50) NOT NULL");
+        create.addField(DBUniverse.SubSets.DESCRIPTION, "VARCHAR (100) NULL");
+        create.addField(DBUniverse.SubSets.POPULATION, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.SubSets.WEIGHT, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.SubSets.MAPRECORDID, "BIGINT NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -77,7 +76,7 @@ public class QueryUniverseTabs extends Alcyone {
         }
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBUniverse.DBSubSets.TABLE);
+            err.append(DBUniverse.SubSets.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());
@@ -88,12 +87,12 @@ public class QueryUniverseTabs extends Alcyone {
         //-------------------------------------------------------------------
     }
     //***********************************************************************
-    private void createUniverseUsers () throws Exception {
+    private void createMapObject () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBUniverseUsers.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.SubsetMapObject.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBUniverseUsers.UNIVERSEID, "BIGINT NOT NULL");
-        create.addField(DBUniverseUsers.USERID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetMapObject.OBJECTID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetMapObject.SUBSETID, "BIGINT NOT NULL");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -103,7 +102,7 @@ public class QueryUniverseTabs extends Alcyone {
         }
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBUniverseUsers.TABLE);
+            err.append(DBUniverse.SubsetMapObject.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());
@@ -112,16 +111,21 @@ public class QueryUniverseTabs extends Alcyone {
             try { if (st != null) st.close(); } catch (Exception e) {}
         }
         //-------------------------------------------------------------------
+        
+        
+        
+        
     }
     //***********************************************************************
-    private void createMapRecords () throws Exception {
+    private void createLocationPoints () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBMapRecords.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.LocationPoints.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBMapRecords.RECORDID, "BIGINT NOT NULL");
-        create.addField(DBMapRecords.CATALOG, "VARCHAR (100) NOT NULL");
-        create.addField(DBMapRecords.TAG, "VARCHAR (30) NOT NULL");
-        create.addField(DBMapRecords.NAME, "VARCHAR (100) NOT NULL");
+        create.addField(DBUniverse.LocationPoints.SUBSETID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.LocationPoints.OBJECTID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.LocationPoints.POINTINDEX, "INTEGER NOT NULL");
+        create.addField(DBUniverse.LocationPoints.LATITUDE, "FLOAT (10,6) NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.LocationPoints.LONGITUDE, "FLOAT (10,6) NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -131,7 +135,7 @@ public class QueryUniverseTabs extends Alcyone {
         }
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBMapRecords.TABLE);
+            err.append(DBUniverse.LocationPoints.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());
@@ -140,36 +144,7 @@ public class QueryUniverseTabs extends Alcyone {
             try { if (st != null) st.close(); } catch (Exception e) {}
         }
         //-------------------------------------------------------------------
-    }
-    //***********************************************************************
-    private void createMapObjects () throws Exception {
-        //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBMapObjects.TABLE);
-        create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBMapObjects.RECORDID, "BIGINT NOT NULL");
-        create.addField(DBMapObjects.OBJECTCODE, "VARCHAR (20) NOT NULL");
-        create.addField(DBMapObjects.POINTINDEX, "INTEGER NOT NULL");
-        create.addField(DBMapObjects.LATITUDE, "FLOAT NOT NULL DEFAULT 0");
-        create.addField(DBMapObjects.LONGITUDE, "FLOAT NOT NULL DEFAULT 0");
-        //-------------------------------------------------------------------
-        PreparedStatement st = null;
-        this.setDataBase();
-        try {
-            st = connection.prepareStatement(create.getText());
-            st.execute();
-        }
-        catch (SQLException e) {
-            StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBMapObjects.TABLE);
-            err.append(" table\n");
-            err.append(e.getMessage());
-            throw new Exception(err.toString());
-        }
-        finally {
-            try { if (st != null) st.close(); } catch (Exception e) {}
-        }
-        //-------------------------------------------------------------------
-    }
+    }    
     //***********************************************************************
 }
 //***************************************************************************

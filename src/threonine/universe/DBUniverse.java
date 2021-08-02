@@ -11,7 +11,7 @@ public class DBUniverse {
         static final String WEIGHTED = "weighted";
     }
     //**********************************************************************
-    public static class DBSubSets {
+    public static class SubSets {
         static final String TABLE = "subsets";
         static final String SUBSETID = "subsetid";
         static final String UNIVERSEID = "universeid";
@@ -22,6 +22,21 @@ public class DBUniverse {
         static final String WEIGHT = "weight";
         @Deprecated
         static final String MAPRECORDID = "maprecordid";
+    }
+    //**********************************************************************
+    public static class SubsetMapObject {
+        static final String TABLE = "subsetmapobject";
+        static final String OBJECTID = "objectid";
+        static final String SUBSETID = "subsetid";
+    }
+    //**********************************************************************
+    public static class LocationPoints {
+        static final String TABLE = "subsetlocationpoints";
+        static final String SUBSETID = "subsetid";
+        static final String OBJECTID = "objectid";
+        static final String POINTINDEX = "pointindex";
+        static final String LATITUDE = "latitude";
+        static final String LONGITUDE = "longitude";
     }
     //**********************************************************************
 }
