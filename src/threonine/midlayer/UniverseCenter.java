@@ -2,7 +2,6 @@ package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
 import methionine.auth.AuthLamda;
-import methionine.project.Project;
 import methionine.project.ProjectLambda;
 import threonine.map.MapsLambda;
 import threonine.universe.SubSet;
@@ -28,8 +27,13 @@ public class UniverseCenter {
      * @throws Exception 
      */
     public void createUniverse (Universe universe, long userid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        if (universe.getName().length() == 0)
+            throw new AppException("Universe Name cannot be empty", AppException.INVALIDDATASUBMITED);
+        //------------------------------------------------------------------
         //We check the user thai is trying has write access to the project
         projectlambda.checkAccess(universe.projectID(), userid, 2);
+        //------------------------------------------------------------------
         universelambda.createUniverse(universe);
     }
     //**********************************************************************
@@ -58,11 +62,15 @@ public class UniverseCenter {
      */
     public Universe[] getUniversesByProject (long projectid, long userid) throws AppException, Exception {
         //We check the user has access to the project.
-        projectlambda.checkAccess(projectid, userid, 1);
+        if (userid != 0) 
+            projectlambda.checkAccess(projectid, userid, 1);
         return universelambda.getUniverses(projectid);
     }
     //**********************************************************************
     public void createSubset (SubSet subset, long userid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        if (subset.getName().length() == 0)
+            throw new AppException("Subset Name cannot be empty", AppException.INVALIDDATASUBMITED);
         //------------------------------------------------------------------
         if (subset.getParentSubSet() == 0)
             throw new AppException("New Subset must have a valid parent", AppException.ROOTSUBSETALREADYEXISTS);
@@ -92,10 +100,16 @@ public class UniverseCenter {
     }
     //**********************************************************************
     public SubSet[] getSubsets (long universeid, long parentid, long userid) throws AppException, Exception {
-
+        //------------------------------------------------------------------
+        //We check the user has access to the project.
+        if (userid != 0) {
+            Universe universe = universelambda.getUniverse(universeid);
+            projectlambda.checkAccess(universe.projectID(), userid, 1);
+        }
+        //------------------------------------------------------------------
         SubSet[] subsets = universelambda.getSubsets(universeid, parentid);
         return subsets;
-
+        //------------------------------------------------------------------
     }
     //**********************************************************************
 }

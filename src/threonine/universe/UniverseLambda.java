@@ -15,10 +15,7 @@ public class UniverseLambda extends MapQueryInterface {
      * @throws methionine.AppException
      * @throws Exception 
      */
-    public long createUniverse (Universe universe) throws AppException, Exception {
-        //------------------------------------------------------------------
-        if (!universe.checkValidData())
-            throw new AppException("Invalid or incomplete data submited", AppException.INVALIDDATASUBMITED);
+    public void createUniverse (Universe universe) throws AppException, Exception {
         //-------------------------------------------------------------------
         connection = electra.masterConnection();
         setDataBase();
@@ -52,8 +49,6 @@ public class UniverseLambda extends MapQueryInterface {
         this.commitTransaction();
         this.releaseExclusiveTableAccess();
         //-------------------------------------------------------------------
-        return universe.univerid;
-        //-------------------------------------------------------------------
     }
     //**********************************************************************
     /**
@@ -71,7 +66,7 @@ public class UniverseLambda extends MapQueryInterface {
     //**********************************************************************
     /**
      * Returns an array of universes.
-     * @param owner
+     * @param projectid
      * @return
      * @throws Exception 
      */
@@ -86,7 +81,6 @@ public class UniverseLambda extends MapQueryInterface {
     /**
      * Updates a universe given its ID.
      * @param universeid
-     * @param owner
      * @param universe
      * @throws Exception 
      */
@@ -127,7 +121,6 @@ public class UniverseLambda extends MapQueryInterface {
      * Checks the user access to a given universe.
      * @param universeid
      * @param projectid
-     * @param owner
      * @return
      * @throws Exception 
      */
@@ -150,11 +143,10 @@ public class UniverseLambda extends MapQueryInterface {
     /**
      * Create a new Subset
      * @param subset
-     * @return
      * @throws AppException UNIVERSENOTFOUND SUBSETNOTFOUND ROOTSUBSETALREADYEXISTS
      * @throws Exception 
      */
-    public long createSubSet (SubSet subset) throws AppException, Exception {
+    public void createSubSet (SubSet subset) throws AppException, Exception {
         //-------------------------------------------------------------------
         connection = electra.masterConnection();
         setDataBase();
@@ -183,8 +175,6 @@ public class UniverseLambda extends MapQueryInterface {
         //-------------------------------------------------------------------
         this.insertSubSet(subset);
         this.releaseExclusiveTableAccess();
-        //-------------------------------------------------------------------
-        return subset.subsetid;
         //-------------------------------------------------------------------
     }
     //**********************************************************************

@@ -25,11 +25,5 @@ public class Universe extends ValidData {
         return description;
     }
     //**********************************************************
-    public boolean checkValidData () {
-        if (name == null) return false;
-        if (name.length() == 0) return false;
-        return true;
-    }
-    //**********************************************************
 }
 //**************************************************************************
