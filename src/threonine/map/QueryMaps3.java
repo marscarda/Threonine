@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import methionine.AppException;
 import methionine.sql.SQLColumn;
 import methionine.sql.SQLCondition;
 import methionine.sql.SQLInnerJoin;
@@ -40,6 +41,53 @@ public class QueryMaps3 extends QueryMaps2 {
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
         }        
+    }
+    //**********************************************************************
+    /**
+     * 
+     * @param projectid
+     * @param folderid
+     * @return 
+     * @throws methionine.AppException 
+     */
+    protected FolderUsage selectFolderUsage (long projectid, long folderid) throws AppException, Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.FolderUsage.TABLE);
+        select.addItem(DBMaps.FolderUsage.PROJECTID);
+        select.addItem(DBMaps.FolderUsage.FOLDERID);
+        select.addItem(DBMaps.FolderUsage.COSTPERUSE);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderUsage.PROJECTID, "=", projectid));
+        whr.addCondition(new SQLCondition(DBMaps.FolderUsage.FOLDERID, "=", folderid));
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            FolderUsage usage;
+            if (!rs.next())
+                throw new AppException("Folder No used in the project", AppException.OBJECTNOTFOUND);
+            usage = new FolderUsage();
+            usage.projectid = rs.getLong(DBMaps.FolderUsage.PROJECTID);
+            usage.folderid = rs.getLong(DBMaps.FolderUsage.FOLDERID);
+            usage.costperuse = rs.getInt(DBMaps.FolderUsage.COSTPERUSE);
+            return usage;
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map folder usage: qnuvxstfh\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
     }
     //**********************************************************************
     /**

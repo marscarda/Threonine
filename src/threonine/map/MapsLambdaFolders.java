@@ -130,6 +130,21 @@ public class MapsLambdaFolders extends QueryMaps3 {
     }
     //**********************************************************************
     /**
+     * 
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public FolderUsage getFolderUsage (long projectid, long folderid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        connection = electra.slaveConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        return this.selectFolderUsage(projectid, folderid);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
      * Returns a map folder given its ID.
      * @param folderid
      * @return
