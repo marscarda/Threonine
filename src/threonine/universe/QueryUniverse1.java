@@ -251,11 +251,10 @@ public class QueryUniverse1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
-        select.addItem(DBUniverse.SubSets.MAPRECORDID);
-        sql.addClause(select);
         SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
         if (universeid != 0) whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
-        if (subsetid != 0) whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
+        sql.addClause(select);
         sql.addClause(whr);
         //-------------------------------------------------------
         PreparedStatement st = null;
@@ -276,7 +275,6 @@ public class QueryUniverse1 extends QueryUniverseTabs {
             subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
             subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
             subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
-            subset.maprecordid = rs.getLong(DBUniverse.SubSets.MAPRECORDID);
             return subset;
         }
         catch (SQLException e) {

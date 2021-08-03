@@ -212,20 +212,6 @@ public class UniverseLambda extends QueryUniverse2 {
         return subsets;
     }
     //**********************************************************************
-    /**
-     * Sets the map record for the given subset
-     * @param subsetid
-     * @param recordid
-     * @throws Exception 
-     */
-    public void setSubsetMapRecord (long subsetid, long recordid) throws Exception {
-        //-------------------------------------------------------------------
-        connection = electra.masterConnection();
-        setDataBase();
-        //-------------------------------------------------------------------
-        this.updateSubsetSetMapRecord(subsetid, recordid);
-        //-------------------------------------------------------------------
-    }
     //**********************************************************************
 }
 //**************************************************************************

@@ -130,20 +130,44 @@ public class UniverseCenter {
         projectlambda.checkAccess(projectid, userid, 2);
         //------------------------------------------------------------------
         //We recover the record. In the proccess we check if the record can be
-        //used in the project that is intended
+        //used in the project that is intended. The usage is useful here to
+        //set the using cost of the map record.
         MapRecord record = mapslambda.getMapRecord(recordid);
-        try { FolderUsage usage = mapslambda.getFolderUsage(projectid, record.getFolderID()); }
+        FolderUsage usage;
+        try { usage = mapslambda.getFolderUsage(projectid, record.getFolderID()); }
         catch (AppException e) {
             if (e.getErrorCode() == AppException.OBJECTNOTFOUND)
                 throw new AppException("Unauthorized", AppException.UNAUTHORIZED);
+            throw e;
         }
         //------------------------------------------------------------------
-        
-        
-
-
+        //We check the subset exists and the user has access to the project
+        //where it belongs.
+        SubSet subset = universelambda.getSubset(0, subsetid);
+        Universe universe = universelambda.getUniverse(subset.getUniverseID());
+        if (universe.projectID() != projectid)
+            throw new AppException("Unauthorized", AppException.UNAUTHORIZED);
         //------------------------------------------------------------------
-
+        //We do the job.
+        setMapRecordTo(subset, record);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    private void setMapRecordTo (SubSet subset, MapRecord record) {
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
     //**********************************************************************
 }
