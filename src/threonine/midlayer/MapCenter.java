@@ -1,7 +1,6 @@
 package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
-import methionine.Celaeno;
 import methionine.auth.AuthLamda;
 import methionine.auth.User;
 import methionine.project.Project;
@@ -30,8 +29,10 @@ public class MapCenter {
      */
     public void createFolder (MapFolder folder, long userid) throws AppException, Exception {
         projectlambda.checkAccess(folder.projectID(), userid, 2);
+        if (folder.getName().length() == 0)
+            throw new AppException("Folder name cannot be empty", AppException.INVALIDDATASUBMITED);
         if (folder.publicName().length() == 0)
-            throw new AppException("Share ID cannot be empty", AppException.INVALIDDATASUBMITED);
+            throw new AppException("Public name cannot be empty", AppException.INVALIDDATASUBMITED);
         mapslambda.createFolder(folder);
     }
     //**********************************************************************
@@ -43,6 +44,8 @@ public class MapCenter {
      * @throws Exception 
      */
     public void createRecord (MapRecord record, long userid) throws AppException, Exception {
+        if (record.getName().length() == 0)
+            throw new AppException("Record name cannot be empty", AppException.INVALIDDATASUBMITED);
         MapFolder folder = mapslambda.getMapFolder(record.getFolderID());
         projectlambda.checkAccess(folder.projectID(), userid, 2);
         record.setProjectId(folder.projectID());//Since project ID must macht with folder we assign here
@@ -113,15 +116,14 @@ public class MapCenter {
         if (folderid == 0) return new MapRecord[0];
         //------------------------------------------------------------------
         //We check the user has access to the project where the folder belongs.
-        //If projectID is specified (!= 0) it must match the the project in wich the folder is.
         if (userid != 0 && usingproject == 0) {
             MapFolder folder = mapslambda.getMapFolder(folderid);
             projectlambda.checkAccess(folder.projectID(), userid, 1);
         }
         //------------------------------------------------------------------
         if (userid != 0 && usingproject != 0) {
-            FolderUsage usage = mapslambda.getFolderUsage(usingproject, folderid);
-            projectlambda.checkAccess(usage.projectID(), userid, 1);
+            projectlambda.checkAccess(usingproject, userid, 1);
+            mapslambda.getFolderUsage(usingproject, folderid);
         }
         //------------------------------------------------------------------
         return mapslambda.getMapRecords(folderid);

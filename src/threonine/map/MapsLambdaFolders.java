@@ -131,6 +131,8 @@ public class MapsLambdaFolders extends QueryMaps3 {
     //**********************************************************************
     /**
      * 
+     * @param projectid
+     * @param folderid
      * @return
      * @throws AppException
      * @throws Exception 

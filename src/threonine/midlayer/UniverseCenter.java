@@ -3,6 +3,8 @@ package threonine.midlayer;
 import methionine.AppException;
 import methionine.auth.AuthLamda;
 import methionine.project.ProjectLambda;
+import threonine.map.FolderUsage;
+import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
 import threonine.universe.SubSet;
 import threonine.universe.Universe;
@@ -110,6 +112,38 @@ public class UniverseCenter {
         SubSet[] subsets = universelambda.getSubsets(universeid, parentid);
         return subsets;
         //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Sets a map record to a subset.
+     * The record is copied and not referenced.
+     * @param subsetid
+     * @param recordid
+     * @param projectid
+     * @param userid
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void setMapRecordTo(long subsetid, long recordid, long projectid, long userid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        //We check the user has access to the project.
+        projectlambda.checkAccess(projectid, userid, 2);
+        //------------------------------------------------------------------
+        //We recover the record. In the proccess we check if the record can be
+        //used in the project that is intended
+        MapRecord record = mapslambda.getMapRecord(recordid);
+        try { FolderUsage usage = mapslambda.getFolderUsage(projectid, record.getFolderID()); }
+        catch (AppException e) {
+            if (e.getErrorCode() == AppException.OBJECTNOTFOUND)
+                throw new AppException("Unauthorized", AppException.UNAUTHORIZED);
+        }
+        //------------------------------------------------------------------
+        
+        
+
+
+        //------------------------------------------------------------------
+
     }
     //**********************************************************************
 }
