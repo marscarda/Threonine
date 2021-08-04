@@ -161,6 +161,7 @@ public class UniverseCenter {
      * @throws Exception 
      */
     private void setMapRecordTo (SubSet subset, MapRecord record) throws AppException, Exception {
+        //-----------------------------------------------------------------
         MapReaderGraphic mapreader = new MapReaderGraphic();
         mapreader.setMapsLambda(mapslambda);
         MapRecordGraphic recordg = mapreader.getMapRecord(record);
@@ -170,12 +171,22 @@ public class UniverseCenter {
         if (objects.length == 0)
             throw new AppException("The record " + record.getName() + " has no map object", AppException.NOMAPOBJECTINRECORD);
         //-----------------------------------------------------------------
+        //Transactions and Locks here
+        universelambda.setAutoCommit(0);
+        //-----------------------------------------------------------------
+        //We clear the existent map objects the subset could have
+        universelambda.clearMapObject(subset.getSubsetID());
+        //-----------------------------------------------------------------
         for (MapObjectGraphic obj : objects) {
             universelambda.addMapObject(subset.getSubsetID(), obj.getPoints());
-            
-            //Add Points here.
-            
         }
+        //-----------------------------------------------------------------
+        
+        //Billing here
+        
+        //-----------------------------------------------------------------
+        universelambda.commitTransaction();
+        //-----------------------------------------------------------------
     }
     //**********************************************************************
 }

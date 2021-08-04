@@ -223,20 +223,42 @@ public class UniverseLambda extends QueryUniverse2 {
         connection = electra.masterConnection();
         this.setDataBase();
         //-------------------------------------------------------------------
-        
-        
-        //Work ahead here
-        
-        
+        //We check the subset exists in the master
+        if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subsetid) == 0)
+            throw new AppException("Subset not found", AppException.SUBSETNOTFOUND);
+        //-------------------------------------------------------------------
         MapObject object = new MapObject();
         object.recordid = subsetid;
         while(true) {
             object.objectid = Celaeno.getUniqueID();
             if (checkValueCount(DBUniverse.SubsetMapObject.TABLE, DBUniverse.SubsetMapObject.OBJECTID, object.objectid) == 0) break;
         }
-        
+        //-------------------------------------------------------------------
+        //We insert the map object.
         this.insertMapObject(object);
-        
+        //-------------------------------------------------------------------
+        //We insert the points for the object
+        for (PointLocation point : points) {
+            point.recordid = object.recordid;
+            point.objectid = object.objectid;
+            this.insertPointLocation(point);
+        }
+        //-------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Clear map objects given a subset id
+     * @param subsetid
+     * @throws Exception 
+     */
+    public void clearMapObject (long subsetid) throws Exception {
+        //-------------------------------------------------------------------
+        connection = electra.masterConnection();
+        this.setDataBase();
+        //-------------------------------------------------------------------
+        this.deleteMapObject(subsetid);
+        this.deletePointLocations(subsetid);
+        //-------------------------------------------------------------------
     }
     //**********************************************************************
 }
