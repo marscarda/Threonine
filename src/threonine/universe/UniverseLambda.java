@@ -3,6 +3,8 @@ package threonine.universe;
 import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
+import threonine.map.MapObject;
+import threonine.map.PointLocation;
 //**************************************************************************
 public class UniverseLambda extends QueryUniverse2 {
     //**********************************************************************
@@ -189,8 +191,10 @@ public class UniverseLambda extends QueryUniverse2 {
      */
     public SubSet getSubset (long universeid, long subsetid) throws AppException, Exception {
         if (subsetid == 0) return new SubSet();
+        //-------------------------------------------------------------------
         connection = electra.slaveConnection();
         this.setDataBase();
+        //-------------------------------------------------------------------
         SubSet subset = this.selectSubset(universeid, subsetid);
         subset.valid = true;
         return subset;
@@ -212,6 +216,28 @@ public class UniverseLambda extends QueryUniverse2 {
         return subsets;
     }
     //**********************************************************************
+    //*** Map Part ***
+    //**********************************************************************
+    public void addMapObject (long subsetid, PointLocation[] points) throws Exception {
+        //-------------------------------------------------------------------
+        connection = electra.masterConnection();
+        this.setDataBase();
+        //-------------------------------------------------------------------
+        
+        
+        //Work ahead here
+        
+        
+        MapObject object = new MapObject();
+        object.recordid = subsetid;
+        while(true) {
+            object.objectid = Celaeno.getUniqueID();
+            if (checkValueCount(DBUniverse.SubsetMapObject.TABLE, DBUniverse.SubsetMapObject.OBJECTID, object.objectid) == 0) break;
+        }
+        
+        this.insertMapObject(object);
+        
+    }
     //**********************************************************************
 }
 //**************************************************************************

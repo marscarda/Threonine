@@ -153,21 +153,29 @@ public class UniverseCenter {
         //------------------------------------------------------------------
     }
     //**********************************************************************
-    private void setMapRecordTo (SubSet subset, MapRecord record) {
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    /**
+     * Sets a Map Record to a subset
+     * @param subset
+     * @param record
+     * @throws AppException
+     * @throws Exception 
+     */
+    private void setMapRecordTo (SubSet subset, MapRecord record) throws AppException, Exception {
+        MapReaderGraphic mapreader = new MapReaderGraphic();
+        mapreader.setMapsLambda(mapslambda);
+        MapRecordGraphic recordg = mapreader.getMapRecord(record);
+        MapObjectGraphic[] objects = recordg.getMapObjects();
+        //-----------------------------------------------------------------
+        //If there is no map object in the record.
+        if (objects.length == 0)
+            throw new AppException("The record " + record.getName() + " has no map object", AppException.NOMAPOBJECTINRECORD);
+        //-----------------------------------------------------------------
+        for (MapObjectGraphic obj : objects) {
+            universelambda.addMapObject(subset.getSubsetID(), obj.getPoints());
+            
+            //Add Points here.
+            
+        }
     }
     //**********************************************************************
 }

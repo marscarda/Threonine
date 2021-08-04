@@ -192,11 +192,11 @@ public class QueryMaps2 extends QueryMaps1 {
      * @param point
      * @throws Exception 
      */
-    protected void insertPointLocation (PointAdd point) throws Exception {
+    protected void insertPointLocation (PointLocation point) throws Exception {
         SQLInsert insert = new SQLInsert(DBMaps.LocationPoints.TABLE);
         insert.addValue(DBMaps.LocationPoints.RECORDID, point.recordid);
         insert.addValue(DBMaps.LocationPoints.OBJECTID, point.objectid);
-        insert.addValue(DBMaps.LocationPoints.POINTINDEX, point.index);
+        insert.addValue(DBMaps.LocationPoints.POINTINDEX, point.ptindex);
         insert.addValue(DBMaps.LocationPoints.LATITUDE, point.latitude);
         insert.addValue(DBMaps.LocationPoints.LONGITUDE, point.longitude);
         PreparedStatement st = null;

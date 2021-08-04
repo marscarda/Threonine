@@ -24,8 +24,11 @@ public class MapReaderGraphic {
     public MapRecordGraphic[] recordsByFolder (long folderid, long userid) throws AppException, Exception {
         //------------------------------------------------------------------
         if (folderid == 0) return new MapRecordGraphic[0]; //This prevents the exception of No Project Selected.
-        MapFolder folder = mapslambda.getMapFolder(folderid);
-        //projectlambda.checkAccess(folder.projectID(), userid, 1);
+        //------------------------------------------------------------------
+        if (userid != 0) {
+            MapFolder folder = mapslambda.getMapFolder(folderid);
+            projectlambda.checkAccess(folder.projectID(), userid, 1);
+        }
         //------------------------------------------------------------------
         MapRecord[] records = mapslambda.getMapRecords(folderid);
         if (records.length == 0) return new MapRecordGraphic[0];
@@ -41,51 +44,25 @@ public class MapReaderGraphic {
         return recordsg;
     }
     //**********************************************************************
-    
-    
-    
-    
-    
-    
-    //**********************************************************************
+    public MapRecordGraphic getMapRecord (long recordid) throws AppException, Exception {
+        MapRecord record = mapslambda.getMapRecord(recordid);
+        return getMapRecord(record);
+    }
+//======================================================================    
     /**
-     * Selects and returns an array of objects given their catalog.
-     * @param folderid
+     * Gets a MapRecordGraphic
+     * @param record
+     * @param userid
      * @return
+     * @throws AppException
      * @throws Exception 
      */
-    
-    
-    
-    /*
-    public MapRecordGraphic[] getRecordsByFolder (long folderid) throws Exception {
-        //------------------------------------------------------------------
-        MapRecord[] records = mapslambda.getMapRecords(folderid);
-        if (records.length == 0) return new MapRecordGraphic[0];
-        //------------------------------------------------------------------
-        int rcount = records.length;
-        MapRecordGraphic[] recordsg = new MapRecordGraphic[rcount];
-        //------------------------------------------------------------------
-        String[] objcodes;
-        MapRecord record;
-        MapObjectGraphic obj;
-        //------------------------------------------------------------------
-        for (int r = 0; r < rcount; r++) {
-            record = records[r];
-            recordsg[r] = new MapRecordGraphic();
-            objcodes = mapslambda.getMapObjectCodes(record.getID());
-            for (String objcode : objcodes) {
-                obj = new MapObjectGraphic();
-                obj.setPoints(mapslambda.getObjectPoints(record.getID(), objcode));
-                recordsg[r].addMapObject(obj);
-            }
-        }
-        //------------------------------------------------------------------
-        return recordsg;
-        //------------------------------------------------------------------
+    public MapRecordGraphic getMapRecord (MapRecord record) throws AppException, Exception {
+        MapRecordGraphic recordg = new MapRecordGraphic();
+        recordg.recordid = record.getID();
+        recordg.setObjects(mapslambda.getObjectsByRecord(record.getID(), true));
+        return recordg;
     }
-    */
-    //======================================================================
     //**********************************************************************
 }
 //**************************************************************************

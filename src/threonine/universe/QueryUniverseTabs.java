@@ -93,6 +93,7 @@ public class QueryUniverseTabs extends Alcyone {
         create.setEngine(MySQLEngine.INNODB);
         create.addField(DBUniverse.SubsetMapObject.OBJECTID, "BIGINT NOT NULL");
         create.addField(DBUniverse.SubsetMapObject.SUBSETID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetMapObject.OBJTYPE, "INTEGER NOT NULL");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -111,10 +112,6 @@ public class QueryUniverseTabs extends Alcyone {
             try { if (st != null) st.close(); } catch (Exception e) {}
         }
         //-------------------------------------------------------------------
-        
-        
-        
-        
     }
     //***********************************************************************
     private void createLocationPoints () throws Exception {

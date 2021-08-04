@@ -67,7 +67,14 @@ public class MapsLambda extends MapsLambdaFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
-    public void createMapObject (long recordid, PointAdd[] points) throws AppException, Exception {
+    /**
+     * 
+     * @param recordid
+     * @param points
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void createMapObject (long recordid, PointLocation[] points) throws AppException, Exception {
         //=============================================================
         connection = electra.masterConnection();
         setDataBase();
@@ -88,7 +95,7 @@ public class MapsLambda extends MapsLambdaFolders {
         //=============================================================
         this.startTransaction();
         this.insertMapObject(object);
-        for (PointAdd point : points) {
+        for (PointLocation point : points) {
             point.recordid = recordid;
             point.objectid = object.objectid;
             this.insertPointLocation(point);
@@ -121,20 +128,20 @@ public class MapsLambda extends MapsLambdaFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
-    public static PointAdd[] createPoints (String txtpoints, long recordid) throws AppException {
+    public static PointLocation[] createPoints (String txtpoints, long recordid) throws AppException {
         //=============================================================
         String[] ptrows = txtpoints.split("\\r?\\n");
         int count = ptrows.length;
-        PointAdd[] points = new PointAdd[count];
+        PointLocation[] points = new PointLocation[count];
         String[] values;
         //=============================================================
         for (int n = 0; n < count; n++) {
             values = ptrows[n].split(",");
             if (values.length < 2) 
                 throw new AppException("Invalid format", AppException.INVALIDFORMAT);
-            points[n] = new PointAdd();
+            points[n] = new PointLocation();
             points[n].recordid = count;
-            points[n].index = n;
+            points[n].ptindex = n;
             try {
                 points[n].latitude = Float.parseFloat(values[0]);
                 points[n].longitude = Float.parseFloat(values[1]);

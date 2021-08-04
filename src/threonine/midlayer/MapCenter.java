@@ -9,7 +9,7 @@ import threonine.map.FolderUsage;
 import threonine.map.MapFolder;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
-import threonine.map.PointAdd;
+import threonine.map.PointLocation;
 //**************************************************************************
 public class MapCenter {
     //**********************************************************************
@@ -52,9 +52,18 @@ public class MapCenter {
         mapslambda.createMapRecord(record);
     }
     //**********************************************************************
-    public void createObject (PointAdd[] points, long recordid, long userid) throws AppException, Exception {
+    /**
+     * 
+     * @param pointstable
+     * @param recordid
+     * @param userid
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void createObject (String pointstable, long recordid, long userid) throws AppException, Exception {
         MapRecord record = mapslambda.getMapRecord(recordid);
         projectlambda.checkAccess(record.getProjectID(), userid, 2);
+        PointLocation[] points = MapsLambda.createPoints(pointstable, recordid);
         mapslambda.createMapObject(recordid, points);
     }
     //**********************************************************************

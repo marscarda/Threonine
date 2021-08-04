@@ -2,10 +2,10 @@ package threonine.map;
 //*************************************************************************
 public class MapObject {
     //*********************************************************
-    long objectid = 0;
-    long recordid = 0;
-    int objtype = 3;
-    PointLocation[] points = null;
+    public long objectid = 0;
+    public long recordid = 0;
+    public int objtype = 3;
+    public PointLocation[] points = null;
     //=========================================================
     public void setRecordID (long recordid) { this.recordid = recordid; }
     //=========================================================

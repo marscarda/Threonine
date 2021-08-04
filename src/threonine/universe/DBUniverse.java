@@ -25,13 +25,14 @@ public class DBUniverse {
     }
     //**********************************************************************
     public static class SubsetMapObject {
-        static final String TABLE = "subsetmapobject";
+        static final String TABLE = "univmapobject";
         static final String OBJECTID = "objectid";
         static final String SUBSETID = "subsetid";
+        static final String OBJTYPE = "objtype";
     }
     //**********************************************************************
     public static class LocationPoints {
-        static final String TABLE = "subsetlocationpoints";
+        static final String TABLE = "univlocationpoints";
         static final String SUBSETID = "subsetid";
         static final String OBJECTID = "objectid";
         static final String POINTINDEX = "pointindex";
