@@ -305,7 +305,6 @@ public class QueryUniverse1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
-        select.addItem(DBUniverse.SubSets.MAPRECORDID);
         sql.addClause(select);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
@@ -333,7 +332,6 @@ public class QueryUniverse1 extends QueryUniverseTabs {
                 subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
                 subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
                 subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
-                subset.maprecordid = rs.getLong(DBUniverse.SubSets.MAPRECORDID);
                 subsets.add(subset);
             }
             return subsets.toArray(new SubSet[0]);
@@ -369,37 +367,6 @@ public class QueryUniverse1 extends QueryUniverseTabs {
         }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to delete subsets by universe\n");
-            msg.append(e.getMessage());
-            throw new Exception(msg.toString());
-        }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-        }        
-    }
-    //******************************************************************    
-    /**
-     * Updates the map record ID for the given subsetid
-     * @param subsetid
-     * @param recorid
-     * @throws Exception 
-     */
-    @Deprecated
-    protected void updateSubsetSetMapRecord (long subsetid, long recorid) throws Exception {
-        SQLQueryCmd sql = new SQLQueryCmd();
-        SQLUpdate update = new SQLUpdate(DBUniverse.SubSets.TABLE);
-        update.addSetColumn(DBUniverse.SubSets.MAPRECORDID, recorid);
-        sql.addClause(update);
-        SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
-        sql.addClause(whr);
-        PreparedStatement st = null;
-        try {
-            st = connection.prepareStatement(sql.getText());
-            sql.setParameters(st, 1);
-            st.execute();            
-        }
-        catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to update map record id\n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
