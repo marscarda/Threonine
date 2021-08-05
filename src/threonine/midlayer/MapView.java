@@ -47,6 +47,7 @@ public class MapView {
      * To set the scale.
      * @param scale 
      */
+    public void setScale (float scale) { this.scale = Math.round(scale); }
     public void setScale (int scale) { this.scale = scale; }
     public int getScale () { return scale; }
     //============================================================
@@ -201,7 +202,8 @@ public class MapView {
             canvasdim = height;
             geodif = north - south;
         }
-        scale = (int)(canvasdim / geodif);
+        if (north == -90) scale = 0;
+        else scale = (int)(canvasdim / geodif);
         return true;
     }
     //============================================================
