@@ -1,11 +1,17 @@
 package threonine.universe;
 //**************************************************************************
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import methionine.AppException;
 import methionine.sql.SQLCondition;
 import methionine.sql.SQLDelete;
 import methionine.sql.SQLInsert;
+import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
+import methionine.sql.SQLSelect;
 import methionine.sql.SQLWhere;
 import threonine.map.MapObject;
 import threonine.map.PointLocation;
@@ -37,6 +43,57 @@ public class QueryUniverse2 extends QueryUniverse1 {
             if (st != null) try {st.close();} catch(Exception e){}
         }        
     }
+    //**********************************************************************
+    /**
+     * Selects and returns an array of map objects given a subset id
+     * @param subsetid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    protected MapObject[] selectMapObjects (long subsetid) throws AppException, Exception {
+        //-------------------------------------------------------
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBUniverse.SubsetMapObject.TABLE);
+        select.addItem(DBUniverse.SubsetMapObject.OBJECTID);
+        select.addItem(DBUniverse.SubsetMapObject.SUBSETID);
+        select.addItem(DBUniverse.SubsetMapObject.OBJTYPE);
+        //-------------------------------------------------------
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubsetMapObject.SUBSETID, "=", subsetid));
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<MapObject> objects = new ArrayList<>();
+            MapObject object;
+            while (rs.next()) {
+                object = new MapObject();
+                object.objectid = rs.getLong(DBUniverse.SubsetMapObject.OBJECTID);
+                object.recordid = rs.getLong(DBUniverse.SubsetMapObject.SUBSETID);
+                object.objtype = rs.getInt(DBUniverse.SubsetMapObject.OBJTYPE);
+                objects.add(object);
+            }            
+            return objects.toArray(new MapObject[0]);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map objects for subset. Code: vrbcqwdrfh\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+        //-------------------------------------------------------
+    }    
     //**********************************************************************
     /**
      * Deletes map objects belonging to a subset id
@@ -119,6 +176,63 @@ public class QueryUniverse2 extends QueryUniverse1 {
         }
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
+        }
+    }
+    //**********************************************************************
+    /**
+     * Selects and return point locations for an object.
+     * @param objectid
+     * @return
+     * @throws Exception 
+     */
+    protected PointLocation[] selectPointLocations (long objectid) throws Exception {
+        //-------------------------------------------------------
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBUniverse.LocationPoints.TABLE);
+        select.addItem(DBUniverse.LocationPoints.OBJECTID);
+        select.addItem(DBUniverse.LocationPoints.SUBSETID);
+        select.addItem(DBUniverse.LocationPoints.POINTINDEX);
+        select.addItem(DBUniverse.LocationPoints.LATITUDE);
+        select.addItem(DBUniverse.LocationPoints.LONGITUDE);
+        //-------------------------------------------------------
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.LocationPoints.OBJECTID, "=", objectid));
+        //-------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBUniverse.LocationPoints.POINTINDEX);
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        sql.addClause(order);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<PointLocation> points = new ArrayList<>();
+            PointLocation point;
+            while (rs.next()) {
+                point = new PointLocation();
+                point.objectid = objectid;
+                point.recordid = rs.getLong(DBUniverse.LocationPoints.SUBSETID);
+                point.ptindex = rs.getInt(DBUniverse.LocationPoints.POINTINDEX);
+                point.latitude = rs.getFloat(DBUniverse.LocationPoints.LATITUDE);
+                point.longitude = rs.getFloat(DBUniverse.LocationPoints.LONGITUDE);
+                points.add(point);
+            }            
+            return points.toArray(new PointLocation[0]);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map point locations. Code: tyhgdytrfh\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
         }
     }
     //**********************************************************************

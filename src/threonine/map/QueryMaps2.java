@@ -303,7 +303,7 @@ public class QueryMaps2 extends QueryMaps1 {
             return objects.toArray(new MapObject[0]);
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to select map record. Code: vtefytrfh\n");
+            StringBuilder msg = new StringBuilder("Failed to select objects map record. Code: vtefyztrfh\n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
@@ -315,7 +315,7 @@ public class QueryMaps2 extends QueryMaps1 {
     }    
     //**********************************************************************
     /**
-     * Selects and return point locations.
+     * Selects and return point locations for an object.
      * @param objectid
      * @return
      * @throws Exception 

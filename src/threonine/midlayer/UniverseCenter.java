@@ -93,6 +93,7 @@ public class UniverseCenter {
         SubSet subset;
         if (subsetid == 0) {
             subset = new SubSet();
+            subset.setUniverseID(universeid);
             subset.setValid();
             subset.setROOT();
         }

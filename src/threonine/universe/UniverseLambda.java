@@ -13,7 +13,6 @@ public class UniverseLambda extends QueryUniverse2 {
     /**
      * Creates a new Universe.
      * @param universe
-     * @return
      * @throws methionine.AppException
      * @throws Exception 
      */
@@ -140,7 +139,7 @@ public class UniverseLambda extends QueryUniverse2 {
         //-------------------------------------------------------------------
     }
     //**********************************************************************
-    //SUBSETS
+    //** SUBSETS **
     //**********************************************************************
     /**
      * Create a new Subset
@@ -190,7 +189,6 @@ public class UniverseLambda extends QueryUniverse2 {
      * @throws Exception 
      */
     public SubSet getSubset (long universeid, long subsetid) throws AppException, Exception {
-        if (subsetid == 0) return new SubSet();
         //-------------------------------------------------------------------
         connection = electra.slaveConnection();
         this.setDataBase();
@@ -216,7 +214,7 @@ public class UniverseLambda extends QueryUniverse2 {
         return subsets;
     }
     //**********************************************************************
-    //*** Map Part ***
+    //*** MAP PART ***
     //**********************************************************************
     public void addMapObject (long subsetid, PointLocation[] points) throws Exception {
         //-------------------------------------------------------------------
@@ -259,6 +257,21 @@ public class UniverseLambda extends QueryUniverse2 {
         this.deleteMapObject(subsetid);
         this.deletePointLocations(subsetid);
         //-------------------------------------------------------------------
+    }
+    //**********************************************************************
+    public MapObject[] getObjectsBySubset (long recordid, boolean fillpoints) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.slaveConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        MapObject[] objects = this.selectMapObjects(recordid);
+        if (!fillpoints) return objects;
+        //------------------------------------------------------------------
+        for (MapObject object : objects)
+            object.points = this.selectPointLocations(object.objectid);
+        //------------------------------------------------------------------
+        return objects;
+        //------------------------------------------------------------------
     }
     //**********************************************************************
 }
