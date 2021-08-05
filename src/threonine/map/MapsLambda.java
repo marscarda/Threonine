@@ -107,6 +107,31 @@ public class MapsLambda extends MapsLambdaFolders {
     }
     //**********************************************************************
     /**
+     * Clear map objects from a map record.
+     * @param recordid
+     * @throws Exception 
+     */
+    public void clearMapObjects (long recordid) throws Exception {
+        //=============================================================
+        connection = electra.masterConnection();
+        setDataBase();
+        //=============================================================
+        this.setAutoCommit(0);
+        SQLLockTables lock = new SQLLockTables();
+        lock.setDataBase(databasename);
+        lock.addTable(DBMaps.Objects.TABLE);
+        lock.addTable(DBMaps.LocationPoints.TABLE);
+        this.getExclusiveTableAccess(lock);
+        //=============================================================
+        this.deleteMapObjects(recordid);
+        this.deletePointLocations(recordid);
+        //=============================================================
+        this.commitTransaction();
+        this.releaseExclusiveTableAccess();
+        //=============================================================
+    }
+    //**********************************************************************
+    /**
      * 
      * @param recordid
      * @param fillpoints

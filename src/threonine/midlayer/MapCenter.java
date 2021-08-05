@@ -67,6 +67,22 @@ public class MapCenter {
         mapslambda.createMapObject(recordid, points);
     }
     //**********************************************************************
+    /**
+     * Clear map objects from a map record.
+     * @param recordid
+     * @param userid
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void clearObjects (long recordid, long userid) throws AppException, Exception {
+        if (userid != 0) {
+            MapRecord record = mapslambda.getMapRecord(recordid);
+            MapFolder folder = mapslambda.getMapFolder(record.getFolderID());
+            projectlambda.checkAccess(folder.projectID(), userid, 3);
+        }
+        mapslambda.clearMapObjects(recordid);
+    }
+    //**********************************************************************
     public MapFolder getMapFolder (long folderid, long userid) throws AppException, Exception {
         //------------------------------------------------------------------
         MapFolder folder;

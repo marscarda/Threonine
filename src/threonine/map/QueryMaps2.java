@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
 import methionine.sql.SQLCondition;
+import methionine.sql.SQLDelete;
 import methionine.sql.SQLInsert;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
@@ -188,6 +189,34 @@ public class QueryMaps2 extends QueryMaps1 {
     }
     //**********************************************************************
     /**
+     * Deletes from table of map objects by recordid
+     * @param recordid
+     * @throws Exception 
+     */
+    protected void deleteMapObjects (long recordid) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLDelete delete = new SQLDelete(DBMaps.Objects.TABLE);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.Objects.RECORDID, "=", recordid));
+        sql.addClause(delete);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to delete object from table\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //**********************************************************************
+    /**
      * Inserts a new map point into de DB.
      * @param point
      * @throws Exception 
@@ -207,6 +236,34 @@ public class QueryMaps2 extends QueryMaps1 {
         }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to insert new map object point\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //**********************************************************************
+    /**
+     * Deletes from table of location points by recordid
+     * @param recordid
+     * @throws Exception 
+     */
+    protected void deletePointLocations (long recordid) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLDelete delete = new SQLDelete(DBMaps.LocationPoints.TABLE);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.LocationPoints.RECORDID, "=", recordid));
+        sql.addClause(delete);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to delete location points from table\n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
