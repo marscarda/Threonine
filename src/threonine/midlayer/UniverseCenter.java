@@ -150,7 +150,7 @@ public class UniverseCenter {
             throw new AppException("Unauthorized", AppException.UNAUTHORIZED);
         //------------------------------------------------------------------
         //We do the job.
-        setMapRecordTo(subset, record);
+        setMapRecordTo2(subset, record);
         //------------------------------------------------------------------
     }
     //**********************************************************************
@@ -161,7 +161,7 @@ public class UniverseCenter {
      * @throws AppException
      * @throws Exception 
      */
-    private void setMapRecordTo (SubSet subset, MapRecord record) throws AppException, Exception {
+    private void setMapRecordTo2 (SubSet subset, MapRecord record) throws AppException, Exception {
         //-----------------------------------------------------------------
         MapReaderGraphic mapreader = new MapReaderGraphic();
         mapreader.setMapsLambda(mapslambda);
@@ -186,7 +186,7 @@ public class UniverseCenter {
         //Billing here
         
         //-----------------------------------------------------------------
-        universelambda.commitTransaction();
+        universelambda.commit();
         //-----------------------------------------------------------------
     }
     //**********************************************************************
