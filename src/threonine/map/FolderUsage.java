@@ -16,13 +16,11 @@ public class FolderUsage {
     //======================================================================
     public long projectID () { return projectid; }
     public long folderID () { return folderid; }
-    
-    
+    public int costPerUse () { return costperuse; }
     public String publicName () {
         if (publicname == null) return "";
         return publicname;
     }
-    
     public String sharePassword () { 
         if (sharepass == null) return "";
         return sharepass; 

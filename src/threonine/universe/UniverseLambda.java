@@ -6,7 +6,7 @@ import methionine.sql.SQLLockTables;
 import threonine.map.MapObject;
 import threonine.map.PointLocation;
 //**************************************************************************
-public class UniverseLambda extends QueryUniverse2 {
+public class UniverseLambda extends UniverseLock {
     //**********************************************************************
     //UNIVERSES
     //**********************************************************************

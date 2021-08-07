@@ -1,9 +1,15 @@
 package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
+import methionine.TabList;
 import methionine.auth.AuthLamda;
+import methionine.billing.BillingLambda;
+import methionine.billing.ComunityTransfer;
+import methionine.billing.UsageCost;
+import methionine.project.Project;
 import methionine.project.ProjectLambda;
 import threonine.map.FolderUsage;
+import threonine.map.MapFolder;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
 import threonine.universe.SubSet;
@@ -16,10 +22,12 @@ public class UniverseCenter {
     ProjectLambda projectlambda = null;
     UniverseLambda universelambda = null;
     MapsLambda mapslambda = null;
+    BillingLambda billinglambda = null;
     public void setAuthLambda (AuthLamda authlambda) { this.authlambda = authlambda; }
     public void setProjectLambda (ProjectLambda projectlambda) { this.projectlambda = projectlambda; }
     public void setUniverseLambda (UniverseLambda universelambda) { this.universelambda = universelambda; }
     public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
+    public void setBillingLambda (BillingLambda billinglambda) { this.billinglambda = billinglambda; }
     //**********************************************************************
     /**
      * Creates a new Universe. 
@@ -115,20 +123,19 @@ public class UniverseCenter {
         //------------------------------------------------------------------
     }
     //**********************************************************************
-    /**
-     * Sets a map record to a subset.
-     * The record is copied and not referenced.
-     * @param subsetid
-     * @param recordid
-     * @param projectid
-     * @param userid
-     * @throws AppException
-     * @throws Exception 
-     */
+    
+    
     public void setMapRecordTo(long subsetid, long recordid, long projectid, long userid) throws AppException, Exception {
+        //******************************************************************
+        //Reading and Verification part
         //------------------------------------------------------------------
         //We check the user has access to the project.
         projectlambda.checkAccess(projectid, userid, 2);
+        //------------------------------------------------------------------
+        //We check the owner of the project is able to spend.
+        Project projectsubset = projectlambda.getProject(projectid, 0);
+        if (!billinglambda.checkAbleToSpend(projectsubset.getOwner()))
+            throw new AppException("Not enough balance", AppException.SPENDINGREJECTED);
         //------------------------------------------------------------------
         //We recover the record. In the proccess we check if the record can be
         //used in the project that is intended. The usage is useful here to
@@ -142,6 +149,16 @@ public class UniverseCenter {
             throw e;
         }
         //------------------------------------------------------------------
+        //We decide and act the usage of the map record has a cost.
+        boolean dotransfer = false;
+        MapFolder folder = null;
+        Project projectto = null;
+        if (usage.costPerUse() != 0) {
+            dotransfer = true;
+            folder = mapslambda.getMapFolder(record.getFolderID());
+            projectto = projectlambda.getProject(folder.projectID(), 0);
+        }
+        //------------------------------------------------------------------
         //We check the subset exists and the user has access to the project
         //where it belongs.
         SubSet subset = universelambda.getSubset(0, subsetid);
@@ -149,19 +166,55 @@ public class UniverseCenter {
         if (universe.projectID() != projectid)
             throw new AppException("Unauthorized", AppException.UNAUTHORIZED);
         //------------------------------------------------------------------
-        //We do the job.
-        setMapRecordTo2(subset, record);
+        MapReaderGraphic mapreader = new MapReaderGraphic();
+        mapreader.setMapsLambda(mapslambda);
+        MapRecordGraphic recordg = mapreader.getMapRecord(record);
+        MapObjectGraphic[] objects = recordg.getMapObjects();
         //------------------------------------------------------------------
+        //If there is no map object in the record.
+        if (objects.length == 0)
+            throw new AppException("The record " + record.getName() + " has no map object", AppException.NOMAPOBJECTINRECORD);
+        //******************************************************************
+        //Writing part
+        //------------------------------------------------------------------
+        //We lock all tables involved
+        TabList tablist = new TabList();
+        universelambda.AddLockMapRecord(tablist);
+        if (dotransfer) billinglambda.AddLockCommunityTransfer(tablist);
+        universelambda.setAutoCommit(0);
+        universelambda.lockTables(tablist);
+        //------------------------------------------------------------------
+        //We clear the existent map objects the subset could have
+        universelambda.clearMapObject(subset.getSubsetID());
+        //-----------------------------------------------------------------
+        //We Add the objects to the subset.
+        for (MapObjectGraphic obj : objects)
+            universelambda.addMapObject(subset.getSubsetID(), obj.getPoints());
+        //------------------------------------------------------------------
+        if (dotransfer) {
+            ComunityTransfer transfer = new ComunityTransfer();
+            transfer.setFromUserid(projectsubset.getOwner());
+            transfer.setFromProjectId(projectsubset.workTeamID());
+            transfer.setToUserId(projectto.getOwner());//If it was a null pointer we would not be here.
+            transfer.setToProjectId(projectto.workTeamID());
+            String description = "Map Record " + record.getName();
+            transfer.setDescription(description);
+            transfer.setSystemCost(UsageCost.MAPRECORDTOSUBSET);
+            transfer.setTransferSize(usage.costPerUse());
+            billinglambda.createComunityTransfer(transfer);
+        }
+        else {
+            //Charge wihout transfer
+        }
+        //-----------------------------------------------------------------
+        universelambda.commit();
+        universelambda.unLockTables();
+        //******************************************************************
     }
     //**********************************************************************
-    /**
-     * Sets a Map Record to a subset
-     * @param subset
-     * @param record
-     * @throws AppException
-     * @throws Exception 
-     */
+    @Deprecated
     private void setMapRecordTo2 (SubSet subset, MapRecord record) throws AppException, Exception {
+        
         //-----------------------------------------------------------------
         MapReaderGraphic mapreader = new MapReaderGraphic();
         mapreader.setMapsLambda(mapslambda);
@@ -178,15 +231,12 @@ public class UniverseCenter {
         //We clear the existent map objects the subset could have
         universelambda.clearMapObject(subset.getSubsetID());
         //-----------------------------------------------------------------
-        for (MapObjectGraphic obj : objects) {
+        //We Add the object to the subset.
+        for (MapObjectGraphic obj : objects)
             universelambda.addMapObject(subset.getSubsetID(), obj.getPoints());
-        }
-        //-----------------------------------------------------------------
-        
-        //Billing here
-        
         //-----------------------------------------------------------------
         universelambda.commit();
+        universelambda.unLockTables();
         //-----------------------------------------------------------------
     }
     //**********************************************************************
