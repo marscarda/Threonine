@@ -2,6 +2,7 @@ package threonine.map;
 //**************************************************************************
 import methionine.AppException;
 import methionine.Celaeno;
+import methionine.TabList;
 import methionine.sql.SQLLockTables;
 //**************************************************************************
 public class MapsLambda extends MapsLambdaFolders {
@@ -79,12 +80,16 @@ public class MapsLambda extends MapsLambdaFolders {
         connection = electra.masterConnection();
         setDataBase();
         //=============================================================
-        SQLLockTables lock = new SQLLockTables();
-        lock.setDataBase(databasename);
-        lock.addTable(DBMaps.MapRecords.TABLE);
-        lock.addTable(DBMaps.Objects.TABLE);
-        lock.addTable(DBMaps.LocationPoints.TABLE);
-        this.getExclusiveTableAccess(lock);
+        TabList tablist = new TabList();
+        tablist.addTable(databasename, DBMaps.MapRecords.TABLE);
+        tablist.addTable(databasename, DBMaps.Objects.TABLE);
+        tablist.addTable(databasename, DBMaps.LocationPoints.TABLE);
+        this.setAutoCommit(0);
+        this.lockTables(tablist);
+        //-------------------------------------------------------------
+        //We check the map record exists.
+        if (checkValueCount(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.RECORDID, recordid) == 0)
+            throw new AppException("Map Record not found", AppException.OBJECTNOTFOUND);
         //-------------------------------------------------------------
         MapObject object = new MapObject();
         object.recordid = recordid;
@@ -93,16 +98,15 @@ public class MapsLambda extends MapsLambdaFolders {
             if (checkValueCount(DBMaps.Objects.TABLE, DBMaps.Objects.OBJECTID, object.objectid) == 0) break;
         }
         //=============================================================
-        this.startTransaction();
         this.insertMapObject(object);
         for (PointLocation point : points) {
             point.recordid = recordid;
             point.objectid = object.objectid;
             this.insertPointLocation(point);
         }
-        this.commitTransaction();
         //=============================================================
-        this.releaseExclusiveTableAccess();        
+        this.commit();
+        this.unLockTables();
         //=============================================================
     }
     //**********************************************************************

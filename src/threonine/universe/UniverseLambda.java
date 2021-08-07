@@ -47,8 +47,8 @@ public class UniverseLambda extends UniverseLock {
         //-------------------------------------------------------------------
         this.insertUniverse(universe);
         this.insertSubSet(subset);
-        this.commitTransaction();
-        this.releaseExclusiveTableAccess();
+        this.commit();
+        this.unLockTables();
         //-------------------------------------------------------------------
     }
     //**********************************************************************
