@@ -217,6 +217,7 @@ public class QueryUniverse1 extends QueryUniverseTabs {
         insert.addValue(DBUniverse.SubSets.DESCRIPTION, subset.description);
         insert.addValue(DBUniverse.SubSets.POPULATION, subset.population);
         insert.addValue(DBUniverse.SubSets.WEIGHT, subset.weight);
+        insert.addValue(DBUniverse.SubSets.COST, subset.cost);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());

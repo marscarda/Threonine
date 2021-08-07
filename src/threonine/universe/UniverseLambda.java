@@ -13,20 +13,14 @@ public class UniverseLambda extends UniverseLock {
     /**
      * Creates a new Universe.
      * @param universe
+     * @param subset
      * @throws methionine.AppException
      * @throws Exception 
      */
-    public void createUniverse (Universe universe) throws AppException, Exception {
+    public void createUniverse (Universe universe, SubSet subset) throws AppException, Exception {
         //-------------------------------------------------------------------
         connection = electra.masterConnection();
         setDataBase();
-        //-------------------------------------------------------------------
-        this.setAutoCommit(0);
-        SQLLockTables lock = new SQLLockTables();
-        lock.setDataBase(databasename);
-        lock.addTable(DBUniverse.Universe.TABLE);
-        lock.addTable(DBUniverse.SubSets.TABLE);
-        this.getExclusiveTableAccess(lock);
         //-------------------------------------------------------------------
         //We create the universe in the database.
         while (true) {
@@ -35,7 +29,7 @@ public class UniverseLambda extends UniverseLock {
         }
         //-------------------------------------------------------------------
         //We now create the first subset.
-        SubSet subset = new SubSet();
+        //SubSet subset = new SubSet();
         subset.name = universe.name;
         subset.description = universe.description;
         subset.universeid = universe.univerid;
@@ -47,8 +41,6 @@ public class UniverseLambda extends UniverseLock {
         //-------------------------------------------------------------------
         this.insertUniverse(universe);
         this.insertSubSet(subset);
-        this.commit();
-        this.unLockTables();
         //-------------------------------------------------------------------
     }
     //**********************************************************************
@@ -152,20 +144,12 @@ public class UniverseLambda extends UniverseLock {
         connection = electra.masterConnection();
         setDataBase();
         //-------------------------------------------------------------------
-        SQLLockTables lock = new SQLLockTables();
-        lock.setDataBase(databasename);
-        lock.addTable(DBUniverse.Universe.TABLE);
-        lock.addTable(DBUniverse.SubSets.TABLE);
-        this.getExclusiveTableAccess(lock);
-        //-------------------------------------------------------------------
         if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, subset.universeid) == 0) {
-            this.releaseExclusiveTableAccess();
             throw new AppException("Universe not found", AppException.UNIVERSENOTFOUND);
         }
         //-------------------------------------------------------------------
         if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.parentsubset,
             DBUniverse.SubSets.UNIVERSEID, subset.universeid) == 0) {
-            this.releaseExclusiveTableAccess();
             throw new AppException("Parent subset not found", AppException.SUBSETNOTFOUND);
         }
         //-------------------------------------------------------------------
@@ -175,7 +159,6 @@ public class UniverseLambda extends UniverseLock {
         }
         //-------------------------------------------------------------------
         this.insertSubSet(subset);
-        this.releaseExclusiveTableAccess();
         //-------------------------------------------------------------------
     }
     //**********************************************************************

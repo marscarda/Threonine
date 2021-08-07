@@ -3,6 +3,7 @@ package threonine.midlayer;
 import methionine.AppException;
 import methionine.TabList;
 import methionine.auth.AuthLamda;
+import methionine.billing.AlterUsage;
 import methionine.billing.BillingLambda;
 import methionine.billing.ComunityTransfer;
 import methionine.billing.SystemCharge;
@@ -41,11 +42,43 @@ public class UniverseCenter {
         //------------------------------------------------------------------
         if (universe.getName().length() == 0)
             throw new AppException("Universe Name cannot be empty", AppException.INVALIDDATASUBMITED);
-        //------------------------------------------------------------------
+        //******************************************************************
+        //Reading Part
+        //******************************************************************
         //We check the user thai is trying has write access to the project
         projectlambda.checkAccess(universe.projectID(), userid, 2);
         //------------------------------------------------------------------
-        universelambda.createUniverse(universe);
+        //We recover the project. Needed ahead when altering usage.
+        Project project = projectlambda.getProject(universe.projectID(), 0);
+        //------------------------------------------------------------------
+        //The top subset of the new universe. We set the cost here.
+        //The subset fields are completed in createUniverse(..)
+        SubSet subset = new SubSet();
+        subset.setCost(UsageCost.UNIVSUBSET);
+        //******************************************************************
+        //Writing Part
+        //******************************************************************
+        //Transaction section
+        TabList tabs = new TabList();
+        universelambda.AddLockCreateSubset(tabs);
+        billinglambda.AddLockAlterUsage(tabs);
+        universelambda.setAutoCommit(0);
+        universelambda.lockTables(tabs);
+        //------------------------------------------------------------------
+        //We create the universe.
+        universelambda.createUniverse(universe, subset);
+        //------------------------------------------------------------------
+        //We alter the usage cost.
+        AlterUsage alter = new AlterUsage();
+        alter.setProjectId(project.projectID());
+        alter.setProjectName(project.getName());
+        alter.setIncrease(UsageCost.UNIVSUBSET);
+        alter.setStartingEvent("Universe '" + universe.getName() + "' Created");
+        billinglambda.alterUsage(alter);
+        //------------------------------------------------------------------
+        //We are done.
+        universelambda.commit();
+        universelambda.unLockTables();
         //------------------------------------------------------------------
     }
     //**********************************************************************
@@ -79,17 +112,57 @@ public class UniverseCenter {
         return universelambda.getUniverses(projectid);
     }
     //**********************************************************************
+    /**
+     * Creates a universe subset 
+     * @param subset
+     * @param userid
+     * @throws AppException
+     * @throws Exception 
+     */
     public void createSubset (SubSet subset, long userid) throws AppException, Exception {
         //------------------------------------------------------------------
         if (subset.getName().length() == 0)
             throw new AppException("Subset Name cannot be empty", AppException.INVALIDDATASUBMITED);
         //------------------------------------------------------------------
         if (subset.getParentSubSet() == 0)
-            throw new AppException("New Subset must have a valid parent", AppException.ROOTSUBSETALREADYEXISTS);
-        //------------------------------------------------------------------
+            throw new AppException("Subser cannot be created in the root", AppException.ROOTSUBSETALREADYEXISTS);
+        //******************************************************************
+        //Reading Part
+        //******************************************************************
+        //We recover the universe and check the user is able to perform this.
         Universe universe = universelambda.getUniverse(subset.getUniverseID());
         projectlambda.checkAccess(universe.projectID(), userid, 2);
+        //------------------------------------------------------------------
+        //We recover the project. Needed ahead when altering usage.
+        Project project = projectlambda.getProject(universe.projectID(), 0);
+        //------------------------------------------------------------------
+        //We persist the cost of this particular subset.
+        subset.setCost(UsageCost.UNIVSUBSET);
+        //******************************************************************
+        //Writing Part
+        //******************************************************************
+        //Lock All tables.
+        TabList tabs = new TabList();
+        universelambda.AddLockCreateSubset(tabs);
+        billinglambda.AddLockAlterUsage(tabs);
+        universelambda.setAutoCommit(0);
+        universelambda.lockTables(tabs);
+        //------------------------------------------------------------------
+        //Creating the subset.
         universelambda.createSubSet(subset);
+        //------------------------------------------------------------------
+        //We alter the usage cost.
+        AlterUsage alter = new AlterUsage();
+        alter.setProjectId(project.projectID());
+        alter.setProjectName(project.getName());
+        alter.setIncrease(UsageCost.UNIVSUBSET);
+        alter.setStartingEvent("Subset " + subset.getName() + " Added to universe " + universe.getName());
+        billinglambda.alterUsage(alter);
+        //------------------------------------------------------------------
+        //We are done.
+        universelambda.commit();
+        universelambda.unLockTables();
+        //------------------------------------------------------------------
     }
     //**********************************************************************
     public SubSet getSubset (long universeid, long subsetid, long userid) throws AppException, Exception {

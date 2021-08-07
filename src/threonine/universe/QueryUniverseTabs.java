@@ -66,6 +66,7 @@ public class QueryUniverseTabs extends Alcyone {
         create.addField(DBUniverse.SubSets.DESCRIPTION, "VARCHAR (100) NULL");
         create.addField(DBUniverse.SubSets.POPULATION, "INTEGER NOT NULL DEFAULT 0");
         create.addField(DBUniverse.SubSets.WEIGHT, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.SubSets.COST, "INTEGER NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
