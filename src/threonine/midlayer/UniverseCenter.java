@@ -5,6 +5,7 @@ import methionine.TabList;
 import methionine.auth.AuthLamda;
 import methionine.billing.BillingLambda;
 import methionine.billing.ComunityTransfer;
+import methionine.billing.SystemCharge;
 import methionine.billing.UsageCost;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
@@ -123,8 +124,6 @@ public class UniverseCenter {
         //------------------------------------------------------------------
     }
     //**********************************************************************
-    
-    
     public void setMapRecordTo(long subsetid, long recordid, long projectid, long userid) throws AppException, Exception {
         //******************************************************************
         //Reading and Verification part
@@ -180,7 +179,7 @@ public class UniverseCenter {
         //We lock all tables involved
         TabList tablist = new TabList();
         universelambda.AddLockMapRecord(tablist);
-        if (dotransfer) billinglambda.AddLockCommunityTransfer(tablist);
+        billinglambda.AddLockCommunityTransfer(tablist);
         universelambda.setAutoCommit(0);
         universelambda.lockTables(tablist);
         //------------------------------------------------------------------
@@ -191,53 +190,32 @@ public class UniverseCenter {
         for (MapObjectGraphic obj : objects)
             universelambda.addMapObject(subset.getSubsetID(), obj.getPoints());
         //------------------------------------------------------------------
+        //If the use of the map object has a cost we create a transfer.
+        //Else we create a syatem charge.
         if (dotransfer) {
             ComunityTransfer transfer = new ComunityTransfer();
             transfer.setFromUserid(projectsubset.getOwner());
             transfer.setFromProjectId(projectsubset.workTeamID());
             transfer.setToUserId(projectto.getOwner());//If it was a null pointer we would not be here.
             transfer.setToProjectId(projectto.workTeamID());
-            String description = "Map Record " + record.getName();
+            String description = "Map Record " + record.getName() + " Added to subset";
             transfer.setDescription(description);
             transfer.setSystemCost(UsageCost.MAPRECORDTOSUBSET);
             transfer.setTransferSize(usage.costPerUse());
             billinglambda.createComunityTransfer(transfer);
-        }
-        else {
-            //Charge wihout transfer
+        } else {
+            SystemCharge charge = new SystemCharge();
+            charge.setUserid(projectsubset.getOwner());
+            charge.setProjectId(projectsubset.workTeamID());
+            String description = "Map Record " + record.getName() + " Added to subset";
+            charge.setDescription(description);
+            charge.setCost(UsageCost.MAPRECORDTOSUBSET);
+            billinglambda.createSystemCharge(charge);
         }
         //-----------------------------------------------------------------
         universelambda.commit();
         universelambda.unLockTables();
         //******************************************************************
-    }
-    //**********************************************************************
-    @Deprecated
-    private void setMapRecordTo2 (SubSet subset, MapRecord record) throws AppException, Exception {
-        
-        //-----------------------------------------------------------------
-        MapReaderGraphic mapreader = new MapReaderGraphic();
-        mapreader.setMapsLambda(mapslambda);
-        MapRecordGraphic recordg = mapreader.getMapRecord(record);
-        MapObjectGraphic[] objects = recordg.getMapObjects();
-        //-----------------------------------------------------------------
-        //If there is no map object in the record.
-        if (objects.length == 0)
-            throw new AppException("The record " + record.getName() + " has no map object", AppException.NOMAPOBJECTINRECORD);
-        //-----------------------------------------------------------------
-        //Transactions and Locks here
-        universelambda.setAutoCommit(0);
-        //-----------------------------------------------------------------
-        //We clear the existent map objects the subset could have
-        universelambda.clearMapObject(subset.getSubsetID());
-        //-----------------------------------------------------------------
-        //We Add the object to the subset.
-        for (MapObjectGraphic obj : objects)
-            universelambda.addMapObject(subset.getSubsetID(), obj.getPoints());
-        //-----------------------------------------------------------------
-        universelambda.commit();
-        universelambda.unLockTables();
-        //-----------------------------------------------------------------
     }
     //**********************************************************************
 }
