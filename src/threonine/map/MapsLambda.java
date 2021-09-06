@@ -157,32 +157,5 @@ public class MapsLambda extends MapsLambdaFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
-    public static PointLocation[] createPoints (String txtpoints, long recordid) throws AppException {
-        //=============================================================
-        String[] ptrows = txtpoints.split("\\r?\\n");
-        int count = ptrows.length;
-        PointLocation[] points = new PointLocation[count];
-        String[] values;
-        //=============================================================
-        for (int n = 0; n < count; n++) {
-            values = ptrows[n].split(",");
-            if (values.length < 2) 
-                throw new AppException("Invalid format", AppException.INVALIDFORMAT);
-            points[n] = new PointLocation();
-            points[n].recordid = count;
-            points[n].ptindex = n;
-            try {
-                points[n].latitude = Float.parseFloat(values[0]);
-                points[n].longitude = Float.parseFloat(values[1]);
-            }
-            catch (Exception e) {
-                throw new AppException("Invalid format", AppException.INVALIDFORMAT);
-            }
-        }        
-        //=============================================================
-        return points;
-        //=============================================================
-    }
-    //**********************************************************************
 }
 //**************************************************************************
