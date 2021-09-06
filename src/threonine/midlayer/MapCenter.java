@@ -63,7 +63,7 @@ public class MapCenter {
     public void createObject (String pointstable, long recordid, long userid) throws AppException, Exception {
         MapRecord record = mapslambda.getMapRecord(recordid);
         projectlambda.checkAccess(record.getProjectID(), userid, 2);
-        PointLocation[] points = MapValidationAndMath.createPoints(pointstable, recordid);
+        PointLocation[] points = MapValidationAndMath.createPoints(pointstable);
         MapValidationAndMath.checkValid(points);
         mapslambda.createMapObject(recordid, points);
     }

@@ -8,7 +8,7 @@ public class MapValidationAndMath {
     //**********************************************************************
     static final int EARTH_RADIUS_M = 6371000;
     //**********************************************************************
-    public static PointLocation[] createPoints (String txtpoints, long recordid) throws AppException {
+    public static PointLocation[] createPoints (String txtpoints) throws AppException {
         //=============================================================
         String[] ptrows = txtpoints.split("\\r?\\n");
         int count = ptrows.length;
@@ -36,20 +36,23 @@ public class MapValidationAndMath {
     }
     //**********************************************************************
     /**
-     * 
+     * Checks the validity of the object
      * @param ponts
      * @throws AppException 
      */
     public static void checkValid (PointLocation[] ponts) throws AppException {
-        checkPointDistRatio(ponts);
+        MapRatioInfo ratio = checkPointDistRatio(ponts);
+        if (!ratio.aproved()) {
+            throw new AppException("To many points", MapErrorCodes.MAXALLOWEDPOINTSEXCEDED);
+        }
     }
     //======================================================================
-    private static void checkPointDistRatio (PointLocation[] points) throws AppException {
+    public static MapRatioInfo checkPointDistRatio (PointLocation[] points) {
         //======================================================
         int ptcount = points.length;
         //------------------------------------------------------
         //We won't invalidate an object with so few points
-        if (ptcount < 100) return;
+        if (ptcount < 100) return new MapRatioInfo();
         //------------------------------------------------------
         //We calculate the total perimeter of the area.
         int itr = ptcount - 1;
@@ -71,8 +74,16 @@ public class MapValidationAndMath {
         //======================================================
         //Allowed is the number of points allowed for this object.
         int allowedpts = (int)(perimeter / pteverymt);
-        if (ptcount > allowedpts)
-            throw new AppException("To many points", MapErrorCodes.MAXALLOWEDPOINTSEXCEDED);
+        if (ptcount > allowedpts) {
+            MapRatioInfo ratioinf = new MapRatioInfo();
+            ratioinf.perimeter = perimeter;
+            ratioinf.separation = pteverymt;
+            ratioinf.ptallowed = allowedpts;
+            ratioinf.ptobject = ptcount;
+            return ratioinf;
+        }
+        //======================================================
+        return new MapRatioInfo();
         //======================================================
     }
     //**********************************************************************
