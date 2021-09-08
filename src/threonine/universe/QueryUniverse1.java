@@ -124,7 +124,7 @@ public class QueryUniverse1 extends QueryUniverseTabs {
             while (rs.next()) {
                 universe = new Universe();
                 universe.univerid = rs.getLong(DBUniverse.Universe.UNIVERSEID);
-                universe.projectid = rs.getLong(DBUniverse.Universe.UNIVERSEID);
+                universe.projectid = rs.getLong(DBUniverse.Universe.PROJECTID);
                 universe.name = rs.getString(DBUniverse.Universe.NAME);
                 universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
                 universes.add(universe);
