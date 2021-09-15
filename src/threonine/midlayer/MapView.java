@@ -66,11 +66,11 @@ public class MapView {
     public float getCenterLongitude () { return clongitude; }
     //============================================================
     /**
-     * Calculates the geo location from a given cartesian coordinates.
+     * Calculates the geo location from a given cartesian coordinates and centers the map.
      * @param refx
      * @param refy 
      */
-    public void calculateLocationFromPlane (int refx, int refy) {
+    public void calculateNewCenterFromPlaneCoords (int refx, int refy) {
         //========================================================
         float frompole = (float)(topcanvasy + refy) / (float)scale;
         clatitude = 90 - frompole;
@@ -248,6 +248,5 @@ public class MapView {
         //========================================================
     }
     //************************************************************
-    
 }
 //**************************************************************************
