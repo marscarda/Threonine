@@ -1,11 +1,14 @@
 package threonine.midlayer;
 //**************************************************************************
+import java.util.ArrayList;
+import java.util.List;
 import methionine.AppException;
 import methionine.auth.AuthLamda;
 import methionine.auth.User;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
 import threonine.map.FolderUsage;
+import threonine.map.MapErrorCodes;
 import threonine.map.MapFolder;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
@@ -154,6 +157,33 @@ public class MapCenter {
         //------------------------------------------------------------------
         return mapslambda.getMapRecords(folderid);
         //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Returns an array of map records given an array of recordids.
+     * @param rawrecordids
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public MapRecord[] getMapRecords(String rawrecordids) throws AppException, Exception {
+        //---------------------------------------------------
+        if (rawrecordids == null) return new MapRecord[0];
+        if (rawrecordids.length() == 0) return new MapRecord[0];
+        //---------------------------------------------------
+        String[] txtrecordids = rawrecordids.split(",");  
+        //---------------------------------------------------
+        List<MapRecord> records = new ArrayList<>();
+        long recordid;
+        //---------------------------------------------------
+        for (String txtrecordid : txtrecordids) {
+            try { 
+                recordid = Long.parseLong(txtrecordid);
+                records.add(mapslambda.getMapRecord(recordid)); 
+            }
+            catch (AppException e) { continue; }
+        }
+        return records.toArray(new MapRecord[0]);
     }
     //**********************************************************************
     public void updateFolderAttribute (long folderid, UpdateMapFolderAttr updateattr, long userid) throws AppException, Exception {

@@ -77,7 +77,7 @@ public class QueryMaps2 extends QueryMaps1 {
             sql.setParameters(st, 1);
             rs = st.executeQuery();
             if (!rs.next())
-                throw new AppException("Map record not found", AppException.OBJECTNOTFOUND);
+                throw new AppException("Map record not found", MapErrorCodes.MAPRECORDNOTFOUND);
             MapRecord record = new MapRecord();
             record.recordid = rs.getLong(DBMaps.MapRecords.RECORDID);
             record.projectid = rs.getLong(DBMaps.MapRecords.PROJECTID);
