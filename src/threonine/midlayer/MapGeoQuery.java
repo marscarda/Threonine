@@ -44,7 +44,7 @@ public class MapGeoQuery extends MapView {
      * Returns the record IDs that contains the point tested.
      * @return 
      */
-    public long[] pointInRecords () { return pointinrecords; }
+    public long[] affectedIDs () { return pointinrecords; }
     //************************************************************
     /**
      * Calculates the geo location from a given cartesian coordinates.
