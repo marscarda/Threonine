@@ -70,7 +70,7 @@ public class MapView {
      * @param refx
      * @param refy 
      */
-    public void calculateNewCenterFromPlaneCoords (int refx, int refy) {
+    private void calculateNewCenterFromPlaneCoords (int refx, int refy) {
         //========================================================
         float frompole = (float)(topcanvasy + refy) / (float)scale;
         clatitude = 90 - frompole;
@@ -99,6 +99,12 @@ public class MapView {
         float diflon = (float)difx / (float)scale / (float)Math.cos(Math.toRadians(downlat));
         clongitude = downlon - diflon;
         //========================================================
+    }
+    //============================================================
+    public void changeZoom (float scalefactor, int eventx, int eventy) {
+        calculateNewCenterFromPlaneCoords(eventx, eventy);
+        scale = (int)((float)scale * scalefactor);
+        if (scale < 2) scale = 2;
     }
     //************************************************************
     public int recordsCount () { return recount; }
