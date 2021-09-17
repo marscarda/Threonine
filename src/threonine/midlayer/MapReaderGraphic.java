@@ -28,7 +28,7 @@ public class MapReaderGraphic {
     public MapRecordGraphic[] getDrawingRecords (MapGraphicGetParam param, long userid) throws AppException, Exception {
         if (param.folderid != 0) 
             return recordsByFolder(param.folderid, userid);
-        if (param.universeid != 0 && param.subsetid != 0)
+        if (param.universeid != 0)
             return recordsBySubset(param.universeid, param.subsetid, userid);
         return new MapRecordGraphic[0];
     }
