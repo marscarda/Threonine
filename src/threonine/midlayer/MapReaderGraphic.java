@@ -19,6 +19,21 @@ public class MapReaderGraphic {
     public void setUniverserLambda (UniverseLambda lambda) { universerlambda = lambda; }
     //**********************************************************************
     /**
+     * 
+     * @param param
+     * @param userid
+     * @return 
+     * @throws methionine.AppException 
+     */
+    public MapRecordGraphic[] getDrawingRecords (MapGraphicGetParam param, long userid) throws AppException, Exception {
+        if (param.folderid != 0) 
+            return recordsByFolder(param.folderid, userid);
+        if (param.universeid != 0 && param.subsetid != 0)
+            return recordsBySubset(param.universeid, param.subsetid, userid);
+        return new MapRecordGraphic[0];
+    }
+    //**********************************************************************
+    /**
      * Get the raw records for drawing by folder. 
      * @param folderid
      * @param userid
