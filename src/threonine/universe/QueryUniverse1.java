@@ -235,6 +235,60 @@ public class QueryUniverse1 extends QueryUniverseTabs {
     }
     //******************************************************************
     /**
+     * Selects the root subset for a given universe.
+     * @param universeid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    protected SubSet selectRootSubset (long universeid) throws AppException, Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBUniverse.SubSets.TABLE);
+        select.addItem(DBUniverse.SubSets.SUBSETID);
+        select.addItem(DBUniverse.SubSets.UNIVERSEID);
+        select.addItem(DBUniverse.SubSets.PARENTSUBSET);
+        select.addItem(DBUniverse.SubSets.NAME);
+        select.addItem(DBUniverse.SubSets.DESCRIPTION);
+        select.addItem(DBUniverse.SubSets.POPULATION);
+        select.addItem(DBUniverse.SubSets.WEIGHT);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.PARENTSUBSET, "=", 0));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            if (!rs.next())
+                throw new AppException("Subset not found", AppException.SUBSETNOTFOUND);
+            SubSet subset;
+            subset = new SubSet();
+            subset.subsetid = rs.getLong(DBUniverse.SubSets.SUBSETID);
+            subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
+            subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
+            subset.name = rs.getString(DBUniverse.SubSets.NAME);
+            subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
+            subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
+            subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+            return subset;
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select subset \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+    }
+    //******************************************************************
+    /**
      * Selects and returns a universe
      * @param universeid
      * @param subsetid

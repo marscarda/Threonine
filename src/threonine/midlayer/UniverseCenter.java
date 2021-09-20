@@ -16,18 +16,18 @@ import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
 import threonine.universe.SubSet;
 import threonine.universe.Universe;
-import threonine.universe.UniverseLambda;
+import threonine.universe.UniverseAtlas;
 //**************************************************************************
 public class UniverseCenter {
     //**********************************************************************
     AuthLamda authlambda = null;
     ProjectLambda projectlambda = null;
-    UniverseLambda universelambda = null;
+    UniverseAtlas universelambda = null;
     MapsLambda mapslambda = null;
     BillingLambda billinglambda = null;
     public void setAuthLambda (AuthLamda authlambda) { this.authlambda = authlambda; }
     public void setProjectLambda (ProjectLambda projectlambda) { this.projectlambda = projectlambda; }
-    public void setUniverseLambda (UniverseLambda universelambda) { this.universelambda = universelambda; }
+    public void setUniverseLambda (UniverseAtlas universelambda) { this.universelambda = universelambda; }
     public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
     public void setBillingLambda (BillingLambda billinglambda) { this.billinglambda = billinglambda; }
     //**********************************************************************

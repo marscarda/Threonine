@@ -2,11 +2,10 @@ package threonine.universe;
 //**************************************************************************
 import methionine.AppException;
 import methionine.Celaeno;
-import methionine.sql.SQLLockTables;
 import threonine.map.MapObject;
 import threonine.map.PointLocation;
 //**************************************************************************
-public class UniverseLambda extends UniverseLock {
+public class UniverseAtlas extends UniverseLock {
     //**********************************************************************
     //UNIVERSES
     //**********************************************************************
@@ -160,6 +159,23 @@ public class UniverseLambda extends UniverseLock {
         //-------------------------------------------------------------------
         this.insertSubSet(subset);
         //-------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Returns the root subset given a universe.
+     * @param universeid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public SubSet getRootSubset (long universeid) throws AppException, Exception {
+        //-------------------------------------------------------------------
+        connection = electra.slaveConnection();
+        this.setDataBase();
+        //-------------------------------------------------------------------
+        SubSet subset = this.selectRootSubset(universeid);
+        subset.valid = true;
+        return subset;
     }
     //**********************************************************************
     /**

@@ -7,16 +7,16 @@ import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
 import threonine.universe.SubSet;
 import threonine.universe.Universe;
-import threonine.universe.UniverseLambda;
+import threonine.universe.UniverseAtlas;
 //**************************************************************************
 public class MapReaderGraphic {
     //**********************************************************************
     ProjectLambda projectlambda = null;
     MapsLambda mapslambda = null;
-    UniverseLambda universerlambda = null;
+    UniverseAtlas universerlambda = null;
     public void setProjectLambda (ProjectLambda lambda) { projectlambda = lambda; }
     public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
-    public void setUniverserLambda (UniverseLambda lambda) { universerlambda = lambda; }
+    public void setUniverserLambda (UniverseAtlas lambda) { universerlambda = lambda; }
     //**********************************************************************
     /**
      * 
