@@ -27,8 +27,8 @@ public class SubSet {
     //===============================================
     public long getUniverseID () { return universeid; }
     public long getParentSubSet () { return parentsubset; }
-    public long getPopulation () { return population; }
-    public long getWeight () { return weight; }
+    public int getPopulation () { return population; }
+    public int getWeight () { return weight; }
     public long getMapRecordID () { return maprecordid; }
     //-----------------------------------------------
     public String getName () {
