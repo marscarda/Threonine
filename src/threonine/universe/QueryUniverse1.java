@@ -241,7 +241,7 @@ public class QueryUniverse1 extends QueryUniverseTabs {
      * @throws AppException
      * @throws Exception 
      */
-    protected SubSet selectRootSubset (long universeid) throws AppException, Exception {
+    protected SubSet selectTopSubset (long universeid) throws AppException, Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBUniverse.SubSets.TABLE);
         select.addItem(DBUniverse.SubSets.SUBSETID);

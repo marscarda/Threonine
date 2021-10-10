@@ -168,12 +168,12 @@ public class UniverseAtlas extends UniverseLock {
      * @throws AppException
      * @throws Exception 
      */
-    public SubSet getRootSubset (long universeid) throws AppException, Exception {
+    public SubSet getTopSubset (long universeid) throws AppException, Exception {
         //-------------------------------------------------------------------
         connection = electra.slaveConnection();
         this.setDataBase();
         //-------------------------------------------------------------------
-        SubSet subset = this.selectRootSubset(universeid);
+        SubSet subset = this.selectTopSubset(universeid);
         subset.valid = true;
         return subset;
     }
