@@ -1,6 +1,7 @@
 package threonine.midlayer;
 //**************************************************************************
 import threonine.map.MapObject;
+import threonine.midlayer.MapObjectGraphic;
 //**************************************************************************
 public class MapRecordGraphic {
     //**********************************************************************

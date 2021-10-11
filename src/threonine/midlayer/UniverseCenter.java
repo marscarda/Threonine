@@ -241,7 +241,7 @@ public class UniverseCenter {
         //------------------------------------------------------------------
         MapReaderGraphic mapreader = new MapReaderGraphic();
         mapreader.setMapsLambda(mapslambda);
-        MapRecordGraphic recordg = mapreader.getMapRecord(record);
+        MapRecordGraphic recordg = mapreader.getRecord(record);
         MapObjectGraphic[] objects = recordg.getMapObjects();
         //------------------------------------------------------------------
         //If there is no map object in the record.

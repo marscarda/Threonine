@@ -43,13 +43,6 @@ public class MapReaderGraphic {
      */
     public MapRecordGraphic[] recordsByFolder (long folderid, long userid) throws AppException, Exception {
         //------------------------------------------------------------------
-        if (folderid == 0) return new MapRecordGraphic[0]; //This prevents the exception of No Project Selected.
-        //------------------------------------------------------------------
-        if (userid != 0) {
-            MapFolder folder = mapslambda.getMapFolder(folderid);
-            projectlambda.checkAccess(folder.projectID(), userid, 1);
-        }
-        //------------------------------------------------------------------
         MapRecord[] records = mapslambda.getMapRecords(folderid);
         if (records.length == 0) return new MapRecordGraphic[0];
         int rcount = records.length;
@@ -75,12 +68,6 @@ public class MapReaderGraphic {
      */
     public MapRecordGraphic[] recordsBySubset (long universeid, long subsetid, long userid) throws AppException, Exception {
         //------------------------------------------------------------------
-        //We check the user has read access to the project where universe belongs.
-        if (userid != 0) {
-            Universe universe = universerlambda.getUniverse(universeid);
-            projectlambda.checkAccess(universe.projectID(), userid, 1);
-        }
-        //------------------------------------------------------------------
         SubSet[] subsets = universerlambda.getSubsets(universeid, subsetid);
         if (subsets.length == 0) return new MapRecordGraphic[0];
         int scount = subsets.length;
@@ -102,9 +89,9 @@ public class MapReaderGraphic {
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic getMapRecord (long recordid) throws AppException, Exception {
+    public MapRecordGraphic getRecord (long recordid) throws AppException, Exception {
         MapRecord record = mapslambda.getMapRecord(recordid);
-        return getMapRecord(record);
+        return getRecord(record);
     }
     //======================================================================    
     /**
@@ -114,7 +101,7 @@ public class MapReaderGraphic {
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic getMapRecord (MapRecord record) throws AppException, Exception {
+    public MapRecordGraphic getRecord (MapRecord record) throws AppException, Exception {
         MapRecordGraphic recordg = new MapRecordGraphic();
         recordg.recordid = record.getID();
         recordg.setObjects(mapslambda.getObjectsByRecord(record.getID(), true));
