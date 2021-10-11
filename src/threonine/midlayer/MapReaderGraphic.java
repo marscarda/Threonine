@@ -2,11 +2,10 @@ package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
 import methionine.project.ProjectLambda;
-import threonine.map.MapFolder;
+import threonine.map.MapObject;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
 import threonine.universe.SubSet;
-import threonine.universe.Universe;
 import threonine.universe.UniverseAtlas;
 //**************************************************************************
 public class MapReaderGraphic {
@@ -105,6 +104,21 @@ public class MapReaderGraphic {
         MapRecordGraphic recordg = new MapRecordGraphic();
         recordg.recordid = record.getID();
         recordg.setObjects(mapslambda.getObjectsByRecord(record.getID(), true));
+        return recordg;
+    }
+    //**********************************************************************
+    /**
+     * If the subset doesn't exist. It returns an empty record.
+     * @param subsetid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public MapRecordGraphic subsetGetRecord (long subsetid) throws AppException, Exception {
+        MapRecordGraphic recordg = new MapRecordGraphic();
+        recordg.recordid = subsetid;
+        MapObject[] mapobjs = universerlambda.getObjectsBySubset(subsetid, true);
+        recordg.setObjects(mapobjs);
         return recordg;
     }
     //**********************************************************************
