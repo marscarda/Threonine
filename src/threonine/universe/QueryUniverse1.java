@@ -320,7 +320,7 @@ public class QueryUniverse1 extends QueryUniverseTabs {
             sql.setParameters(st, 1);
             rs = st.executeQuery();
             if (!rs.next())
-                throw new AppException("Subset not found", AppException.SUBSETNOTFOUND);
+                throw new AppException("Subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
             SubSet subset;
             subset = new SubSet();
             subset.subsetid = rs.getLong(DBUniverse.SubSets.SUBSETID);
