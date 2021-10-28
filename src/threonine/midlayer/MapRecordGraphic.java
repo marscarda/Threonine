@@ -4,7 +4,7 @@ import threonine.map.MapObject;
 //**************************************************************************
 public class MapRecordGraphic {
     //**********************************************************************
-    long recordid = 0;
+    long itemid = 0;
     int objcount = 0;
     MapObjectGraphic[] mapobjects = null;
     //**********************************************************************
@@ -30,7 +30,7 @@ public class MapRecordGraphic {
         objcount++;
     }
     //**********************************************************************
-    public long getRecordId () { return recordid; }
+    public long getRecordId () { return itemid; }
     public int getObjectsCount () { return objcount; }
     public MapObjectGraphic[] getMapObjects () {
         if (mapobjects == null) return new MapObjectGraphic[0];
@@ -68,6 +68,8 @@ public class MapRecordGraphic {
             if (obj.getEast() > e) e = obj.getEast();
         return e;
     }
+    //**********************************************************************
+    public void reWriteId (long newid) { itemid = newid; }
     //**********************************************************************
 }
 //**************************************************************************

@@ -35,7 +35,7 @@ public class MapGeoQuery extends MapView {
             int inside = intersections % 2;
             //===============================================
             if (inside != 0)
-                addRecordID(record.recordid);
+                addRecordID(record.itemid);
             //===============================================
         }
     }
