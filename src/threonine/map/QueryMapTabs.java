@@ -122,6 +122,8 @@ public class QueryMapTabs extends Alcyone {
         create.addField(DBMaps.Objects.OBJECTID, "BIGINT NOT NULL");
         create.addField(DBMaps.Objects.RECORDID, "BIGINT NOT NULL");
         create.addField(DBMaps.Objects.OBJTYPE, "INTEGER NOT NULL");
+        create.addField(DBMaps.Objects.COST, "FLOAT (10,6) NOT NULL DEFAULT 0");
+        create.addUnique(DBMaps.Objects.OBJECTID);
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();

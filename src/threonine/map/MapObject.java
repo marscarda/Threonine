@@ -6,6 +6,7 @@ public class MapObject {
     public long recordid = 0;
     public int objtype = 3;
     public PointLocation[] points = null;
+    public float cost = 0;
     //=========================================================
     public void setRecordID (long recordid) { this.recordid = recordid; }
     //=========================================================

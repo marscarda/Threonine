@@ -1,5 +1,6 @@
 package threonine.map;
 //**************************************************************************
+import java.sql.SQLIntegrityConstraintViolationException;
 import methionine.AppException;
 import methionine.Celaeno;
 import methionine.TabList;
@@ -72,41 +73,34 @@ public class MapsLambda extends MapsLambdaFolders {
      * 
      * @param recordid
      * @param points
+     * @param cost
      * @throws AppException
      * @throws Exception 
      */
-    public void createMapObject (long recordid, PointLocation[] points) throws AppException, Exception {
+    public void createMapObject (long recordid, PointLocation[] points, float cost) throws AppException, Exception {
         //=============================================================
         connection = electra.masterConnection();
         setDataBase();
         //=============================================================
-        TabList tablist = new TabList();
-        tablist.addTable(databasename, DBMaps.MapRecords.TABLE);
-        tablist.addTable(databasename, DBMaps.Objects.TABLE);
-        tablist.addTable(databasename, DBMaps.LocationPoints.TABLE);
-        this.setAutoCommit(0);
-        this.lockTables(tablist);
-        //-------------------------------------------------------------
         //We check the map record exists.
         if (checkValueCount(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.RECORDID, recordid) == 0)
-            throw new AppException("Map Record not found", AppException.OBJECTNOTFOUND);
-        //-------------------------------------------------------------
+            throw new AppException("Map Record not found", MapErrorCodes.MAPRECORDNOTFOUND);
+        //=============================================================
         MapObject object = new MapObject();
         object.recordid = recordid;
+        object.cost = cost;
         while (true) {
             object.objectid = Celaeno.getUniqueID();
-            if (checkValueCount(DBMaps.Objects.TABLE, DBMaps.Objects.OBJECTID, object.objectid) == 0) break;
+            try { this.insertMapObject(object); }
+            catch (SQLIntegrityConstraintViolationException e) { continue; }
+            break;
         }
-        //=============================================================
-        this.insertMapObject(object);
+        //-------------------------------------------------------------
         for (PointLocation point : points) {
             point.recordid = recordid;
             point.objectid = object.objectid;
             this.insertPointLocation(point);
         }
-        //=============================================================
-        this.commit();
-        this.unLockTables();
         //=============================================================
     }
     //**********************************************************************

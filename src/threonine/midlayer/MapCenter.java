@@ -3,10 +3,15 @@ package threonine.midlayer;
 import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
+import methionine.TabList;
 import methionine.auth.AuthLamda;
 import methionine.auth.User;
+import methionine.billing.AlterUsage;
+import methionine.billing.BillingLambda;
+import methionine.billing.UsageCost;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
+import threonine.map.DBMaps;
 import threonine.map.FolderUsage;
 import threonine.map.MapErrorCodes;
 import threonine.map.MapFolder;
@@ -19,9 +24,11 @@ public class MapCenter {
     AuthLamda authlambda = null;
     ProjectLambda projectlambda = null;
     MapsLambda mapslambda = null;
+    BillingLambda billingatlas = null;
     public void setAuthLambda (AuthLamda authlambda) { this.authlambda = authlambda; }
     public void setProjectLambda (ProjectLambda projectlambda) { this.projectlambda = projectlambda; }
     public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
+    public void setBillingAtlas (BillingLambda billingatlas) { this.billingatlas = billingatlas; }
     //**********************************************************************
     /**
      * Creates a new Map Folder
@@ -64,11 +71,47 @@ public class MapCenter {
      * @throws Exception 
      */
     public void createObject (String pointstable, long recordid, long userid) throws AppException, Exception {
+        //********************************************************
         MapRecord record = mapslambda.getMapRecord(recordid);
+        //********************************************************
+        //We check the user has write acces to the project
         projectlambda.checkAccess(record.getProjectID(), userid, 2);
+        //--------------------------------------------------------
+        //We recover the project. Needed ahead when altering usage.
+        Project project = projectlambda.getProject(record.getProjectID(), 0);
+        //********************************************************
         PointLocation[] points = MapValidationAndMath.createPoints(pointstable);
         MapValidationAndMath.checkValid(points);
-        mapslambda.createMapObject(recordid, points);
+        //********************************************************
+        //We calculate the cost of the object.
+        int billpts = points.length;
+        float cost = 0;
+        while (billpts > 0) {
+            billpts -= 100;
+            cost += UsageCost.MAP100VERTICES;
+        }
+        //********************************************************
+        //Transaction and locks stuff.
+        TabList tablist = new TabList();
+        mapslambda.addLockCreateObject(tablist);
+        billingatlas.AddLockAlterUsage(tablist);
+        mapslambda.setAutoCommit(0);
+        mapslambda.lockTables(tablist);
+        //********************************************************
+        mapslambda.createMapObject(recordid, points, cost);
+        //********************************************************
+        //We alter the usage cost.
+        AlterUsage alter = new AlterUsage();
+        alter.setProjectId(project.projectID());
+        alter.setProjectName(project.getName());
+        alter.setIncrease(cost);
+        alter.setStartingEvent("Map Object for '" + record.getName() + "' Created");
+        billingatlas.alterUsage(alter);
+        //********************************************************
+        //We are done.
+        mapslambda.commit();
+        mapslambda.unLockTables();
+        //********************************************************
     }
     //**********************************************************************
     /**

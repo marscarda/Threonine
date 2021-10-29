@@ -3,6 +3,7 @@ package threonine.map;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
@@ -165,19 +166,22 @@ public class QueryMaps2 extends QueryMaps1 {
     /**
      * Inserts a new map object in the DB.
      * @param object
+     * @throws java.sql.SQLIntegrityConstraintViolationException
      * @throws Exception 
      */
-    protected void insertMapObject (MapObject object) throws Exception {
+    protected void insertMapObject (MapObject object) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBMaps.Objects.TABLE);
         insert.addValue(DBMaps.Objects.OBJECTID, object.objectid);
         insert.addValue(DBMaps.Objects.RECORDID, object.recordid);
         insert.addValue(DBMaps.Objects.OBJTYPE, object.objtype);
+        insert.addValue(DBMaps.Objects.COST, object.cost);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
             insert.setParameters(st, 1);
             st.execute();            
         }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to insert new map object \n");
             msg.append(e.getMessage());

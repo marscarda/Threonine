@@ -4,7 +4,7 @@ import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
 //**************************************************************************
-public class MapsLambdaFolders extends QueryMaps3 {
+public class MapsLambdaFolders extends LockMap {
     //**********************************************************************
     /**
      * Creates a new map folder

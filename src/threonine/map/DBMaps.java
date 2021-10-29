@@ -36,6 +36,7 @@ public class DBMaps {
         static final String OBJECTID = "objectid";
         static final String RECORDID = "recordid";
         static final String OBJTYPE = "objtype";
+        static final String COST = "cost";
     }
     //**********************************************************************
     public static class LocationPoints {
