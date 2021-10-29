@@ -9,7 +9,7 @@ public class SubSet {
     String description;
     int population = 0;
     int weight = 0;
-    int cost = 0;
+    float cost = 0;
     long maprecordid = 0;
     boolean valid = false;
     boolean root = false;
@@ -23,7 +23,7 @@ public class SubSet {
     public void setPopulation (int population) { this.population = population; }
     public void setWeight (int weight) { this.weight = weight; }
     //-----------------------------------------------
-    public void setCost (int cost) { this.cost = cost; }
+    public void setCost (float cost) { this.cost = cost; }
     //===============================================
     public long getUniverseID () { return universeid; }
     public long getParentSubSet () { return parentsubset; }
