@@ -149,7 +149,7 @@ public class UniverseAtlas extends UniverseLock {
         //-------------------------------------------------------------------
         if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.parentsubset,
             DBUniverse.SubSets.UNIVERSEID, subset.universeid) == 0) {
-            throw new AppException("Parent subset not found", AppException.SUBSETNOTFOUND);
+            throw new AppException("Parent subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
         }
         //-------------------------------------------------------------------
         while (true) {
@@ -222,7 +222,7 @@ public class UniverseAtlas extends UniverseLock {
         //-------------------------------------------------------------------
         //We check the subset exists in the master
         if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subsetid) == 0)
-            throw new AppException("Subset not found", AppException.SUBSETNOTFOUND);
+            throw new AppException("Subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
         //-------------------------------------------------------------------
         MapObject object = new MapObject();
         object.recordid = subsetid;
