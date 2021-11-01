@@ -104,6 +104,16 @@ public class MapsLambdaFolders extends LockMap {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    @Override
+    public void deleteFolder (long folderid) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        super.deleteFolder(folderid);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
     /**
      * 
      * @param usage
@@ -147,6 +157,20 @@ public class MapsLambdaFolders extends LockMap {
     }
     //**********************************************************************
     /**
+     * 
+     * @throws Exception 
+     */
+    @Override
+    public void deleteFolderUsage (long folderid, long projectid) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        super.deleteFolderUsage(folderid, projectid);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
      * Returns a map folder given its ID.
      * @param folderid
      * @return
@@ -163,7 +187,8 @@ public class MapsLambdaFolders extends LockMap {
             return folder;
         }
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         folder = this.selectMapFolder(folderid);

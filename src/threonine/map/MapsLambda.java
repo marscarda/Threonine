@@ -3,7 +3,6 @@ package threonine.map;
 import java.sql.SQLIntegrityConstraintViolationException;
 import methionine.AppException;
 import methionine.Celaeno;
-import methionine.TabList;
 import methionine.sql.SQLLockTables;
 //**************************************************************************
 public class MapsLambda extends MapsLambdaFolders {
@@ -26,7 +25,7 @@ public class MapsLambda extends MapsLambdaFolders {
         this.getExclusiveTableAccess(lock);
         //------------------------------------------------------------------
         if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERID, record.folderid) == 0)
-            throw new AppException("Parent Folder Not Found", AppException.OBJECTNOTFOUND);
+            throw new AppException("Parent Folder Not Found", MapErrorCodes.MAPFOLDERNOTFOUND);
         //------------------------------------------------------------------
         while (true) {
             record.recordid = Celaeno.getUniqueID();
@@ -66,6 +65,21 @@ public class MapsLambda extends MapsLambdaFolders {
         setDataBase();
         //------------------------------------------------------------------
         return this.selectMapRecords(folderid);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * 
+     * @param recordid
+     * @throws Exception 
+     */
+    @Override
+    public void deleteMapRecord (long folderid, long recordid) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        super.deleteMapRecord(folderid, 0);
         //------------------------------------------------------------------
     }
     //**********************************************************************

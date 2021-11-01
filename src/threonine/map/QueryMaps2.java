@@ -157,6 +157,36 @@ public class QueryMaps2 extends QueryMaps1 {
         }
     }    
     //**********************************************************************
+    /**
+     * 
+     * @param folderid
+     * @param recordid
+     * @throws Exception 
+     */
+    protected void deleteMapRecord (long folderid, long recordid) throws Exception {
+        //---------------------------------------------
+        if (folderid == 0 && recordid == 0) return;
+        //---------------------------------------------
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLDelete delete = new SQLDelete(DBMaps.MapRecords.TABLE);
+        SQLWhere whr = new SQLWhere();
+        if (folderid != 0) whr.addCondition(new SQLCondition(DBMaps.MapRecords.FOLDERID, "=", folderid));
+        if (recordid != 0) whr.addCondition(new SQLCondition(DBMaps.MapRecords.RECORDID, "=", recordid));
+        sql.addClause(delete);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to delete map record (kandrazj)\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
+    }
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************

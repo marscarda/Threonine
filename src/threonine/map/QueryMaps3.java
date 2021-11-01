@@ -8,6 +8,7 @@ import java.util.List;
 import methionine.AppException;
 import methionine.sql.SQLColumn;
 import methionine.sql.SQLCondition;
+import methionine.sql.SQLDelete;
 import methionine.sql.SQLInnerJoin;
 import methionine.sql.SQLInsert;
 import methionine.sql.SQLOrderBy;
@@ -135,6 +136,34 @@ public class QueryMaps3 extends QueryMaps2 {
             if (st != null) try {st.close();} catch(Exception e){}
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
+    }
+    //**********************************************************************
+    /**
+     * 
+     * @param folderid
+     * @param projectid
+     * @throws Exception 
+     */
+    protected void deleteFolderUsage (long folderid, long projectid) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLDelete delete = new SQLDelete(DBMaps.FolderUsage.TABLE);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderUsage.FOLDERID, "=", folderid));
+        if (projectid != 0) whr.addCondition(new SQLCondition(DBMaps.FolderUsage.PROJECTID, "=", projectid));
+        sql.addClause(delete);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to delete map folder usage (mansers)\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
     }
     //**********************************************************************
     /**

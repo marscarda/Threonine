@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
 import methionine.sql.SQLCondition;
+import methionine.sql.SQLDelete;
 import methionine.sql.SQLInsert;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
@@ -273,6 +274,32 @@ public class QueryMaps1 extends QueryMapTabs {
             if (st != null) try {st.close();} catch(Exception e){}
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
+    }
+    //**********************************************************************
+    /**
+     * 
+     * @param folderid
+     * @throws Exception 
+     */
+    protected void deleteFolder (long folderid) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLDelete delete = new SQLDelete(DBMaps.FolderTree.TABLE);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.FOLDERID, "=", folderid));
+        sql.addClause(delete);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to delete map folder (kandraj)\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
     }
     //**********************************************************************
     /**
