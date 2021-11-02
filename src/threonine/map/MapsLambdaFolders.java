@@ -1,5 +1,6 @@
 package threonine.map;
 //**************************************************************************
+import java.sql.SQLIntegrityConstraintViolationException;
 import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
@@ -9,7 +10,6 @@ public class MapsLambdaFolders extends LockMap {
     /**
      * Creates a new map folder
      * @param folder
-     * @throws AppException IDENTIFIERALREADYEXISTS, OBJECTNOTFOUND
      * @throws Exception 
      */
     public void createFolder (MapFolder folder) throws AppException, Exception {
@@ -17,41 +17,35 @@ public class MapsLambdaFolders extends LockMap {
         connection = electra.masterConnection();
         setDataBase();
         //------------------------------------------------------------------
-        this.setAutoCommit(0);
-        SQLLockTables lock = new SQLLockTables();
-        lock.setDataBase(databasename);
-        lock.addTable(DBMaps.FolderTree.TABLE);
-        lock.addTable(DBMaps.FolderUsage.TABLE);
-        this.getExclusiveTableAccess(lock);
-        //------------------------------------------------------------------
         if (folder.parentid != 0) {
             if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERID, folder.parentid) == 0)
-                throw new AppException("Parent Folder Not Found", AppException.OBJECTNOTFOUND);
+                throw new AppException("Parent Folder Not Found", MapErrorCodes.MAPFOLDERNOTFOUND);
             if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, folder.name, 
                 DBMaps.FolderTree.PARENTFOLDER, folder.parentid) != 0)
-                    throw new AppException("Folder Name already exists", AppException.IDENTIFIERALREADYEXISTS);
+                    throw new AppException("Folder Name already exists", MapErrorCodes.FOLDERNAMEALREADYEXISTS);
         } else {
             if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, folder.name, 
                 DBMaps.FolderTree.PROJECTID, folder.projectid) != 0)
-                    throw new AppException("Folder Name already exists", AppException.IDENTIFIERALREADYEXISTS);
+                    throw new AppException("Folder Name already exists", MapErrorCodes.FOLDERNAMEALREADYEXISTS);
         }
         //------------------------------------------------------------------
         if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, folder.publicname) != 0)
-            throw new AppException("Public name already used", AppException.IDENTIFIERALREADYEXISTS);
-        //------------------------------------------------------------------
-        while (true) {
-            folder.folderid = Celaeno.getUniqueID();
-            if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERID, folder.folderid) == 0) break;
-        }
+            throw new AppException("Public name already used", MapErrorCodes.FOLDERPUBLICNAMEALREADYUSED);
         //------------------------------------------------------------------
         FolderUsage usage = new FolderUsage();
         usage.projectid = folder.projectid;
         usage.folderid = folder.folderid;
-        //------------------------------------
-        this.insertMapFolder(folder);
+        //------------------------------------------------------------------
+        while (true) {
+            try {
+                folder.folderid = Celaeno.getUniqueID();
+                this.insertMapFolder(folder);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }
+        //------------------------------------------------------------------
         this.insertFolderUsage(usage);
-        this.commitTransaction();
-        this.releaseExclusiveTableAccess();
         //------------------------------------------------------------------
     }
     //**********************************************************************
@@ -149,7 +143,8 @@ public class MapsLambdaFolders extends LockMap {
      */
     public FolderUsage getFolderUsage (long projectid, long folderid) throws AppException, Exception {
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         return this.selectFolderUsage(projectid, folderid);
@@ -198,7 +193,8 @@ public class MapsLambdaFolders extends LockMap {
     //======================================================================
     public MapFolder getMapFolder (String publicname) throws AppException, Exception {
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         return this.selectMapFolder(publicname);
@@ -214,7 +210,8 @@ public class MapsLambdaFolders extends LockMap {
      */
     public MapFolder[] getChildrenFolders (long projectid, long parentid) throws Exception {
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         return this.selectMapFolders(projectid, parentid);
@@ -229,7 +226,8 @@ public class MapsLambdaFolders extends LockMap {
      */
     public MapFolder[] searchFolders (String searchkey) throws Exception {
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         return this.selectMapFoldersByShareID(searchkey);
@@ -243,7 +241,8 @@ public class MapsLambdaFolders extends LockMap {
      */
     public MapFolder[] getFolderUsed (long projectid) throws Exception {
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         return this.selectFoldersUsedInProject(projectid);

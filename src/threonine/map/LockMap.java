@@ -4,6 +4,11 @@ import methionine.TabList;
 //************************************************************************
 public class LockMap extends QueryMaps3 {
     //********************************************************************
+    public void addLockCreateFolder (TabList tabs) {
+        tabs.addTable(databasename, DBMaps.FolderTree.TABLE);
+        tabs.addTable(databasename, DBMaps.FolderUsage.TABLE);
+    }
+    //********************************************************************
     public void addLockCreateObject (TabList tabs) {
         tabs.addTable(databasename, DBMaps.MapRecords.TABLE);
         tabs.addTable(databasename, DBMaps.Objects.TABLE);
@@ -16,6 +21,12 @@ public class LockMap extends QueryMaps3 {
         tabs.addTable(databasename, DBMaps.Objects.TABLE);
         tabs.addTable(databasename, DBMaps.LocationPoints.TABLE);
         tabs.addTable(databasename, DBMaps.FolderUsage.TABLE);
+    }
+    //********************************************************************
+    public void addLockDeleteRecord (TabList tabs) {
+        //tabs.addTable(databasename, DBMaps.MapRecords.TABLE);
+        //tabs.addTable(databasename, DBMaps.Objects.TABLE);
+        tabs.addTable(databasename, DBMaps.LocationPoints.TABLE);
     }
     //********************************************************************
 }

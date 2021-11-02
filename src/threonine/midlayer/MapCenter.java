@@ -38,12 +38,27 @@ public class MapCenter {
      * @throws Exception 
      */
     public void createFolder (MapFolder folder, long userid) throws AppException, Exception {
+        //========================================================
         projectlambda.checkAccess(folder.projectID(), userid, 2);
         if (folder.getName().length() == 0)
             throw new AppException("Folder name cannot be empty", AppException.INVALIDDATASUBMITED);
         if (folder.publicName().length() == 0)
             throw new AppException("Public name cannot be empty", AppException.INVALIDDATASUBMITED);
+        //========================================================
+        //We need to use the master for this.
+        mapslambda.useMaster();
+        //================================================================
+        TabList tabs = new TabList();
+        projectlambda.setLock(tabs);
+        mapslambda.addLockCreateFolder(tabs);
+        mapslambda.setAutoCommit(0);
+        mapslambda.lockTables(tabs);
+        //================================================================
+        projectlambda.inMasterProject(folder.projectID());
         mapslambda.createFolder(folder);
+        //========================================================
+        mapslambda.commit();
+        //========================================================
     }
     //**********************************************************************
     /**

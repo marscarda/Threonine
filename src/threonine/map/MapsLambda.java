@@ -46,7 +46,8 @@ public class MapsLambda extends MapsLambdaFolders {
      */
     public MapRecord getMapRecord (long recordid) throws AppException, Exception {
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         return this.selectMapRecord(recordid);
@@ -61,7 +62,8 @@ public class MapsLambda extends MapsLambdaFolders {
      */
     public MapRecord[] getMapRecords (long folderid) throws Exception {
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         return this.selectMapRecords(folderid);
@@ -143,7 +145,8 @@ public class MapsLambda extends MapsLambdaFolders {
      */
     public MapObject[] getObjectsByRecord (long recordid, boolean fillpoints) throws Exception {
         //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
         MapObject[] objects = this.selectMapObjects(recordid);

@@ -39,6 +39,7 @@ public class QueryMapTabs extends Alcyone {
         create.addField(DBMaps.FolderTree.SHAREPASS, "VARCHAR (100) NULL DEFAULT NULL");
         create.addField(DBMaps.FolderTree.COSTPERUSE, "INTEGER NOT NULL DEFAULT 0");
         create.addField(DBMaps.FolderTree.SEARCHABLE, "INTEGER NOT NULL DEFAULT 0");
+        create.addUnique(DBMaps.FolderTree.FOLDERID);
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();

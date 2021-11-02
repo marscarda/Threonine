@@ -3,6 +3,7 @@ package threonine.map;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
@@ -22,7 +23,7 @@ public class QueryMaps1 extends QueryMapTabs {
      * @param folder
      * @throws Exception 
      */
-    protected void insertMapFolder (MapFolder folder) throws Exception {
+    protected void insertMapFolder (MapFolder folder) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBMaps.FolderTree.TABLE);
         insert.addValue(DBMaps.FolderTree.FOLDERID, folder.folderid);
         insert.addValue(DBMaps.FolderTree.PROJECTID, folder.projectid);
@@ -36,6 +37,7 @@ public class QueryMaps1 extends QueryMapTabs {
             insert.setParameters(st, 1);
             st.execute();            
         }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to insert new mapfolder\n");
             msg.append(e.getMessage());
