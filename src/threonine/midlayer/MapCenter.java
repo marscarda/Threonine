@@ -11,9 +11,7 @@ import methionine.billing.BillingLambda;
 import methionine.billing.UsageCost;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
-import threonine.map.DBMaps;
 import threonine.map.FolderUsage;
-import threonine.map.MapErrorCodes;
 import threonine.map.MapFolder;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
@@ -136,13 +134,14 @@ public class MapCenter {
      * @throws AppException
      * @throws Exception 
      */
+    @Deprecated
     public void clearObjects (long recordid, long userid) throws AppException, Exception {
         if (userid != 0) {
             MapRecord record = mapslambda.getMapRecord(recordid);
             MapFolder folder = mapslambda.getMapFolder(record.getFolderID());
             projectlambda.checkAccess(folder.projectID(), userid, 3);
         }
-        mapslambda.clearMapObjects(recordid);
+        //mapslambda.clearMapObjects(recordid);
     }
     //**********************************************************************
     public MapFolder getMapFolder (long folderid, long userid) throws AppException, Exception {
