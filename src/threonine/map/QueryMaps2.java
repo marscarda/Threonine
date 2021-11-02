@@ -368,6 +368,7 @@ public class QueryMaps2 extends QueryMaps1 {
         select.addItem(DBMaps.Objects.OBJECTID);
         select.addItem(DBMaps.Objects.RECORDID);
         select.addItem(DBMaps.Objects.OBJTYPE);
+        select.addItem(DBMaps.Objects.COST);
         //-------------------------------------------------------
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBMaps.Objects.RECORDID, "=", recordid));
@@ -389,6 +390,7 @@ public class QueryMaps2 extends QueryMaps1 {
                 object.objectid = rs.getLong(DBMaps.Objects.OBJECTID);
                 object.recordid = rs.getLong(DBMaps.Objects.RECORDID);
                 object.objtype = rs.getInt(DBMaps.Objects.OBJTYPE);
+                object.cost = rs.getFloat(DBMaps.Objects.COST);
                 objects.add(object);
             }            
             return objects.toArray(new MapObject[0]);
