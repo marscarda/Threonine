@@ -82,7 +82,7 @@ public class MapsLambda extends MapsLambdaFolders {
         connection = electra.masterConnection();
         setDataBase();
         //------------------------------------------------------------------
-        super.deleteMapRecord(folderid, 0);
+        super.deleteMapRecord(folderid, recordid);
         //------------------------------------------------------------------
     }
     //**********************************************************************

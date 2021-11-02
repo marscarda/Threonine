@@ -24,8 +24,8 @@ public class LockMap extends QueryMaps3 {
     }
     //********************************************************************
     public void addLockDeleteRecord (TabList tabs) {
-        //tabs.addTable(databasename, DBMaps.MapRecords.TABLE);
-        //tabs.addTable(databasename, DBMaps.Objects.TABLE);
+        tabs.addTable(databasename, DBMaps.MapRecords.TABLE);
+        tabs.addTable(databasename, DBMaps.Objects.TABLE);
         tabs.addTable(databasename, DBMaps.LocationPoints.TABLE);
     }
     //********************************************************************
