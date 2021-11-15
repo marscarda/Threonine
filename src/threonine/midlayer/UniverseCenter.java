@@ -5,7 +5,7 @@ import methionine.TabList;
 import methionine.auth.AuthLamda;
 import methionine.billing.AlterUsage;
 import methionine.billing.BillingLambda;
-import methionine.billing.ComunityTransfer;
+import methionine.billing.ComunityTransferDep;
 import methionine.billing.SystemCharge;
 import methionine.billing.UsageCost;
 import methionine.project.Project;
@@ -267,7 +267,7 @@ public class UniverseCenter {
         //If the use of the map object has a cost we create a transfer.
         //Else we create a syatem charge.
         if (dotransfer) {
-            ComunityTransfer transfer = new ComunityTransfer();
+            ComunityTransferDep transfer = new ComunityTransferDep();
             transfer.setFromUserid(projectsubset.getOwner());
             transfer.setFromProjectId(projectsubset.workTeamID());
             transfer.setToUserId(projectto.getOwner());//If it was a null pointer we would not be here.
