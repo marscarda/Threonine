@@ -276,7 +276,9 @@ public class UniverseCenter {
             transfer.setDescription(description);
             transfer.setSystemCost(UsageCost.MAPRECORDTOSUBSET);
             transfer.setTransferSize(usage.costPerUse());
-            billinglambda.createComunityTransfer(transfer);
+            
+            //billinglambda.createComunityTransfer(transfer);
+            
         } else {
             SystemCharge charge = new SystemCharge();
             charge.setUserid(projectsubset.getOwner());
