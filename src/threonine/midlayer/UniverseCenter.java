@@ -5,7 +5,7 @@ import methionine.TabList;
 import methionine.auth.AuthLamda;
 import methionine.billing.AlterUsage;
 import methionine.billing.BillingLambda;
-import methionine.billing.ComunityTransferDep;
+import methionine.billing.CommerceTransfer;
 import methionine.billing.SystemCharge;
 import methionine.billing.UsageCost;
 import methionine.project.Project;
@@ -158,7 +158,10 @@ public class UniverseCenter {
         alter.setIncrease(UsageCost.UNIVSUBSET);
         alter.setStartingEvent("Subset " + subset.getName() + " Added to universe " + universe.getName());
         billinglambda.alterUsage(alter);
-        //------------------------------------------------------------------
+        //******************************************************************
+        //We recalculate the population to parents.
+        updateParentsPop(subset.getUniverseID(), subset.getParentSubSet());
+        //******************************************************************
         //We are done.
         universelambda.commit();
         universelambda.unLockTables();
@@ -267,14 +270,13 @@ public class UniverseCenter {
         //If the use of the map object has a cost we create a transfer.
         //Else we create a syatem charge.
         if (dotransfer) {
-            ComunityTransferDep transfer = new ComunityTransferDep();
+            CommerceTransfer transfer = new CommerceTransfer();
             transfer.setFromUserid(projectsubset.getOwner());
-            transfer.setFromProjectId(projectsubset.workTeamID());
+            transfer.setFromProjectId(projectsubset.projectID());
             transfer.setToUserId(projectto.getOwner());//If it was a null pointer we would not be here.
-            transfer.setToProjectId(projectto.workTeamID());
+            transfer.setToProjectId(projectto.projectID());
             String description = "Map Record " + record.getName() + " Added to subset";
             transfer.setDescription(description);
-            transfer.setSystemCost(UsageCost.MAPRECORDTOSUBSET);
             transfer.setTransferSize(usage.costPerUse());
             
             //billinglambda.createComunityTransfer(transfer);
@@ -282,7 +284,7 @@ public class UniverseCenter {
         } else {
             SystemCharge charge = new SystemCharge();
             charge.setUserid(projectsubset.getOwner());
-            charge.setProjectId(projectsubset.workTeamID());
+            charge.setProjectId(projectsubset.projectID());
             String description = "Map Record " + record.getName() + " Added to subset";
             charge.setDescription(description);
             charge.setCost(UsageCost.MAPRECORDTOSUBSET);
@@ -292,6 +294,31 @@ public class UniverseCenter {
         universelambda.commit();
         universelambda.unLockTables();
         //******************************************************************
+    }
+    //**********************************************************************
+    /**
+     * 
+     * @param subsetid
+     * @throws AppException
+     * @throws Exception 
+     */
+    private void updateParentsPop (long universe, long pinsubset) throws AppException, Exception {
+        //********************************************************
+        //Top reached. Nothing to do.
+        if (pinsubset == 0) return;
+        //********************************************************
+        SubSet subset = universelambda.getSubset(universe, pinsubset);
+        SubSet[] subsets = universelambda.getSubsets(universe, pinsubset);
+        int childrenpop = 0;
+        //==============================================
+        for (SubSet sbst : subsets)
+            childrenpop += sbst.getPopulation();
+        //********************************************************
+        if (childrenpop > subset.getPopulation()) 
+            universelambda.setSubsetPop(universe, pinsubset, childrenpop);
+        //********************************************************
+        updateParentsPop(universe, subset.getParentSubSet());
+        //********************************************************
     }
     //**********************************************************************
 }

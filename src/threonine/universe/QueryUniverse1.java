@@ -427,8 +427,41 @@ public class QueryUniverse1 extends QueryUniverseTabs {
         }
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
+        }
+    }
+    //******************************************************************
+    /**
+     * Updates population for a subset.
+     * @param universeid
+     * @param subsetid
+     * @param population
+     * @throws Exception 
+     */
+    protected void updateSubsetPopulation (long universeid, long subsetid, int population) throws Exception {
+
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBUniverse.SubSets.TABLE);
+        update.addSetColumn(DBUniverse.SubSets.POPULATION, population);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update subsets population\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
         }        
     }
-    //******************************************************************    
+    //******************************************************************
 }
 //**************************************************************************
