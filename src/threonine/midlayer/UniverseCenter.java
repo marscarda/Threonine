@@ -263,7 +263,7 @@ public class UniverseCenter {
         //We lock all tables involved
         TabList tablist = new TabList();
         universelambda.AddLockMapRecord(tablist);
-        //billinglambda.AddLockAlterUsage(tablist);
+        billinglambda.AddLockAlterUsage(tablist);
         billinglambda.addLockCommunityCommerce(tablist);
         universelambda.setAutoCommit(0);
         universelambda.lockTables(tablist);
@@ -289,12 +289,17 @@ public class UniverseCenter {
         }
         //==================================================================
         //We alter the usage cost.
-        AlterUsage alter = new AlterUsage();
-        alter.setProjectId(projectsubset.projectID());
-        alter.setProjectName(projectsubset.getName());
-        alter.setIncrease(UsageCost.MAPRECORDSUBSET);
-        alter.setStartingEvent("Map Record set to subset '");
-        //billinglambda.alterUsage(alter);
+        if (subset.getMapCost() == 0) {
+            AlterUsage alter = new AlterUsage();
+            alter.setProjectId(projectsubset.projectID());
+            alter.setProjectName(projectsubset.getName());
+            alter.setIncrease(UsageCost.MAPRECORDSUBSET);
+            alter.setStartingEvent("Map Record set to subset '");
+            billinglambda.alterUsage(alter);
+            //--------------------------------------------------------------
+            //We record How Much this Cost.
+            universelambda.setMapCost(subset.getUniverseID(), subset.getSubsetID(), UsageCost.MAPRECORDSUBSET);
+        }
         //==================================================================
         //We are all done.
         universelambda.commit();

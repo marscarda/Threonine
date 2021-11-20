@@ -20,7 +20,8 @@ public class DBUniverse {
         static final String DESCRIPTION = "description";
         static final String POPULATION = "population";
         static final String WEIGHT = "weight";
-        static final String COST = "cost";
+        static final String SUBSETCOST = "subsetcost";
+        static final String MAPCOST = "mapcost";
     }
     //**********************************************************************
     public static class SubsetMapObject {

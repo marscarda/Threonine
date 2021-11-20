@@ -9,7 +9,8 @@ public class SubSet {
     String description;
     int population = 0;
     int weight = 0;
-    float cost = 0;
+    float subsetcost = 0;
+    float mapcost = 0;
     long maprecordid = 0;
     boolean valid = false;
     boolean root = false;
@@ -23,13 +24,14 @@ public class SubSet {
     public void setPopulation (int population) { this.population = population; }
     public void setWeight (int weight) { this.weight = weight; }
     //-----------------------------------------------
-    public void setCost (float cost) { this.cost = cost; }
+    public void setCost (float cost) { this.subsetcost = cost; }
     //===============================================
     public long getUniverseID () { return universeid; }
     public long getParentSubSet () { return parentsubset; }
     public int getPopulation () { return population; }
     public int getWeight () { return weight; }
     public long getMapRecordID () { return maprecordid; }
+    public float getMapCost () { return mapcost; }
     //-----------------------------------------------
     public String getName () {
         if (name == null) return "";

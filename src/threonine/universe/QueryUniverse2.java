@@ -12,22 +12,28 @@ import methionine.sql.SQLInsert;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
+import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
-import threonine.map.MapObject;
-import threonine.map.PointLocation;
 //**************************************************************************
 public class QueryUniverse2 extends QueryUniverse1 {
-    //**********************************************************************
+    //******************************************************************
+    //SUBSETS
+    //******************************************************************
     /**
-     * Inserts a record in the universe map objects table.
-     * @param object
+     * Inserts a new subset
+     * @param subset
      * @throws Exception 
      */
-    protected void insertMapObject (MapObject object) throws Exception {
-        SQLInsert insert = new SQLInsert(DBUniverse.SubsetMapObject.TABLE);
-        insert.addValue(DBUniverse.SubsetMapObject.OBJECTID, object.objectid);
-        insert.addValue(DBUniverse.SubsetMapObject.SUBSETID, object.recordid);
-        insert.addValue(DBUniverse.SubsetMapObject.OBJTYPE, object.objtype);
+    protected void insertSubSet (SubSet subset) throws Exception {
+        SQLInsert insert = new SQLInsert(DBUniverse.SubSets.TABLE);
+        insert.addValue(DBUniverse.SubSets.SUBSETID, subset.subsetid);
+        insert.addValue(DBUniverse.SubSets.UNIVERSEID, subset.universeid);
+        insert.addValue(DBUniverse.SubSets.PARENTSUBSET, subset.parentsubset);
+        insert.addValue(DBUniverse.SubSets.NAME, subset.name);
+        insert.addValue(DBUniverse.SubSets.DESCRIPTION, subset.description);
+        insert.addValue(DBUniverse.SubSets.POPULATION, subset.population);
+        insert.addValue(DBUniverse.SubSets.WEIGHT, subset.weight);
+        insert.addValue(DBUniverse.SubSets.SUBSETCOST, subset.subsetcost);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -35,7 +41,7 @@ public class QueryUniverse2 extends QueryUniverse1 {
             st.execute();            
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to insert new map object (universe subset) efghfd\n");
+            StringBuilder msg = new StringBuilder("Failed to insert new subset \n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
@@ -43,25 +49,27 @@ public class QueryUniverse2 extends QueryUniverse1 {
             if (st != null) try {st.close();} catch(Exception e){}
         }        
     }
-    //**********************************************************************
+    //******************************************************************
     /**
-     * Selects and returns an array of map objects given a subset id
-     * @param subsetid
+     * Selects the root subset for a given universe.
+     * @param universeid
      * @return
      * @throws AppException
      * @throws Exception 
      */
-    protected MapObject[] selectMapObjects (long subsetid) throws AppException, Exception {
-        //-------------------------------------------------------
+    protected SubSet selectTopSubset (long universeid) throws AppException, Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBUniverse.SubsetMapObject.TABLE);
-        select.addItem(DBUniverse.SubsetMapObject.OBJECTID);
-        select.addItem(DBUniverse.SubsetMapObject.SUBSETID);
-        select.addItem(DBUniverse.SubsetMapObject.OBJTYPE);
-        //-------------------------------------------------------
+        SQLSelect select = new SQLSelect(DBUniverse.SubSets.TABLE);
+        select.addItem(DBUniverse.SubSets.SUBSETID);
+        select.addItem(DBUniverse.SubSets.UNIVERSEID);
+        select.addItem(DBUniverse.SubSets.PARENTSUBSET);
+        select.addItem(DBUniverse.SubSets.NAME);
+        select.addItem(DBUniverse.SubSets.DESCRIPTION);
+        select.addItem(DBUniverse.SubSets.POPULATION);
+        select.addItem(DBUniverse.SubSets.WEIGHT);
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.SubsetMapObject.SUBSETID, "=", subsetid));
-        //-------------------------------------------------------
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.PARENTSUBSET, "=", 0));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
         sql.addClause(select);
         sql.addClause(whr);
         //-------------------------------------------------------
@@ -72,19 +80,21 @@ public class QueryUniverse2 extends QueryUniverse1 {
             st = connection.prepareStatement(sql.getText());
             sql.setParameters(st, 1);
             rs = st.executeQuery();
-            List<MapObject> objects = new ArrayList<>();
-            MapObject object;
-            while (rs.next()) {
-                object = new MapObject();
-                object.objectid = rs.getLong(DBUniverse.SubsetMapObject.OBJECTID);
-                object.recordid = rs.getLong(DBUniverse.SubsetMapObject.SUBSETID);
-                object.objtype = rs.getInt(DBUniverse.SubsetMapObject.OBJTYPE);
-                objects.add(object);
-            }            
-            return objects.toArray(new MapObject[0]);
+            if (!rs.next())
+                throw new AppException("Subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
+            SubSet subset;
+            subset = new SubSet();
+            subset.subsetid = rs.getLong(DBUniverse.SubSets.SUBSETID);
+            subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
+            subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
+            subset.name = rs.getString(DBUniverse.SubSets.NAME);
+            subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
+            subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
+            subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+            return subset;
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to select map objects for subset. Code: vrbcqwdrfh\n");
+            StringBuilder msg = new StringBuilder("Failed to select subset \n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
@@ -92,117 +102,91 @@ public class QueryUniverse2 extends QueryUniverse1 {
             if (st != null) try {st.close();} catch(Exception e){}
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
+    }
+    //******************************************************************
+    /**
+     * Selects and returns a universe
+     * @param universeid
+     * @param subsetid
+     * @return
+     * @throws AppException SUBSETNOTFOUND
+     * @throws Exception 
+     */
+    protected SubSet selectSubset (long universeid, long subsetid) throws AppException, Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBUniverse.SubSets.TABLE);
+        select.addItem(DBUniverse.SubSets.SUBSETID);
+        select.addItem(DBUniverse.SubSets.UNIVERSEID);
+        select.addItem(DBUniverse.SubSets.PARENTSUBSET);
+        select.addItem(DBUniverse.SubSets.NAME);
+        select.addItem(DBUniverse.SubSets.DESCRIPTION);
+        select.addItem(DBUniverse.SubSets.POPULATION);
+        select.addItem(DBUniverse.SubSets.WEIGHT);
+        select.addItem(DBUniverse.SubSets.SUBSETCOST);
+        select.addItem(DBUniverse.SubSets.MAPCOST);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
+        if (universeid != 0) whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        sql.addClause(select);
+        sql.addClause(whr);
         //-------------------------------------------------------
-    }    
-    //**********************************************************************
-    /**
-     * Deletes map objects belonging to a subset id
-     * @param subsetid
-     * @throws Exception 
-     */
-    protected void deleteMapObject (long subsetid) throws Exception {
-        SQLQueryCmd sql = new SQLQueryCmd();
-        SQLDelete delete = new SQLDelete(DBUniverse.SubsetMapObject.TABLE);
-        SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.SubsetMapObject.SUBSETID, "=", subsetid));
-        sql.addClause(delete);
-        sql.addClause(whr);
         PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
         try {
             st = connection.prepareStatement(sql.getText());
             sql.setParameters(st, 1);
-            st.execute();            
+            rs = st.executeQuery();
+            if (!rs.next())
+                throw new AppException("Subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
+            SubSet subset;
+            subset = new SubSet();
+            subset.subsetid = rs.getLong(DBUniverse.SubSets.SUBSETID);
+            subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
+            subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
+            subset.name = rs.getString(DBUniverse.SubSets.NAME);
+            subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
+            subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
+            subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+            subset.subsetcost = rs.getFloat(DBUniverse.SubSets.SUBSETCOST);
+            subset.mapcost = rs.getFloat(DBUniverse.SubSets.MAPCOST);
+            return subset;
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to delete map object for a subset elksffd\n");
+            StringBuilder msg = new StringBuilder("Failed to select subset \n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
-        }        
-    }
-    //**********************************************************************
-    /**
-     * Inserts a new map point into de DB.
-     * @param point
-     * @throws Exception 
-     */
-    protected void insertPointLocation (PointLocation point) throws Exception {
-        SQLInsert insert = new SQLInsert(DBUniverse.LocationPoints.TABLE);
-        insert.addValue(DBUniverse.LocationPoints.SUBSETID, point.recordid);
-        insert.addValue(DBUniverse.LocationPoints.OBJECTID, point.objectid);
-        insert.addValue(DBUniverse.LocationPoints.POINTINDEX, point.ptindex);
-        insert.addValue(DBUniverse.LocationPoints.LATITUDE, point.latitude);
-        insert.addValue(DBUniverse.LocationPoints.LONGITUDE, point.longitude);
-        PreparedStatement st = null;
-        try {
-            st = connection.prepareStatement(insert.getText());
-            insert.setParameters(st, 1);
-            st.execute();            
-        }
-        catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to insert location point subset kftdfhd\n");
-            msg.append(e.getMessage());
-            throw new Exception(msg.toString());
-        }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-        }        
-    }
-    //**********************************************************************
-    /**
-     * Deletes all location points for a given subset
-     * @param subsetid
-     * @throws Exception 
-     */
-    protected void deletePointLocations (long subsetid) throws Exception {
-        SQLQueryCmd sql = new SQLQueryCmd();
-        SQLDelete delete = new SQLDelete(DBUniverse.LocationPoints.TABLE);
-        SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.LocationPoints.SUBSETID, "=", subsetid));
-        sql.addClause(delete);
-        sql.addClause(whr);
-        PreparedStatement st = null;
-        try {
-            st = connection.prepareStatement(sql.getText());
-            sql.setParameters(st, 1);
-            st.execute();
-        }
-        catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to delete location points for a subset qwlksffd\n");
-            msg.append(e.getMessage());
-            throw new Exception(msg.toString());
-        }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
         }
     }
-    //**********************************************************************
+    //******************************************************************
     /**
-     * Selects and return point locations for an object.
-     * @param objectid
+     * Selects an array of subsets.
+     * @param universeid
+     * @param parentid
      * @return
      * @throws Exception 
      */
-    protected PointLocation[] selectPointLocations (long objectid) throws Exception {
-        //-------------------------------------------------------
+    protected SubSet[] selectSubsets (long universeid, long parentid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBUniverse.LocationPoints.TABLE);
-        select.addItem(DBUniverse.LocationPoints.OBJECTID);
-        select.addItem(DBUniverse.LocationPoints.SUBSETID);
-        select.addItem(DBUniverse.LocationPoints.POINTINDEX);
-        select.addItem(DBUniverse.LocationPoints.LATITUDE);
-        select.addItem(DBUniverse.LocationPoints.LONGITUDE);
-        //-------------------------------------------------------
-        SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.LocationPoints.OBJECTID, "=", objectid));
-        //-------------------------------------------------------
-        SQLOrderBy order = new SQLOrderBy();
-        order.addColumn(DBUniverse.LocationPoints.POINTINDEX);
-        //-------------------------------------------------------
+        SQLSelect select = new SQLSelect(DBUniverse.SubSets.TABLE);
+        select.addItem(DBUniverse.SubSets.SUBSETID);
+        select.addItem(DBUniverse.SubSets.UNIVERSEID);
+        select.addItem(DBUniverse.SubSets.PARENTSUBSET);
+        select.addItem(DBUniverse.SubSets.NAME);
+        select.addItem(DBUniverse.SubSets.DESCRIPTION);
+        select.addItem(DBUniverse.SubSets.POPULATION);
+        select.addItem(DBUniverse.SubSets.WEIGHT);
         sql.addClause(select);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.PARENTSUBSET, "=", parentid));
         sql.addClause(whr);
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBUniverse.SubSets.NAME);
         sql.addClause(order);
         //-------------------------------------------------------
         PreparedStatement st = null;
@@ -212,21 +196,23 @@ public class QueryUniverse2 extends QueryUniverse1 {
             st = connection.prepareStatement(sql.getText());
             sql.setParameters(st, 1);
             rs = st.executeQuery();
-            List<PointLocation> points = new ArrayList<>();
-            PointLocation point;
+            List<SubSet> subsets = new ArrayList<>();
+            SubSet subset;
             while (rs.next()) {
-                point = new PointLocation();
-                point.objectid = objectid;
-                point.recordid = rs.getLong(DBUniverse.LocationPoints.SUBSETID);
-                point.ptindex = rs.getInt(DBUniverse.LocationPoints.POINTINDEX);
-                point.latitude = rs.getFloat(DBUniverse.LocationPoints.LATITUDE);
-                point.longitude = rs.getFloat(DBUniverse.LocationPoints.LONGITUDE);
-                points.add(point);
-            }            
-            return points.toArray(new PointLocation[0]);
-        }
+                subset = new SubSet();
+                subset.subsetid = rs.getLong(DBUniverse.SubSets.SUBSETID);
+                subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
+                subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
+                subset.name = rs.getString(DBUniverse.SubSets.NAME);
+                subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
+                subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
+                subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+                subsets.add(subset);
+            }
+            return subsets.toArray(new SubSet[0]);
+        }        
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to select map point locations. Code: tyhgdytrfh\n");
+            StringBuilder msg = new StringBuilder("Failed to select subsets \n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
@@ -235,6 +221,95 @@ public class QueryUniverse2 extends QueryUniverse1 {
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
     }
-    //**********************************************************************
+    //******************************************************************
+    /**
+     * Deletes all subset given a universe id
+     * @param universeid
+     * @throws Exception 
+     */
+    protected void deleteSubsetsByUniverse (long universeid) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLDelete delete = new SQLDelete(DBUniverse.SubSets.TABLE);
+        sql.addClause(delete);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to delete subsets by universe\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }
+    }
+    //******************************************************************
+    //SUBSET UPDATES
+    //******************************************************************
+    /**
+     * Updates population for a subset.
+     * @param universeid
+     * @param subsetid
+     * @param population
+     * @throws Exception 
+     */
+    protected void updateSubsetPopulation (long universeid, long subsetid, int population) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBUniverse.SubSets.TABLE);
+        update.addSetColumn(DBUniverse.SubSets.POPULATION, population);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update subsets population\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }
+    }
+    //******************************************************************
+    protected void updateSubsetMapCost (long universeid, long subsetid, float cost) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBUniverse.SubSets.TABLE);
+        update.addSetColumn(DBUniverse.SubSets.MAPCOST, cost);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update subsets map cost\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //******************************************************************
+    
+    
 }
 //**************************************************************************
