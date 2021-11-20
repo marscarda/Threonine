@@ -37,7 +37,7 @@ public class QueryMapTabs extends Alcyone {
         create.addField(DBMaps.FolderTree.FOLDERNAME, "VARCHAR (100) NOT NULL");
         create.addField(DBMaps.FolderTree.PUBLICNAME, "VARCHAR (100) NOT NULL");
         create.addField(DBMaps.FolderTree.SHAREPASS, "VARCHAR (100) NULL DEFAULT NULL");
-        create.addField(DBMaps.FolderTree.COSTPERUSE, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBMaps.FolderTree.COSTPERUSE, "FLOAT (10,6) NOT NULL DEFAULT 0");
         create.addField(DBMaps.FolderTree.SEARCHABLE, "INTEGER NOT NULL DEFAULT 0");
         create.addUnique(DBMaps.FolderTree.FOLDERID);
         //-------------------------------------------------------------------
@@ -66,7 +66,7 @@ public class QueryMapTabs extends Alcyone {
         create.setEngine(MySQLEngine.INNODB);
         create.addField(DBMaps.FolderUsage.PROJECTID, "BIGINT NOT NULL");
         create.addField(DBMaps.FolderUsage.FOLDERID, "BIGINT NOT NULL");
-        create.addField(DBMaps.FolderUsage.COSTPERUSE, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBMaps.FolderUsage.COSTPERUSE, "FLOAT (10,6) NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();

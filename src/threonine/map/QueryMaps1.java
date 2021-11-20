@@ -114,7 +114,7 @@ public class QueryMaps1 extends QueryMapTabs {
      * @param value
      * @throws Exception 
      */
-    protected void updateMapFolderCostPerUse (long folderid, int value) throws Exception {
+    protected void updateMapFolderCostPerUse (long folderid, float value) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLUpdate update = new SQLUpdate(DBMaps.FolderTree.TABLE);
         update.addSetColumn(DBMaps.FolderTree.COSTPERUSE, value);

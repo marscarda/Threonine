@@ -80,7 +80,7 @@ public class MapsLambdaFolders extends LockMap {
     }
     //======================================================================
     @Override
-    public void updateMapFolderCostPerUse (long folderid, int value) throws Exception {
+    public void updateMapFolderCostPerUse (long folderid, float value) throws Exception {
         //------------------------------------------------------------------
         connection = electra.masterConnection();
         setDataBase();

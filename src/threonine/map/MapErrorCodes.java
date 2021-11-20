@@ -7,5 +7,6 @@ public class MapErrorCodes {
     public static final int MAXALLOWEDPOINTSEXCEDED = 1003;
     public static final int FOLDERNAMEALREADYEXISTS = 1004;
     public static final int FOLDERPUBLICNAMEALREADYUSED = 1005;
+    public static final int FOLDERUSEAGENOTFOUND = 1006;
 }
 //*****************************************************************************

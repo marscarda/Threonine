@@ -5,16 +5,16 @@ public class UpdateMapFolderAttr {
     int attrib = 0;
     String publicname = null;
     String sharepass = null;
-    int costperuse = 0;
+    float costperuse = 0;
     int searchable = 0;
     //==========================================================
     public void setAttribute (int attrib) { this.attrib = attrib; }
     public void setPublicName (String publicname) { this.publicname = publicname; }
     public void setSharePass (String sharepass) { this.sharepass = sharepass; }
-    public void setCostPerUse (int costperuse) { this.costperuse = costperuse; }
+    public void setCostPerUse (float costperuse) { this.costperuse = costperuse; }
     public void setSearchable (int searchable) { this.searchable = searchable; }
     //==========================================================
-    public int costPerUse () { return costperuse; }
+    public float costPerUse () { return costperuse; }
     public boolean isSearchable () { return searchable != 0; }
     public String publicName () {
         if (publicname == null) return "";

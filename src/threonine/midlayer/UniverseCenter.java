@@ -2,15 +2,16 @@ package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
 import methionine.TabList;
+import methionine.auth.AuthErrorCodes;
 import methionine.auth.AuthLamda;
 import methionine.billing.AlterUsage;
 import methionine.billing.BillingLambda;
 import methionine.billing.CommerceTransfer;
-import methionine.billing.SystemCharge;
 import methionine.billing.UsageCost;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
 import threonine.map.FolderUsage;
+import threonine.map.MapErrorCodes;
 import threonine.map.MapFolder;
 import threonine.map.MapRecord;
 import threonine.map.MapsLambda;
@@ -209,9 +210,10 @@ public class UniverseCenter {
         projectlambda.checkAccess(projectid, userid, 2);
         //------------------------------------------------------------------
         //We check the owner of the project is able to spend.
+        //It is always true. Lets change this to balance check.
         Project projectsubset = projectlambda.getProject(projectid, 0);
-        if (!billinglambda.checkAbleToSpend(projectsubset.getOwner()))
-            throw new AppException("Not enough balance", AppException.SPENDINGREJECTED);
+        //if (!billinglambda.checkAbleToSpend(projectsubset.getOwner()))
+        //    throw new AppException("Not enough balance", AppException.SPENDINGREJECTED);
         //------------------------------------------------------------------
         //We recover the record. In the proccess we check if the record can be
         //used in the project that is intended. The usage is useful here to
@@ -220,12 +222,12 @@ public class UniverseCenter {
         FolderUsage usage;
         try { usage = mapslambda.getFolderUsage(projectid, record.getFolderID()); }
         catch (AppException e) {
-            if (e.getErrorCode() == AppException.OBJECTNOTFOUND)
-                throw new AppException("Unauthorized", AppException.UNAUTHORIZED);
+            if (e.getErrorCode() == MapErrorCodes.FOLDERUSEAGENOTFOUND)
+                throw new AppException("Unauthorized", AuthErrorCodes.UNAUTHORIZED);
             throw e;
         }
         //------------------------------------------------------------------
-        //We decide and act the usage of the map record has a cost.
+        //We decide wether to make a commerce transfer.
         boolean dotransfer = false;
         MapFolder folder = null;
         Project projectto = null;
@@ -240,7 +242,7 @@ public class UniverseCenter {
         SubSet subset = universelambda.getSubset(0, subsetid);
         Universe universe = universelambda.getUniverse(subset.getUniverseID());
         if (universe.projectID() != projectid)
-            throw new AppException("Unauthorized", AppException.UNAUTHORIZED);
+            throw new AppException("Unauthorized", AuthErrorCodes.UNAUTHORIZED);
         //------------------------------------------------------------------
         MapReaderGraphic mapreader = new MapReaderGraphic();
         mapreader.setMapsLambda(mapslambda);
@@ -256,19 +258,42 @@ public class UniverseCenter {
         //We lock all tables involved
         TabList tablist = new TabList();
         universelambda.AddLockMapRecord(tablist);
-        billinglambda.AddLockCommunityTransfer(tablist);
+        
+        billinglambda.AddLockAlterUsage(tablist);
+        
         universelambda.setAutoCommit(0);
         universelambda.lockTables(tablist);
         //------------------------------------------------------------------
         //We clear the existent map objects the subset could have
         universelambda.clearMapObject(subset.getSubsetID());
-        //-----------------------------------------------------------------
+        //------------------------------------------------------------------
         //We Add the objects to the subset.
         for (MapObjectGraphic obj : objects)
             universelambda.addMapObject(subset.getSubsetID(), obj.getPoints());
-        //------------------------------------------------------------------
+        //==================================================================
         //If the use of the map object has a cost we create a transfer.
-        //Else we create a syatem charge.
+        if (dotransfer) {
+            CommerceTransfer transfer = new CommerceTransfer();
+            transfer.setFromUserid(projectsubset.getOwner());
+            transfer.setFromProjectId(projectsubset.projectID());
+            transfer.setToUserId(projectto.getOwner());//If it was a null pointer we would not be here.
+            transfer.setToProjectId(projectto.projectID());
+            String description = "Map Record " + record.getName() + " Added to subset";
+            transfer.setDescription(description);
+            transfer.setAmount(usage.costPerUse());
+            billinglambda.addCommerceTransfer(transfer);
+        }
+        //==================================================================
+        //We alter the usage cost.
+        AlterUsage alter = new AlterUsage();
+        alter.setProjectId(projectsubset.projectID());
+        alter.setProjectName(projectsubset.getName());
+        alter.setIncrease(UsageCost.MAPRECORDSUBSET);
+        alter.setStartingEvent("Map Record set to subset '");
+        billinglambda.alterUsage(alter);        
+        //==================================================================
+        
+        /*
         if (dotransfer) {
             CommerceTransfer transfer = new CommerceTransfer();
             transfer.setFromUserid(projectsubset.getOwner());
@@ -290,6 +315,10 @@ public class UniverseCenter {
             charge.setCost(UsageCost.MAPRECORDTOSUBSET);
             billinglambda.createSystemCharge(charge);
         }
+        */
+        
+        
+        
         //-----------------------------------------------------------------
         universelambda.commit();
         universelambda.unLockTables();
