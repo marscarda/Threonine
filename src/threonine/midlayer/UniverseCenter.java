@@ -5,6 +5,8 @@ import methionine.TabList;
 import methionine.auth.AuthErrorCodes;
 import methionine.auth.AuthLamda;
 import methionine.billing.AlterUsage;
+import methionine.billing.BalanceInfo;
+import methionine.billing.BillingErrorCodes;
 import methionine.billing.BillingLambda;
 import methionine.billing.CommerceTransfer;
 import methionine.billing.UsageCost;
@@ -212,8 +214,9 @@ public class UniverseCenter {
         //We check the owner of the project is able to spend.
         //It is always true. Lets change this to balance check.
         Project projectsubset = projectlambda.getProject(projectid, 0);
-        //if (!billinglambda.checkAbleToSpend(projectsubset.getOwner()))
-        //    throw new AppException("Not enough balance", AppException.SPENDINGREJECTED);
+        BalanceInfo balance = billinglambda.getTotalBalance(projectsubset.getOwner());
+        if (balance.getTotalBalance() <= 0)
+            throw new AppException("Not enough balance", BillingErrorCodes.CHARGEREJECTED);
         //------------------------------------------------------------------
         //We recover the record. In the proccess we check if the record can be
         //used in the project that is intended. The usage is useful here to
@@ -232,6 +235,8 @@ public class UniverseCenter {
         MapFolder folder = null;
         Project projectto = null;
         if (usage.costPerUse() != 0) {
+            if (balance.getTotalBalance() < usage.costPerUse())
+                throw new AppException("Not enough balance", BillingErrorCodes.BALANCEINSUFICIENT);
             dotransfer = true;
             folder = mapslambda.getMapFolder(record.getFolderID());
             projectto = projectlambda.getProject(folder.projectID(), 0);
@@ -258,9 +263,8 @@ public class UniverseCenter {
         //We lock all tables involved
         TabList tablist = new TabList();
         universelambda.AddLockMapRecord(tablist);
-        
-        billinglambda.AddLockAlterUsage(tablist);
-        
+        //billinglambda.AddLockAlterUsage(tablist);
+        billinglambda.addLockCommunityCommerce(tablist);
         universelambda.setAutoCommit(0);
         universelambda.lockTables(tablist);
         //------------------------------------------------------------------
@@ -290,36 +294,9 @@ public class UniverseCenter {
         alter.setProjectName(projectsubset.getName());
         alter.setIncrease(UsageCost.MAPRECORDSUBSET);
         alter.setStartingEvent("Map Record set to subset '");
-        billinglambda.alterUsage(alter);        
+        //billinglambda.alterUsage(alter);
         //==================================================================
-        
-        /*
-        if (dotransfer) {
-            CommerceTransfer transfer = new CommerceTransfer();
-            transfer.setFromUserid(projectsubset.getOwner());
-            transfer.setFromProjectId(projectsubset.projectID());
-            transfer.setToUserId(projectto.getOwner());//If it was a null pointer we would not be here.
-            transfer.setToProjectId(projectto.projectID());
-            String description = "Map Record " + record.getName() + " Added to subset";
-            transfer.setDescription(description);
-            transfer.setTransferSize(usage.costPerUse());
-            
-            //billinglambda.createComunityTransfer(transfer);
-            
-        } else {
-            SystemCharge charge = new SystemCharge();
-            charge.setUserid(projectsubset.getOwner());
-            charge.setProjectId(projectsubset.projectID());
-            String description = "Map Record " + record.getName() + " Added to subset";
-            charge.setDescription(description);
-            charge.setCost(UsageCost.MAPRECORDTOSUBSET);
-            billinglambda.createSystemCharge(charge);
-        }
-        */
-        
-        
-        
-        //-----------------------------------------------------------------
+        //We are all done.
         universelambda.commit();
         universelambda.unLockTables();
         //******************************************************************
