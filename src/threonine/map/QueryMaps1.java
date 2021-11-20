@@ -199,7 +199,7 @@ public class QueryMaps1 extends QueryMapTabs {
             sql.setParameters(st, 1);
             rs = st.executeQuery();
             if (!rs.next())
-                throw new AppException("Folder not found", AppException.OBJECTNOTFOUND);
+                throw new AppException("Folder not found", MapErrorCodes.MAPFOLDERNOTFOUND);
             MapFolder folder;
             folder = new MapFolder();
             folder.folderid = rs.getLong(DBMaps.FolderTree.FOLDERID);
@@ -208,7 +208,7 @@ public class QueryMaps1 extends QueryMapTabs {
             folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
             folder.publicname = rs.getString(DBMaps.FolderTree.PUBLICNAME);
             folder.sharepass = rs.getString(DBMaps.FolderTree.SHAREPASS);
-            folder.costperuse = rs.getInt(DBMaps.FolderTree.COSTPERUSE);
+            folder.costperuse = rs.getFloat(DBMaps.FolderTree.COSTPERUSE);
             folder.searcheable = rs.getInt(DBMaps.FolderTree.SEARCHABLE);
             return folder;
         }
@@ -365,7 +365,7 @@ public class QueryMaps1 extends QueryMapTabs {
      * @return
      * @throws Exception 
      */
-    protected MapFolder[] selectMapFoldersByShareID (String searchkey) throws Exception {
+    protected MapFolder[] selectMapFoldersByPublicName (String searchkey) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.FolderTree.TABLE);
         select.addItem(DBMaps.FolderTree.FOLDERID);
@@ -396,7 +396,7 @@ public class QueryMaps1 extends QueryMapTabs {
                 folder.parentid = rs.getLong(DBMaps.FolderTree.PARENTFOLDER);
                 folder.name = rs.getString(DBMaps.FolderTree.FOLDERNAME);
                 folder.publicname = rs.getString(DBMaps.FolderTree.PUBLICNAME);
-                folder.costperuse = rs.getInt(DBMaps.FolderTree.COSTPERUSE);
+                folder.costperuse = rs.getFloat(DBMaps.FolderTree.COSTPERUSE);
                 records.add(folder);
             }
             return records.toArray(new MapFolder[0]);

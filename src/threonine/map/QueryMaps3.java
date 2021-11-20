@@ -77,7 +77,7 @@ public class QueryMaps3 extends QueryMaps2 {
             usage = new FolderUsage();
             usage.projectid = rs.getLong(DBMaps.FolderUsage.PROJECTID);
             usage.folderid = rs.getLong(DBMaps.FolderUsage.FOLDERID);
-            usage.costperuse = rs.getInt(DBMaps.FolderUsage.COSTPERUSE);
+            usage.costperuse = rs.getFloat(DBMaps.FolderUsage.COSTPERUSE);
             return usage;
         }
         catch (SQLException e) {
@@ -122,7 +122,7 @@ public class QueryMaps3 extends QueryMaps2 {
                 usage = new FolderUsage();
                 usage.projectid = rs.getLong(DBMaps.FolderUsage.PROJECTID);
                 usage.folderid = rs.getLong(DBMaps.FolderUsage.FOLDERID);
-                usage.costperuse = rs.getInt(DBMaps.FolderUsage.COSTPERUSE);
+                usage.costperuse = rs.getFloat(DBMaps.FolderUsage.COSTPERUSE);
                 usages.add(usage);
             }
             return usages.toArray(new FolderUsage[0]);
@@ -214,7 +214,7 @@ public class QueryMaps3 extends QueryMaps2 {
                 folder.folderid = rs.getLong(1);
                 folder.projectid = rs.getLong(2);
                 folder.publicname = rs.getString(3);
-                folder.costperuse = rs.getInt(4);
+                folder.costperuse = rs.getFloat(4);
                 records.add(folder);
             }
             return records.toArray(new MapFolder[0]);

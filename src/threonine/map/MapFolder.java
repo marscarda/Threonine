@@ -8,7 +8,7 @@ public class MapFolder {
     String name = null;
     String publicname = null;
     String sharepass = null;
-    int costperuse = 0;
+    float costperuse = 0;
     int searcheable = 0;
     boolean valid = false;
     //----------------------------------------------------------------------
@@ -38,7 +38,7 @@ public class MapFolder {
         if (sharepass == null) return "";
         return sharepass;
     }
-    public int costPerUse () { return costperuse; }
+    public float costPerUse () { return costperuse; }
     public int isSearchableInt () { return searcheable; }
     public boolean isSearcheable () { return searcheable != 0; }
     //======================================================================
