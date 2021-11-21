@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
 import methionine.TabList;
+import methionine.auth.AuthErrorCodes;
 import methionine.auth.AuthLamda;
 import methionine.auth.User;
 import methionine.billing.AlterUsage;
@@ -333,12 +334,12 @@ public class MapCenter {
                 mapslambda.createFolderUsage(usage);
                 return folder;
             }
-            throw new AppException("Invalid Share Password for this folder", AppException.UNAUTHORIZED);
+            throw new AppException("Invalid Share Password for this folder", AuthErrorCodes.UNAUTHORIZED);
         }
         //------------------------------------------------------------------
         //If folder has no established usage cost. We reject it.
         if (folder.costPerUse() == 0) 
-            throw new AppException("Not authorized to use this map objects folder", AppException.UNAUTHORIZED);
+            throw new AppException("Not authorized to use this map objects folder", AuthErrorCodes.UNAUTHORIZED);
         //------------------------------------------------------------------
         //We find out the user owner of the folder
         Project project = projectlambda.getProject(folder.projectID(), 0);
