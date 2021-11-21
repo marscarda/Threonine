@@ -73,7 +73,7 @@ public class QueryMaps3 extends QueryMaps2 {
             rs = st.executeQuery();
             FolderUsage usage;
             if (!rs.next())
-                throw new AppException("Folder Not used in the project", AppException.OBJECTNOTFOUND);
+                throw new AppException("Folder Not used in the project", MapErrorCodes.FOLDERUSEAGENOTFOUND);
             usage = new FolderUsage();
             usage.projectid = rs.getLong(DBMaps.FolderUsage.PROJECTID);
             usage.folderid = rs.getLong(DBMaps.FolderUsage.FOLDERID);

@@ -254,7 +254,7 @@ public class QueryMaps1 extends QueryMapTabs {
             sql.setParameters(st, 1);
             rs = st.executeQuery();
             if (!rs.next())
-                throw new AppException("Folder not found", AppException.OBJECTNOTFOUND);
+                throw new AppException("Folder not found", MapErrorCodes.MAPFOLDERNOTFOUND);
             MapFolder folder;
             folder = new MapFolder();
             folder.folderid = rs.getLong(DBMaps.FolderTree.FOLDERID);
