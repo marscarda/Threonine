@@ -61,7 +61,7 @@ public class MapsLambdaFolders extends LockMap {
         this.getExclusiveTableAccess(lock);
         //------------------------------------------------------------------
         if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, value) != 0)
-            throw new AppException("Public name already used", AppException.IDENTIFIERALREADYEXISTS);
+            throw new AppException("Public name already used", MapErrorCodes.FOLDERPUBLICNAMEALREADYUSED);
         //------------------------------------------------------------------
         super.updateMapFolderPublicName(folderid, value);
         //------------------------------------------------------------------
