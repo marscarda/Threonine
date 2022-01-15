@@ -9,6 +9,8 @@ public class DBUniverse {
         static final String NAME = "univname";
         static final String DESCRIPTION = "description";
         static final String WEIGHTED = "weighted";
+        static final String PUBLIC = "public";
+        static final String PRICE = "price";
     }
     //**********************************************************************
     public static class SubSets {

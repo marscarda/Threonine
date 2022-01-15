@@ -35,6 +35,8 @@ public class QueryUniverseTabs extends Alcyone {
         create.addField(DBUniverse.Universe.NAME, "VARCHAR (100) NOT NULL");
         create.addField(DBUniverse.Universe.DESCRIPTION, "VARCHAR (300) NOT NULL");
         create.addField(DBUniverse.Universe.WEIGHTED, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.Universe.PUBLIC, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.Universe.PRICE, "FLOAT (10,6) NOT NULL DEFAULT 0");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
