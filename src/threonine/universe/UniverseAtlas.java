@@ -1,5 +1,7 @@
 package threonine.universe;
 //**************************************************************************
+import java.util.Calendar;
+import java.util.TimeZone;
 import methionine.AppException;
 import methionine.Celaeno;
 import threonine.map.MapObject;
@@ -17,16 +19,16 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception 
      */
     public void createUniverse (Universe universe, SubSet subset) throws AppException, Exception {
-        //-------------------------------------------------------------------
+        //------------------------------------------------------------------
         connection = electra.masterConnection();
         setDataBase();
-        //-------------------------------------------------------------------
+        //------------------------------------------------------------------
         //We create the universe in the database.
         while (true) {
             universe.univerid = Celaeno.getUniqueID();
             if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, universe.univerid) == 0) break;
         }
-        //-------------------------------------------------------------------
+        //------------------------------------------------------------------
         //We now create the first subset.
         //SubSet subset = new SubSet();
         subset.name = universe.name;
@@ -37,10 +39,10 @@ public class UniverseAtlas extends UniverseLock {
             subset.subsetid = Celaeno.getUniqueID();
             if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.subsetid) == 0) break;
         }
-        //-------------------------------------------------------------------
+        //------------------------------------------------------------------
         this.insertUniverse(universe);
         this.insertSubSet(subset);
-        //-------------------------------------------------------------------
+        //------------------------------------------------------------------
     }
     //**********************************************************************
     /**
@@ -53,7 +55,10 @@ public class UniverseAtlas extends UniverseLock {
     public Universe getUniverse (long universeid) throws AppException, Exception {
         connection = electra.slaveConnection();
         setDataBase();
-        return this.selectUniverse(universeid);
+        Universe universe = this.selectUniverse(universeid);
+        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        universe.setCurrentDate(Celaeno.getDateString(now, true));
+        return universe;
     }
     //**********************************************************************
     /**

@@ -30,6 +30,8 @@ public class UniverseQ1 extends QueryUniverseTabs {
         insert.addValue(DBUniverse.Universe.PROJECTID, universe.projectid);
         insert.addValue(DBUniverse.Universe.NAME, universe.name);
         insert.addValue(DBUniverse.Universe.DESCRIPTION, universe.description);
+        if (universe.notpubuntil != null)
+            insert.addValue(DBUniverse.Universe.NOTPUBLICBEFORE, universe.notpubuntil);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -62,6 +64,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.DESCRIPTION);
         select.addItem(DBUniverse.Universe.PUBLIC);
         select.addItem(DBUniverse.Universe.PRICE);
+        select.addItem(DBUniverse.Universe.NOTPUBLICBEFORE);
         sql.addClause(select);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.Universe.UNIVERSEID, "=", universeid));
@@ -83,6 +86,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
             universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
             universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
             universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
+            universe.notpubuntil = rs.getString(DBUniverse.Universe.NOTPUBLICBEFORE);
             return universe;
         }
         catch (SQLException e) {
@@ -110,7 +114,8 @@ public class UniverseQ1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.NAME);
         select.addItem(DBUniverse.Universe.DESCRIPTION);
         select.addItem(DBUniverse.Universe.PUBLIC);
-        select.addItem(DBUniverse.Universe.PRICE);        
+        select.addItem(DBUniverse.Universe.PRICE);
+        select.addItem(DBUniverse.Universe.NOTPUBLICBEFORE);
         sql.addClause(select);
         if (projectid != 0) {
             SQLWhere whr = new SQLWhere();
@@ -134,7 +139,8 @@ public class UniverseQ1 extends QueryUniverseTabs {
                 universe.name = rs.getString(DBUniverse.Universe.NAME);
                 universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
                 universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
-                universe.price = rs.getFloat(DBUniverse.Universe.PRICE);                
+                universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
+                universe.notpubuntil = rs.getString(DBUniverse.Universe.NOTPUBLICBEFORE);
                 universes.add(universe);
             }
             return universes.toArray(new Universe[0]);
