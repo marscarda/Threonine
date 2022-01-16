@@ -16,7 +16,7 @@ import methionine.sql.SQLWhere;
 import threonine.map.MapObject;
 import threonine.map.PointLocation;
 //**************************************************************************
-public class QueryUniverse3 extends QueryUniverse2 {
+public class UniverseQ3 extends UniverseQ2 {
     //**********************************************************************
     /**
      * Inserts a record in the universe map objects table.

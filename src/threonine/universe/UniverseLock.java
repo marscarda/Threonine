@@ -2,7 +2,7 @@ package threonine.universe;
 //**************************************************************************
 import methionine.TabList;
 //**************************************************************************
-public class UniverseLock extends QueryUniverse3 {
+public class UniverseLock extends UniverseQ4 {
     //**********************************************************************
     public void AddLockCreateSubset (TabList tabs) {
         tabs.addTable(databasename, DBUniverse.Universe.TABLE);

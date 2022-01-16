@@ -130,6 +130,24 @@ public class UniverseAtlas extends UniverseLock {
         //-------------------------------------------------------------------
     }
     //**********************************************************************
+    //** PUBLIC STATUS **
+    //**********************************************************************
+    /**
+     * Sets the public status for a given universe.
+     * @param universeid
+     * @param status
+     * @param price
+     * @throws Exception 
+     */
+    public void setPublicStatus (long universeid, int status, float price) throws Exception {
+        //-------------------------------------------------------------------
+        connection = electra.masterConnection();
+        setDataBase();
+        //-------------------------------------------------------------------
+        this.updatePubStatus(universeid, status, price);
+        //-------------------------------------------------------------------
+    }
+    //**********************************************************************
     //** SUBSETS **
     //**********************************************************************
     /**

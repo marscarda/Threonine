@@ -15,7 +15,7 @@ import methionine.sql.SQLSelect;
 import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
 //**************************************************************************
-public class QueryUniverse1 extends QueryUniverseTabs {
+public class UniverseQ1 extends QueryUniverseTabs {
     //******************************************************************
     //UNIVERSES
     //******************************************************************
@@ -60,6 +60,8 @@ public class QueryUniverse1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.PROJECTID);
         select.addItem(DBUniverse.Universe.NAME);
         select.addItem(DBUniverse.Universe.DESCRIPTION);
+        select.addItem(DBUniverse.Universe.PUBLIC);
+        select.addItem(DBUniverse.Universe.PRICE);
         sql.addClause(select);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.Universe.UNIVERSEID, "=", universeid));
@@ -79,6 +81,8 @@ public class QueryUniverse1 extends QueryUniverseTabs {
             universe.projectid = rs.getLong(DBUniverse.Universe.PROJECTID);
             universe.name = rs.getString(DBUniverse.Universe.NAME);
             universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
+            universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
+            universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
             return universe;
         }
         catch (SQLException e) {
@@ -105,6 +109,8 @@ public class QueryUniverse1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.PROJECTID);
         select.addItem(DBUniverse.Universe.NAME);
         select.addItem(DBUniverse.Universe.DESCRIPTION);
+        select.addItem(DBUniverse.Universe.PUBLIC);
+        select.addItem(DBUniverse.Universe.PRICE);        
         sql.addClause(select);
         if (projectid != 0) {
             SQLWhere whr = new SQLWhere();
@@ -127,6 +133,8 @@ public class QueryUniverse1 extends QueryUniverseTabs {
                 universe.projectid = rs.getLong(DBUniverse.Universe.PROJECTID);
                 universe.name = rs.getString(DBUniverse.Universe.NAME);
                 universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
+                universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
+                universe.price = rs.getFloat(DBUniverse.Universe.PRICE);                
                 universes.add(universe);
             }
             return universes.toArray(new Universe[0]);

@@ -37,6 +37,7 @@ public class QueryUniverseTabs extends Alcyone {
         create.addField(DBUniverse.Universe.WEIGHTED, "INTEGER NOT NULL DEFAULT 0");
         create.addField(DBUniverse.Universe.PUBLIC, "INTEGER NOT NULL DEFAULT 0");
         create.addField(DBUniverse.Universe.PRICE, "FLOAT (10,6) NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.Universe.NOTPUBLICBEFORE, "VARCHAR (30) NOT NULL DEFAULT UTC_TIMESTAMP");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();

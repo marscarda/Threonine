@@ -15,7 +15,7 @@ import methionine.sql.SQLSelect;
 import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
 //**************************************************************************
-public class QueryUniverse2 extends QueryUniverse1 {
+public class UniverseQ2 extends UniverseQ1 {
     //******************************************************************
     //SUBSETS
     //******************************************************************
@@ -272,7 +272,7 @@ public class QueryUniverse2 extends QueryUniverse1 {
         try {
             st = connection.prepareStatement(sql.getText());
             sql.setParameters(st, 1);
-            st.execute();            
+            st.execute();
         }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to update subsets population\n");
