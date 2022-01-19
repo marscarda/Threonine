@@ -11,7 +11,7 @@ public class DBUniverse {
         static final String WEIGHTED = "weighted";
         static final String PUBLIC = "public";
         static final String PRICE = "price";
-        static final String NOTPUBLICBEFORE = "notpublicbefore";
+        static final String CHANGETOPUB = "changetopub";
     }
     //**********************************************************************
     public static class SubSets {

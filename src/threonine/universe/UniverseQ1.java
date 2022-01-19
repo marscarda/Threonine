@@ -10,7 +10,6 @@ import methionine.sql.SQLCondition;
 import methionine.sql.SQLDelete;
 import methionine.sql.SQLInsert;
 import methionine.sql.SQLQueryCmd;
-import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLSelect;
 import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
@@ -30,8 +29,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
         insert.addValue(DBUniverse.Universe.PROJECTID, universe.projectid);
         insert.addValue(DBUniverse.Universe.NAME, universe.name);
         insert.addValue(DBUniverse.Universe.DESCRIPTION, universe.description);
-        if (universe.notpubuntil != null)
-            insert.addValue(DBUniverse.Universe.NOTPUBLICBEFORE, universe.notpubuntil);
+        insert.addValue(DBUniverse.Universe.CHANGETOPUB, universe.edittopub);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -64,7 +62,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.DESCRIPTION);
         select.addItem(DBUniverse.Universe.PUBLIC);
         select.addItem(DBUniverse.Universe.PRICE);
-        select.addItem(DBUniverse.Universe.NOTPUBLICBEFORE);
+        select.addItem(DBUniverse.Universe.CHANGETOPUB);
         sql.addClause(select);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.Universe.UNIVERSEID, "=", universeid));
@@ -86,7 +84,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
             universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
             universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
             universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
-            universe.notpubuntil = rs.getString(DBUniverse.Universe.NOTPUBLICBEFORE);
+            universe.edittopub = rs.getInt(DBUniverse.Universe.CHANGETOPUB);
             return universe;
         }
         catch (SQLException e) {
@@ -115,7 +113,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.DESCRIPTION);
         select.addItem(DBUniverse.Universe.PUBLIC);
         select.addItem(DBUniverse.Universe.PRICE);
-        select.addItem(DBUniverse.Universe.NOTPUBLICBEFORE);
+        select.addItem(DBUniverse.Universe.CHANGETOPUB);
         sql.addClause(select);
         if (projectid != 0) {
             SQLWhere whr = new SQLWhere();
@@ -140,7 +138,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
                 universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
                 universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
                 universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
-                universe.notpubuntil = rs.getString(DBUniverse.Universe.NOTPUBLICBEFORE);
+                universe.edittopub = rs.getInt(DBUniverse.Universe.CHANGETOPUB);
                 universes.add(universe);
             }
             return universes.toArray(new Universe[0]);

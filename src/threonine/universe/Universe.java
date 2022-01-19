@@ -10,15 +10,13 @@ public class Universe extends ValidData {
     String description = null;
     int ispublic = 0;
     float price = 0;
-    String notpubuntil = null;
-    String currentdate = null;
+    int edittopub = 0;
     //------------------------------------------------------
     public long universeID () { return univerid; }
     //------------------------------------------------------
     public void setProjectId (long projectid) { this.projectid = projectid; }
     public void setName (String name) { this.name = name; }
-    public void setNotPubUntilDate (String date) { notpubuntil = date; }
-    void setCurrentDate (String now) { currentdate = now; }
+    public void setEditToPubs (int edits) { edittopub = edits; }
     public String getName () {
         if (name == null) return "";
         return name;
@@ -32,17 +30,9 @@ public class Universe extends ValidData {
         if (description == null) return "";
         return description;
     }
-    public String notPubUntil () {
-        if (notpubuntil == null) return "";
-        return notpubuntil;
-    }
+    public int editsTuPub () { return edittopub; }
     //**********************************************************
-    public boolean allowToPublish () { 
-        if (currentdate == null) return true;
-        if (notpubuntil == null) return true;
-        int v = currentdate.compareTo(notpubuntil);
-        return v > 0;
-    }
+    public boolean allowToPublish () { return edittopub == 0; }
     //**********************************************************
     public static int PUBUNTILDAYS = 21;
     //**********************************************************

@@ -57,7 +57,6 @@ public class UniverseAtlas extends UniverseLock {
         setDataBase();
         Universe universe = this.selectUniverse(universeid);
         Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        universe.setCurrentDate(Celaeno.getDateString(now, true));
         return universe;
     }
     //**********************************************************************
