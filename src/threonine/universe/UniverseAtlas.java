@@ -1,6 +1,7 @@
 package threonine.universe;
 //**************************************************************************
 import java.util.Calendar;
+import java.util.Random;
 import java.util.TimeZone;
 import methionine.AppException;
 import methionine.Celaeno;
@@ -134,7 +135,7 @@ public class UniverseAtlas extends UniverseLock {
         //-------------------------------------------------------------------
     }
     //**********************************************************************
-    //** PUBLIC STATUS **
+    //** PUBLIC **
     //**********************************************************************
     /**
      * Sets the public status for a given universe.
@@ -150,6 +151,31 @@ public class UniverseAtlas extends UniverseLock {
         //-------------------------------------------------------------------
         this.updatePubStatus(universeid, status, price);
         //-------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * 
+     * @param search
+     * @param count
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public Universe[] getPublicUniverseList (String search) throws AppException, Exception {
+        //==========================================================
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
+        setDataBase();
+        //==========================================================
+        int publiccount = this.selectPublicCount();
+        int offset = 0;
+        if (publiccount > PUBLICCOUNT) {
+            Random rand = new Random();
+            offset = rand.nextInt(publiccount - PUBLICCOUNT);
+        }
+        //==========================================================
+        return this.selectPublicUniverses(search, offset);
+        //==========================================================
     }
     //**********************************************************************
     //** SUBSETS **
