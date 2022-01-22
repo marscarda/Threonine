@@ -11,26 +11,35 @@ public class Universe extends ValidData {
     int ispublic = 0;
     float price = 0;
     int edittopub = 0;
+    long userid = 0;
+    String username = null;
     //------------------------------------------------------
     public long universeID () { return univerid; }
     //------------------------------------------------------
     public void setProjectId (long projectid) { this.projectid = projectid; }
     public void setName (String name) { this.name = name; }
     public void setEditToPubs (int edits) { edittopub = edits; }
+    public void setUserID (long userid) { this.userid = userid; }
+    public void setUserName (String username) { this.username = username; }
+    //------------------------------------------------------
+    public long projectID () { return projectid; }
+    public long userID () { return userid; }
+    public void setDescription (String description) { this.description = description; }
+    public boolean isPublic () { return ispublic != 0; }
+    public float getPrice () { return price; }
+    public int editsTuPub () { return edittopub; }
     public String getName () {
         if (name == null) return "";
         return name;
     }
-    //------------------------------------------------------
-    public long projectID () { return projectid; }
-    public void setDescription (String description) { this.description = description; }
-    public boolean isPublic () { return ispublic != 0; }
-    public float getPrice () { return price; }
     public String getDescription () {
         if (description == null) return "";
         return description;
     }
-    public int editsTuPub () { return edittopub; }
+    public String getUserName () {
+        if (username == null) return "";
+        return username;
+    }
     //**********************************************************
     public boolean allowToPublish () { return edittopub == 0; }
     //**********************************************************

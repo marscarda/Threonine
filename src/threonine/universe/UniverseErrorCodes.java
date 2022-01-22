@@ -5,5 +5,6 @@ public class UniverseErrorCodes {
     public static final int SUBSETNOTFOUND = 501;
     public static final int PUBLICNOTALLOWED = 502;
     public static final int ROOTSUBSETALREADYEXISTS = 503;
+    public static final int UNIVERSENOTPUBLIC = 504;
 }
 //*****************************************************************************
