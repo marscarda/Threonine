@@ -32,10 +32,6 @@ public class MapsLambdaFolders extends LockMap {
         if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, folder.publicname) != 0)
             throw new AppException("Public name already used", MapErrorCodes.FOLDERPUBLICNAMEALREADYUSED);
         //------------------------------------------------------------------
-        FolderUsage usage = new FolderUsage();
-        usage.projectid = folder.projectid;
-        usage.folderid = folder.folderid;
-        //------------------------------------------------------------------
         while (true) {
             try {
                 folder.folderid = Celaeno.getUniqueID();
@@ -45,6 +41,9 @@ public class MapsLambdaFolders extends LockMap {
             catch (SQLIntegrityConstraintViolationException e) {}
         }
         //------------------------------------------------------------------
+        FolderUsage usage = new FolderUsage();
+        usage.projectid = folder.projectid;
+        usage.folderid = folder.folderid;
         this.insertFolderUsage(usage);
         //------------------------------------------------------------------
     }

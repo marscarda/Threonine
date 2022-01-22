@@ -26,21 +26,20 @@ public class MapReaderGraphic {
      */
     public MapRecordGraphic[] getDrawingRecords (MapGraphicGetParam param, long userid) throws AppException, Exception {
         if (param.folderid != 0) 
-            return recordsByFolder(param.folderid, userid);
+            return recordsByFolder(param.folderid);
         if (param.universeid != 0)
-            return recordsBySubset(param.universeid, param.subsetid, userid);
+            return recordsBySubset(param.universeid, param.subsetid);
         return new MapRecordGraphic[0];
     }
     //**********************************************************************
     /**
      * Get the raw records for drawing by folder. 
      * @param folderid
-     * @param userid
      * @return
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic[] recordsByFolder (long folderid, long userid) throws AppException, Exception {
+    public MapRecordGraphic[] recordsByFolder (long folderid) throws AppException, Exception {
         //------------------------------------------------------------------
         MapRecord[] records = mapslambda.getMapRecords(folderid);
         if (records.length == 0) return new MapRecordGraphic[0];
@@ -65,7 +64,7 @@ public class MapReaderGraphic {
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic[] recordsBySubset (long universeid, long subsetid, long userid) throws AppException, Exception {
+    public MapRecordGraphic[] recordsBySubset (long universeid, long subsetid) throws AppException, Exception {
         //------------------------------------------------------------------
         SubSet[] subsets = universerlambda.getSubsets(universeid, subsetid);
         if (subsets.length == 0) return new MapRecordGraphic[0];
