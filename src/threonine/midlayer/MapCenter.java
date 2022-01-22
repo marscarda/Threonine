@@ -92,7 +92,7 @@ public class MapCenter {
         projectlambda.checkAccess(record.getProjectID(), userid, 2);
         //--------------------------------------------------------
         //We recover the project. Needed ahead when altering usage.
-        Project project = projectlambda.getProject(record.getProjectID(), 0);
+        Project project = projectlambda.getProject(record.getProjectID());
         //********************************************************
         PointLocation[] points = MapValidationAndMath.createPoints(pointstable);
         MapValidationAndMath.checkValid(points);
@@ -295,7 +295,7 @@ public class MapCenter {
         //-------------------------------------------------
         MapFolder[] folders = mapslambda.searchFolders(searchkey);
         for (MapFolder folder : folders) {
-            project = projectlambda.getProject(folder.projectID(), 0);
+            project = projectlambda.getProject(folder.projectID());
             user = authlambda.getUser(project.getOwner(), false);
             folder.setUserID(user.userID());
             folder.setUserName(user.loginName());
@@ -327,7 +327,7 @@ public class MapCenter {
         if (usage.hasPassword()) {
             if (folder.checkPassword(usage.sharePassword())) {
                 //We find out the user owner of the folder
-                Project project = projectlambda.getProject(folder.projectID(), 0);
+                Project project = projectlambda.getProject(folder.projectID());
                 User user = authlambda.getUser(project.getOwner(), false);
                 folder.setUserID(user.userID());
                 folder.setUserName(user.loginName());
@@ -342,7 +342,7 @@ public class MapCenter {
             throw new AppException("Not authorized to use this map objects folder", AuthErrorCodes.UNAUTHORIZED);
         //------------------------------------------------------------------
         //We find out the user owner of the folder
-        Project project = projectlambda.getProject(folder.projectID(), 0);
+        Project project = projectlambda.getProject(folder.projectID());
         User user = authlambda.getUser(project.getOwner(), false);
         folder.setUserID(user.userID());
         folder.setUserName(user.loginName());
@@ -365,7 +365,7 @@ public class MapCenter {
         //-------------------------------------------------
         MapFolder[] folders = mapslambda.getFolderUsed(projectid);
         for (MapFolder folder : folders) {
-            project = projectlambda.getProject(folder.projectID(), 0);
+            project = projectlambda.getProject(folder.projectID());
             user = authlambda.getUser(project.getOwner(), false);
             folder.setUserID(user.userID());
             folder.setUserName(user.loginName());

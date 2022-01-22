@@ -76,7 +76,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
             sql.setParameters(st, 1);
             rs = st.executeQuery();
             if (!rs.next())
-                throw new AppException("Universe not found", AppException.UNIVERSENOTFOUND);
+                throw new AppException("Universe not found", UniverseErrorCodes.UNIVERSENOTFOUND);
             Universe universe = new Universe();
             universe.univerid = rs.getLong(DBUniverse.Universe.UNIVERSEID);
             universe.projectid = rs.getLong(DBUniverse.Universe.PROJECTID);

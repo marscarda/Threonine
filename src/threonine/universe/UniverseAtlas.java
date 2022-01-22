@@ -191,7 +191,7 @@ public class UniverseAtlas extends UniverseLock {
         setDataBase();
         //-------------------------------------------------------------------
         if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, subset.universeid) == 0) {
-            throw new AppException("Universe not found", AppException.UNIVERSENOTFOUND);
+            throw new AppException("Universe not found", UniverseErrorCodes.UNIVERSENOTFOUND);
         }
         //-------------------------------------------------------------------
         if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.parentsubset,
