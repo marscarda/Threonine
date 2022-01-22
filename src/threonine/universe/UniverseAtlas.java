@@ -156,7 +156,6 @@ public class UniverseAtlas extends UniverseLock {
     /**
      * 
      * @param search
-     * @param count
      * @return
      * @throws AppException
      * @throws Exception 
