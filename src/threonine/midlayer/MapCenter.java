@@ -108,7 +108,7 @@ public class MapCenter {
         //Transaction and locks stuff.
         TabList tablist = new TabList();
         mapslambda.addLockCreateObject(tablist);
-        billingatlas.AddLockAlterUsage(tablist);
+        billingatlas.lockAlterUsage(tablist);
         mapslambda.setAutoCommit(0);
         mapslambda.lockTables(tablist);
         //********************************************************
