@@ -31,11 +31,10 @@ public class UniverseAtlas extends UniverseLock {
         }
         //------------------------------------------------------------------
         //We now create the first subset.
-        //SubSet subset = new SubSet();
-        subset.name = universe.name;
-        subset.description = universe.description;
+//        subset.name = universe.name;
+//        subset.description = universe.description;
+//        subset.weight = 1;
         subset.universeid = universe.univerid;
-        subset.weight = 1;
         while (true) {
             subset.subsetid = Celaeno.getUniqueID();
             if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.subsetid) == 0) break;

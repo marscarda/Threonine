@@ -11,7 +11,6 @@ public class SubSet {
     int weight = 0;
     float subsetcost = 0;
     float mapcost = 0;
-    long maprecordid = 0;
     boolean valid = false;
     boolean root = false;
     //===============================================
@@ -30,7 +29,6 @@ public class SubSet {
     public long getParentSubSet () { return parentsubset; }
     public int getPopulation () { return population; }
     public int getWeight () { return weight; }
-    public long getMapRecordID () { return maprecordid; }
     public float getMapCost () { return mapcost; }
     //-----------------------------------------------
     public String getName () {
