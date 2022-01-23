@@ -24,6 +24,7 @@ public class SubSet {
     public void setWeight (int weight) { this.weight = weight; }
     //-----------------------------------------------
     public void setCost (float cost) { this.subsetcost = cost; }
+    public void setMapCost (float cost) { this.mapcost = cost; }
     //===============================================
     public long getUniverseID () { return universeid; }
     public long getParentSubSet () { return parentsubset; }

@@ -34,6 +34,7 @@ public class UniverseQ2 extends UniverseQ1 {
         insert.addValue(DBUniverse.SubSets.POPULATION, subset.population);
         insert.addValue(DBUniverse.SubSets.WEIGHT, subset.weight);
         insert.addValue(DBUniverse.SubSets.SUBSETCOST, subset.subsetcost);
+        insert.addValue(DBUniverse.SubSets.MAPCOST, subset.mapcost);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -67,6 +68,8 @@ public class UniverseQ2 extends UniverseQ1 {
         select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
+        select.addItem(DBUniverse.SubSets.SUBSETCOST);
+        select.addItem(DBUniverse.SubSets.MAPCOST);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.SubSets.PARENTSUBSET, "=", 0));
         whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
@@ -91,6 +94,8 @@ public class UniverseQ2 extends UniverseQ1 {
             subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
             subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
             subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+            subset.subsetcost = rs.getFloat(DBUniverse.SubSets.SUBSETCOST);
+            subset.mapcost = rs.getFloat(DBUniverse.SubSets.MAPCOST);
             return subset;
         }
         catch (SQLException e) {
@@ -180,6 +185,8 @@ public class UniverseQ2 extends UniverseQ1 {
         select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
+        select.addItem(DBUniverse.SubSets.SUBSETCOST);
+        select.addItem(DBUniverse.SubSets.MAPCOST);
         sql.addClause(select);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.SubSets.UNIVERSEID, "=", universeid));
@@ -207,6 +214,8 @@ public class UniverseQ2 extends UniverseQ1 {
                 subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
                 subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
                 subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+                subset.subsetcost = rs.getFloat(DBUniverse.SubSets.SUBSETCOST);
+                subset.mapcost = rs.getFloat(DBUniverse.SubSets.MAPCOST);
                 subsets.add(subset);
             }
             return subsets.toArray(new SubSet[0]);
