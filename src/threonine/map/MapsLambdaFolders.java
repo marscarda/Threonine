@@ -229,6 +229,9 @@ public class MapsLambdaFolders extends LockMap {
         else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
+        //int publiccount = this.selectPublicCount();
+        
+        
         return this.selectMapFoldersByPublicName(searchkey);
     }
     //**********************************************************************

@@ -2,7 +2,7 @@ package threonine.map;
 //************************************************************************
 import methionine.TabList;
 //************************************************************************
-public class LockMap extends QueryMaps3 {
+public class LockMap extends MappingQ4 {
     //********************************************************************
     public void addLockCreateFolder (TabList tabs) {
         tabs.addTable(databasename, DBMaps.FolderTree.TABLE);
