@@ -4,17 +4,17 @@ import methionine.AppException;
 import methionine.project.ProjectLambda;
 import threonine.map.MapObject;
 import threonine.map.MapRecord;
-import threonine.map.MapsLambda;
+import threonine.map.MappingAttlas;
 import threonine.universe.SubSet;
 import threonine.universe.UniverseAtlas;
 //**************************************************************************
 public class MapReaderGraphic {
     //**********************************************************************
     ProjectLambda projectlambda = null;
-    MapsLambda mapslambda = null;
+    MappingAttlas mapslambda = null;
     UniverseAtlas universerlambda = null;
     public void setProjectLambda (ProjectLambda lambda) { projectlambda = lambda; }
-    public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
+    public void setMapsLambda (MappingAttlas mapslambda) { this.mapslambda = mapslambda; }
     public void setUniverserLambda (UniverseAtlas lambda) { universerlambda = lambda; }
     //**********************************************************************
     /**

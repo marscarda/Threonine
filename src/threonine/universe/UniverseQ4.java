@@ -81,7 +81,7 @@ public class UniverseQ4 extends UniverseQ3 {
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
             if (rs != null) try {rs.close();} catch(Exception e){}
-        }        
+        }
     }
     //**********************************************************************
     /**

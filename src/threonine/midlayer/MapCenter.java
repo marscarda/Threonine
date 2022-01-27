@@ -15,18 +15,18 @@ import methionine.project.ProjectLambda;
 import threonine.map.FolderUsage;
 import threonine.map.MapFolder;
 import threonine.map.MapRecord;
-import threonine.map.MapsLambda;
+import threonine.map.MappingAttlas;
 import threonine.map.PointLocation;
 //**************************************************************************
 public class MapCenter {
     //**********************************************************************
     AuthLamda authlambda = null;
     ProjectLambda projectlambda = null;
-    MapsLambda mapslambda = null;
+    MappingAttlas mapslambda = null;
     BillingLambda billingatlas = null;
     public void setAuthLambda (AuthLamda authlambda) { this.authlambda = authlambda; }
     public void setProjectLambda (ProjectLambda projectlambda) { this.projectlambda = projectlambda; }
-    public void setMapsLambda (MapsLambda mapslambda) { this.mapslambda = mapslambda; }
+    public void setMapsLambda (MappingAttlas mapslambda) { this.mapslambda = mapslambda; }
     public void setBillingAtlas (BillingLambda billingatlas) { this.billingatlas = billingatlas; }
     //**********************************************************************
     /**
@@ -288,12 +288,20 @@ public class MapCenter {
         }
     }
     //**********************************************************************
+    /**
+     * 
+     * @param searchkey
+     * @return
+     * @throws Exception
+     * @deprecated Use the class ExcMapping in Lycine
+     */
+    @Deprecated
     public MapFolder[] searchFolders (String searchkey) throws Exception {
         //-------------------------------------------------
         Project project;
         User user;
         //-------------------------------------------------
-        MapFolder[] folders = mapslambda.searchFolders(searchkey);
+        MapFolder[] folders = mapslambda.getPublicList(searchkey);
         for (MapFolder folder : folders) {
             project = projectlambda.getProject(folder.projectID());
             user = authlambda.getUser(project.getOwner(), false);

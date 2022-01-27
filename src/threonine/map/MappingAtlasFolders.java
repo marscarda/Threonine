@@ -1,11 +1,12 @@
 package threonine.map;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Random;
 import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
 //**************************************************************************
-public class MapsLambdaFolders extends LockMap {
+public class MappingAtlasFolders extends LockMap {
     //**********************************************************************
     /**
      * Creates a new map folder
@@ -223,16 +224,20 @@ public class MapsLambdaFolders extends LockMap {
      * @return
      * @throws Exception 
      */
-    public MapFolder[] searchFolders (String searchkey) throws Exception {
+    public MapFolder[] getPublicList (String searchkey) throws Exception {
         //------------------------------------------------------------------
         if (usemaster) connection = electra.masterConnection();
         else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
-        //int publiccount = this.selectPublicCount();
-        
-        
-        return this.selectMapFoldersByPublicName(searchkey);
+        int publiccount = this.selectPublicCount();
+        int offset = 0;
+        if (publiccount > PUBLICCOUNT) {
+            Random rand = new Random();
+            offset = rand.nextInt(publiccount - PUBLICCOUNT);
+        }
+        //==========================================================
+        return this.selectPublicFolders(searchkey, offset);
     }
     //**********************************************************************
     /**

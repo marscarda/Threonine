@@ -7,25 +7,60 @@ import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
 import methionine.sql.SQLCondition;
+import methionine.sql.SQLLimit;
+import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
 import methionine.sql.SQLWhere;
 //**************************************************************************
 public class MappingQ4 extends QueryMaps3 {
     //**********************************************************************
-    protected int selectPublicCount () throws AppException, Exception {
-        
-        
-        return 0;
-    }
+    protected int PUBLICCOUNT = 15;
     //**********************************************************************
     /**
      * 
-     * @param searchkey
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    protected int selectPublicCount () throws AppException, Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.FolderTree.TABLE);
+        select.addItem("COUNT", "*", "C");
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.FolderTree.SEARCHABLE, "!=", 0));
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select public map folders count\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }        
+    }
+    //**********************************************************************
+    /**
+     * Selects a list of public map folders.
+     * @param search
+     * @param offset
      * @return
      * @throws Exception 
      */
-    protected MapFolder[] selectMapFoldersByPublicName (String searchkey) throws Exception {
+    protected MapFolder[] selectPublicFolders (String search, int offset) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.FolderTree.TABLE);
         select.addItem(DBMaps.FolderTree.FOLDERID);
@@ -34,12 +69,23 @@ public class MappingQ4 extends QueryMaps3 {
         select.addItem(DBMaps.FolderTree.FOLDERNAME);
         select.addItem(DBMaps.FolderTree.PUBLICNAME);
         select.addItem(DBMaps.FolderTree.COSTPERUSE);
+        //-------------------------------------------------------
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBMaps.FolderTree.SEARCHABLE, "!=", 0));
-        whr.addCondition(new SQLCondition(DBMaps.FolderTree.PUBLICNAME, "LIKE", "%" + searchkey + "%"));
+        if (search != null)
+            whr.addCondition(new SQLCondition(DBMaps.FolderTree.PUBLICNAME, "LIKE", "%" + search + "%"));
+        //-------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBMaps.FolderTree.PUBLICNAME);
+        //-------------------------------------------------------
         sql.addClause(select);
         sql.addClause(whr);
+        sql.addClause(order);
         //-------------------------------------------------------
+        if (search == null) {
+            SQLLimit limit = new SQLLimit(offset, PUBLICCOUNT);
+            sql.addClause(limit);
+        }        //-------------------------------------------------------
         PreparedStatement st = null;
         ResultSet rs = null;
         //-------------------------------------------------------

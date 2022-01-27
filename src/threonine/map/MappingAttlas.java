@@ -5,7 +5,7 @@ import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
 //**************************************************************************
-public class MapsLambda extends MapsLambdaFolders {
+public class MappingAttlas extends MappingAtlasFolders {
     //**********************************************************************
     /**
      * Creates a new map record.
