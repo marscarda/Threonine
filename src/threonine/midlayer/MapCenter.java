@@ -9,7 +9,7 @@ import methionine.auth.AuthLamda;
 import methionine.auth.User;
 import methionine.finance.AlterUsage;
 import methionine.finance.BillingLambda;
-import methionine.finance.UsageCost;
+import methionine.finance.FinanceRules;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
 import threonine.map.FolderUsage;
@@ -102,7 +102,7 @@ public class MapCenter {
         float cost = 0;
         while (billpts > 0) {
             billpts -= 100;
-            cost += UsageCost.MAP100VERTICES;
+            cost += FinanceRules.MAP100VERTICES;
         }
         //********************************************************
         //Transaction and locks stuff.
