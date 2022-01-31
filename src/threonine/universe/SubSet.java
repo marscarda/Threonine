@@ -9,6 +9,7 @@ public class SubSet {
     String description;
     int population = 0;
     int weight = 0;
+    int mapstatus = 0;
     float subsetcost = 0;
     float mapcost = 0;
     boolean valid = false;
@@ -31,6 +32,7 @@ public class SubSet {
     public int getPopulation () { return population; }
     public int getWeight () { return weight; }
     public float getMapCost () { return mapcost; }
+    public boolean mapStatus () { return mapstatus != 0; }
     //-----------------------------------------------
     public String getName () {
         if (name == null) return "";
