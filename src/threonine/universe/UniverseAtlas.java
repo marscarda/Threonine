@@ -1,5 +1,6 @@
 package threonine.universe;
 //**************************************************************************
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.TimeZone;
@@ -199,11 +200,13 @@ public class UniverseAtlas extends UniverseLock {
         }
         //-------------------------------------------------------------------
         while (true) {
-            subset.subsetid = Celaeno.getUniqueID();
-            if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.subsetid) == 0) break;
-        }
-        //-------------------------------------------------------------------
-        this.insertSubSet(subset);
+            try {
+                subset.subsetid = Celaeno.getUniqueID();
+                this.insertSubSet(subset);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }        
         //-------------------------------------------------------------------
     }
     //**********************************************************************

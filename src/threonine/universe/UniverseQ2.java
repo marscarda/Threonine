@@ -3,6 +3,7 @@ package threonine.universe;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
@@ -22,9 +23,10 @@ public class UniverseQ2 extends UniverseQ1 {
     /**
      * Inserts a new subset
      * @param subset
+     * @throws java.sql.SQLIntegrityConstraintViolationException
      * @throws Exception 
      */
-    protected void insertSubSet (SubSet subset) throws Exception {
+    protected void insertSubSet (SubSet subset) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBUniverse.SubSets.TABLE);
         insert.addValue(DBUniverse.SubSets.SUBSETID, subset.subsetid);
         insert.addValue(DBUniverse.SubSets.UNIVERSEID, subset.universeid);
@@ -33,6 +35,7 @@ public class UniverseQ2 extends UniverseQ1 {
         insert.addValue(DBUniverse.SubSets.DESCRIPTION, subset.description);
         insert.addValue(DBUniverse.SubSets.POPULATION, subset.population);
         insert.addValue(DBUniverse.SubSets.WEIGHT, subset.weight);
+        insert.addValue(DBUniverse.SubSets.MAPSTATUS, subset.mapstatus);
         insert.addValue(DBUniverse.SubSets.SUBSETCOST, subset.subsetcost);
         insert.addValue(DBUniverse.SubSets.MAPCOST, subset.mapcost);
         PreparedStatement st = null;
@@ -41,6 +44,7 @@ public class UniverseQ2 extends UniverseQ1 {
             insert.setParameters(st, 1);
             st.execute();            
         }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to insert new subset \n");
             msg.append(e.getMessage());
@@ -68,6 +72,7 @@ public class UniverseQ2 extends UniverseQ1 {
         select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
+        select.addItem(DBUniverse.SubSets.MAPSTATUS);
         select.addItem(DBUniverse.SubSets.SUBSETCOST);
         select.addItem(DBUniverse.SubSets.MAPCOST);
         SQLWhere whr = new SQLWhere();
@@ -94,6 +99,7 @@ public class UniverseQ2 extends UniverseQ1 {
             subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
             subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
             subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+            subset.mapstatus = rs.getInt(DBUniverse.SubSets.MAPSTATUS);
             subset.subsetcost = rs.getFloat(DBUniverse.SubSets.SUBSETCOST);
             subset.mapcost = rs.getFloat(DBUniverse.SubSets.MAPCOST);
             return subset;
@@ -127,6 +133,7 @@ public class UniverseQ2 extends UniverseQ1 {
         select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
+        select.addItem(DBUniverse.SubSets.MAPSTATUS);
         select.addItem(DBUniverse.SubSets.SUBSETCOST);
         select.addItem(DBUniverse.SubSets.MAPCOST);
         SQLWhere whr = new SQLWhere();
@@ -153,6 +160,7 @@ public class UniverseQ2 extends UniverseQ1 {
             subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
             subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
             subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
+            subset.mapstatus = rs.getInt(DBUniverse.SubSets.MAPSTATUS);
             subset.subsetcost = rs.getFloat(DBUniverse.SubSets.SUBSETCOST);
             subset.mapcost = rs.getFloat(DBUniverse.SubSets.MAPCOST);
             return subset;
