@@ -277,6 +277,15 @@ public class UniverseAtlas extends UniverseLock {
         //-------------------------------------------------------------------
     }
     //**********************************************************************
+    public void setMapStatus (long subsetid, int status) throws Exception {
+        //-------------------------------------------------------------------
+        connection = electra.masterConnection();
+        this.setDataBase();
+        //-------------------------------------------------------------------
+        this.updateSubsetMapStatus(subsetid, status);
+        //-------------------------------------------------------------------        
+    }
+    //**********************************************************************
     //*** MAP PART ***
     //**********************************************************************
     public void addMapObject (long subsetid, PointLocation[] points) throws Exception {

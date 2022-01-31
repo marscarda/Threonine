@@ -313,12 +313,37 @@ public class UniverseQ2 extends UniverseQ1 {
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-        }        
+        finally { if (st != null) try {st.close();} catch(Exception e){} }
     }
     //******************************************************************
-    
-    
+    /**
+     * Updates the map status for a subset.
+     * @param universeid
+     * @param subsetid
+     * @param mapstatus
+     * @throws Exception 
+     */
+    protected void updateSubsetMapStatus (long subsetid, int mapstatus) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBUniverse.SubSets.TABLE);
+        update.addSetColumn(DBUniverse.SubSets.MAPSTATUS, mapstatus);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubSets.SUBSETID, "=", subsetid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update subsets map cost\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
+    }
+    //******************************************************************
 }
 //**************************************************************************

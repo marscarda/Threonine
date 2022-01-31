@@ -9,6 +9,12 @@ public class UniverseLock extends UniverseQ4 {
         tabs.addTable(databasename, DBUniverse.SubSets.TABLE);
     }
     //**********************************************************************
+    /**
+     * Lock these three tables individually. Methods Arimasu
+     * @param tabs
+     * @deprecated
+     */
+    @Deprecated
     public void AddLockMapRecord (TabList tabs) {
         tabs.addTable(databasename, DBUniverse.SubSets.TABLE);
         tabs.addTable(databasename, DBUniverse.SubsetMapObject.TABLE);

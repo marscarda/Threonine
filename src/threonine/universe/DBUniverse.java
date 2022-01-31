@@ -23,19 +23,20 @@ public class DBUniverse {
         static final String DESCRIPTION = "description";
         static final String POPULATION = "population";
         static final String WEIGHT = "weight";
+        static final String MAPSTATUS = "mapstatus";
         static final String SUBSETCOST = "subsetcost";
         static final String MAPCOST = "mapcost";
     }
     //**********************************************************************
     public static class SubsetMapObject {
-        static final String TABLE = "univmapobject";
-        static final String OBJECTID = "objectid";
+        static final String TABLE = "sbmapfeature";
+        static final String OBJECTID = "featureid";
         static final String SUBSETID = "subsetid";
-        static final String OBJTYPE = "objtype";
+        static final String OBJTYPE = "featuretype";
     }
     //**********************************************************************
     public static class LocationPoints {
-        static final String TABLE = "univlocationpoint";
+        static final String TABLE = "ulocationpoint";
         static final String SUBSETID = "subsetid";
         static final String OBJECTID = "objectid";
         static final String POINTINDEX = "pointindex";
