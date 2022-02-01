@@ -76,6 +76,21 @@ public class UniverseAtlas extends UniverseLock {
     }
     //**********************************************************************
     /**
+     * 
+     * @param universeid
+     * @param value
+     * @throws Exception 
+     */
+    public void setEditsToPub (long universeid, int value) throws Exception {
+        //-------------------------------------------------------------------
+        connection = electra.masterConnection();
+        this.setDataBase();
+        //-------------------------------------------------------------------
+        this.updateChangeToPub(universeid, value);
+        //-------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
      * Updates a universe given its ID.
      * @param universeid
      * @param universe
@@ -111,27 +126,6 @@ public class UniverseAtlas extends UniverseLock {
         }
         //-------------------------------------------------------------------
         this.commitTransaction();
-        //-------------------------------------------------------------------
-    }
-    //**********************************************************************
-    /**
-     * Checks the user access to a given universe.
-     * @param universeid
-     * @param projectid
-     * @return
-     * @throws Exception 
-     */
-    public int checkUserAccessToUniverse (long universeid, long projectid) throws Exception {
-        //-------------------------------------------------------------------
-        connection = electra.slaveConnection();
-        setDataBase();
-        Universe universe;
-        try { universe = this.selectUniverse(universeid); }
-        catch (AppException e) { return 0; }
-        //-------------------------------------------------------------------
-        if (universe.projectid  != projectid) return 0;
-        //-------------------------------------------------------------------
-        return 2;
         //-------------------------------------------------------------------
     }
     //**********************************************************************

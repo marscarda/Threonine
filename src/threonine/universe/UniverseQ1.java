@@ -213,5 +213,37 @@ public class UniverseQ1 extends QueryUniverseTabs {
         }        
     }
     //******************************************************************
+    //UNIVERSE UPDATES
+    //******************************************************************
+    /**
+     * 
+     * @param universeid
+     * @param value
+     * @throws Exception 
+     */
+    protected void updateChangeToPub (long universeid, int value) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBUniverse.Universe.TABLE);
+        update.addSetColumn(DBUniverse.Universe.CHANGETOPUB, value);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.Universe.UNIVERSEID, "=", universeid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update universe\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }
+    }
+    //******************************************************************
 }
 //**************************************************************************
