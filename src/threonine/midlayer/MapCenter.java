@@ -8,7 +8,7 @@ import methionine.auth.AuthErrorCodes;
 import methionine.auth.AuthLamda;
 import methionine.auth.User;
 import methionine.finance.AlterUsage;
-import methionine.finance.BillingLambda;
+import methionine.finance.FinanceAtlas;
 import methionine.finance.FinanceRules;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
@@ -23,11 +23,11 @@ public class MapCenter {
     AuthLamda authlambda = null;
     ProjectLambda projectlambda = null;
     MappingAttlas mapslambda = null;
-    BillingLambda billingatlas = null;
+    FinanceAtlas billingatlas = null;
     public void setAuthLambda (AuthLamda authlambda) { this.authlambda = authlambda; }
     public void setProjectLambda (ProjectLambda projectlambda) { this.projectlambda = projectlambda; }
     public void setMapsLambda (MappingAttlas mapslambda) { this.mapslambda = mapslambda; }
-    public void setBillingAtlas (BillingLambda billingatlas) { this.billingatlas = billingatlas; }
+    public void setBillingAtlas (FinanceAtlas billingatlas) { this.billingatlas = billingatlas; }
     //**********************************************************************
     /**
      * Creates a new Map Folder
