@@ -19,6 +19,10 @@ public class MapLayer {
         if (layername == null) return "";
         return layername;
     }
+    public String layerDescription () {
+        if (layerdescription == null) return "";
+        return layerdescription;
+    }
     //======================================================================
 }
 //**************************************************************************
