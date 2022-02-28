@@ -16,7 +16,7 @@ import methionine.sql.SQLSelect;
 import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
 //**************************************************************************
-public class QueryMaps1 extends QueryMapTabs {
+public class MappingQ1 extends QueryMapTabs {
     //**********************************************************************
     /**
      * Inserts a new map folder into the database.

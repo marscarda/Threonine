@@ -19,12 +19,42 @@ public class QueryMapTabs extends Alcyone {
             throw new Exception(err.toString());
         }
         //===================================================================
-        if (!checkTableExists(DBMaps.FolderTree.TABLE, tables)) createFolderTree();
+        if (!checkTableExists(DBMaps.MapLayer.TABLE, tables)) createLayer();
+        //if (!checkTableExists(DBMaps.FolderTree.TABLE, tables)) createFolderTree();
         if (!checkTableExists(DBMaps.FolderUsage.TABLE, tables)) createFolderShares();
         if (!checkTableExists(DBMaps.MapRecords.TABLE, tables)) createMapRecords();
         if (!checkTableExists(DBMaps.Objects.TABLE, tables)) createMapObjects();
         if (!checkTableExists(DBMaps.LocationPoints.TABLE, tables)) createLocationPoints();
         //===================================================================
+    }
+    //***********************************************************************
+    private void createLayer () throws Exception {
+        //-------------------------------------------------------------------
+        SQLCreateTable create = new SQLCreateTable(DBMaps.MapLayer.TABLE);
+        create.setEngine(MySQLEngine.INNODB);
+        create.addField(DBMaps.MapLayer.LAYERID, "BIGINT NOT NULL");
+        create.addField(DBMaps.MapLayer.PROJECTID, "BIGINT NOT NULL");
+        create.addField(DBMaps.MapLayer.LAYERNAME, "VARCHAR (100) NOT NULL");
+        create.addField(DBMaps.MapLayer.DESCRIPTION, "VARCHAR (300) NOT NULL");
+        create.addUnique(DBMaps.MapLayer.LAYERID);
+        //-------------------------------------------------------------------
+        PreparedStatement st = null;
+        this.setDataBase();
+        try {
+            st = connection.prepareStatement(create.getText());
+            st.execute();
+        }
+        catch (SQLException e) {
+            StringBuilder err = new StringBuilder("Failed to create ");
+            err.append(DBMaps.MapLayer.TABLE);
+            err.append(" table\n");
+            err.append(e.getMessage());
+            throw new Exception(err.toString());
+        }
+        finally {
+            try { if (st != null) st.close(); } catch (Exception e) {}
+        }
+        //-------------------------------------------------------------------        
     }
     //***********************************************************************
     private void createFolderTree () throws Exception {

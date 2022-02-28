@@ -15,7 +15,7 @@ import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
 import methionine.sql.SQLWhere;
 //**************************************************************************
-public class QueryMaps2 extends QueryMaps1 {
+public class MappingQ2 extends MappingQ1 {
     //**********************************************************************
     /**
      * Inserts a new map record into the database.

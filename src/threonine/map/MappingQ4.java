@@ -13,7 +13,7 @@ import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
 import methionine.sql.SQLWhere;
 //**************************************************************************
-public class MappingQ4 extends QueryMaps3 {
+public class MappingQ4 extends MappingQ3 {
     //**********************************************************************
     protected int PUBLICCOUNT = 15;
     //**********************************************************************

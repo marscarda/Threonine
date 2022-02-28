@@ -2,6 +2,14 @@ package threonine.map;
 //**************************************************************************
 public class DBMaps {
     //**********************************************************************
+    public static class MapLayer {
+        static final String TABLE = "maplayer";
+        static final String LAYERID = "layerid";
+        static final String PROJECTID = "projectid";
+        static final String LAYERNAME = "layername";
+        static final String DESCRIPTION = "description";
+    }
+    //**********************************************************************
     public static class FolderTree {
         static final String TABLE = "mapfoldertree";
         static final String FOLDERID = "folderid";

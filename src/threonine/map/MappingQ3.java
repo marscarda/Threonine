@@ -16,7 +16,7 @@ import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
 import methionine.sql.SQLWhere;
 //**************************************************************************
-public class QueryMaps3 extends QueryMaps2 {
+public class MappingQ3 extends MappingQ2 {
     //**********************************************************************
     /**
      * Insert a new folder usage into the table.
