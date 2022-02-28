@@ -42,11 +42,61 @@ public class MappingQ1 extends QueryMapTabs {
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-        }        
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
     }
     //**********************************************************************
+    /**
+     * Selects MapLayers given a project.
+     * @param projectid
+     * @return
+     * @throws Exception 
+     */
+    protected MapLayer[] selectLayersByProject (long projectid) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapLayer.TABLE);
+        select.addItem(DBMaps.MapLayer.LAYERID);
+        select.addItem(DBMaps.MapLayer.PROJECTID);
+        select.addItem(DBMaps.MapLayer.LAYERNAME);
+        select.addItem(DBMaps.MapLayer.DESCRIPTION);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.MapLayer.PROJECTID, "=", projectid));
+        //-------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBMaps.MapLayer.LAYERNAME);
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        sql.addClause(order);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<MapLayer> layers = new ArrayList<>();
+            MapLayer layer;
+            while (rs.next()) {
+                layer = new MapLayer();
+                layer.layerid = rs.getLong(DBMaps.MapLayer.LAYERID);
+                layer.projectid = rs.getLong(DBMaps.MapLayer.PROJECTID);
+                layer.layername = rs.getString(DBMaps.MapLayer.LAYERNAME);
+                layer.layerdescription = rs.getString(DBMaps.MapLayer.DESCRIPTION);
+                layers.add(layer);
+            }
+            return layers.toArray(new MapLayer[0]);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map layers. Code: hrnfgsa \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+    }
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************

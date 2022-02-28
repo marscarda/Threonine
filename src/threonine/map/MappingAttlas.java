@@ -33,6 +33,19 @@ public class MappingAttlas extends MappingAtlasFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * Returns Map Layers given a project ID.
+     * @param projectid
+     * @return
+     * @throws Exception 
+     */
+    public MapLayer[] getLayersByProject (long projectid) throws Exception {
+        //------------------------------------------------------------------
+        connection = electra.nearSrvConnection();
+        setDataBase();
+        return this.selectLayersByProject(projectid);
+        //------------------------------------------------------------------
+    }
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************
