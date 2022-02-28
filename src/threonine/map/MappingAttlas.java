@@ -8,6 +8,40 @@ import methionine.sql.SQLLockTables;
 public class MappingAttlas extends MappingAtlasFolders {
     //**********************************************************************
     /**
+     * Creates a Map Layer.
+     * @param layer
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void createLayer (MapLayer layer) throws AppException, Exception {
+        //------------------------------------------------------------------
+        connection = electra.mainSrvConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, layer.layername, 
+            DBMaps.FolderTree.PROJECTID, layer.projectid) != 0)
+                throw new AppException("Layer Name already exists", MapErrorCodes.FOLDERNAMEALREADYEXISTS);
+        //------------------------------------------------------------------
+        while (true) {
+            try {
+                layer.layerid = Celaeno.getUniqueID();
+                this.insertLayer(layer);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    /**
      * Creates a new map record.
      * @param record
      * @throws AppException OBJECTNOTFOUND
@@ -69,7 +103,6 @@ public class MappingAttlas extends MappingAtlasFolders {
         return this.selectMapRecords(folderid);
         //------------------------------------------------------------------
     }
-    //**********************************************************************
     //**********************************************************************
     /**
      * 

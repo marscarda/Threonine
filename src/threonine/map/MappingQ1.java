@@ -19,10 +19,48 @@ import methionine.sql.SQLWhere;
 public class MappingQ1 extends QueryMapTabs {
     //**********************************************************************
     /**
+     * Inserts a map layer into the table.
+     * @param layer
+     * @throws SQLIntegrityConstraintViolationException
+     * @throws Exception 
+     */
+    protected void insertLayer (MapLayer layer) throws SQLIntegrityConstraintViolationException, Exception {
+        SQLInsert insert = new SQLInsert(DBMaps.MapLayer.TABLE);
+        insert.addValue(DBMaps.MapLayer.LAYERID, layer.layerid);
+        insert.addValue(DBMaps.MapLayer.PROJECTID, layer.projectid);
+        insert.addValue(DBMaps.MapLayer.LAYERNAME, layer.layername);
+        insert.addValue(DBMaps.MapLayer.DESCRIPTION, layer.layerdescription);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(insert.getText());
+            insert.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to insert new maplayer\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+        }        
+    }
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    /**
      * Inserts a new map folder into the database.
      * @param folder
      * @throws Exception 
      */
+    @Deprecated
     protected void insertMapFolder (MapFolder folder) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBMaps.FolderTree.TABLE);
         insert.addValue(DBMaps.FolderTree.FOLDERID, folder.folderid);
