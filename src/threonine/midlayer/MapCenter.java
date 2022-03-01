@@ -70,7 +70,7 @@ public class MapCenter {
     public void createRecord (MapRecord record, long userid) throws AppException, Exception {
         if (record.getName().length() == 0)
             throw new AppException("Record name cannot be empty", AppException.INVALIDDATASUBMITED);
-        MapFolder folder = mapslambda.getMapFolder(record.getFolderID());
+        MapFolder folder = mapslambda.getMapFolder(record.layerID());
         projectlambda.checkAccess(folder.projectID(), userid, 2);
         record.setProjectId(folder.projectID());//Since project ID must macht with folder we assign here
         mapslambda.createMapRecord(record);
@@ -139,7 +139,7 @@ public class MapCenter {
     public void clearObjects (long recordid, long userid) throws AppException, Exception {
         if (userid != 0) {
             MapRecord record = mapslambda.getMapRecord(recordid);
-            MapFolder folder = mapslambda.getMapFolder(record.getFolderID());
+            MapFolder folder = mapslambda.getMapFolder(record.layerID());
             projectlambda.checkAccess(folder.projectID(), userid, 3);
         }
         //mapslambda.clearMapObjects(recordid);

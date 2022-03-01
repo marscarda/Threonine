@@ -25,8 +25,7 @@ public class MappingQ2 extends MappingQ1 {
     protected void insertMapRecord (MapRecord record) throws Exception {
         SQLInsert insert = new SQLInsert(DBMaps.MapRecords.TABLE);
         insert.addValue(DBMaps.MapRecords.RECORDID, record.recordid);
-        insert.addValue(DBMaps.MapRecords.PROJECTID, record.projectid);
-        insert.addValue(DBMaps.MapRecords.FOLDERID, record.folderid);
+        insert.addValue(DBMaps.MapRecords.LAYERID, record.layerid);
         insert.addValue(DBMaps.MapRecords.NAME, record.name);
         insert.addValue(DBMaps.MapRecords.EXTRADATA, record.extradata);
         insert.addValue(DBMaps.MapRecords.ADMINDIV, record.admindiv);
@@ -58,8 +57,7 @@ public class MappingQ2 extends MappingQ1 {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapRecords.TABLE);
         select.addItem(DBMaps.MapRecords.RECORDID);
-        select.addItem(DBMaps.MapRecords.PROJECTID);
-        select.addItem(DBMaps.MapRecords.FOLDERID);
+        select.addItem(DBMaps.MapRecords.LAYERID);
         select.addItem(DBMaps.MapRecords.NAME);
         select.addItem(DBMaps.MapRecords.EXTRADATA);
         select.addItem(DBMaps.MapRecords.ADMINDIV);
@@ -81,8 +79,7 @@ public class MappingQ2 extends MappingQ1 {
                 throw new AppException("Map record not found", MapErrorCodes.MAPRECORDNOTFOUND);
             MapRecord record = new MapRecord();
             record.recordid = rs.getLong(DBMaps.MapRecords.RECORDID);
-            record.projectid = rs.getLong(DBMaps.MapRecords.PROJECTID);
-            record.folderid = rs.getLong(DBMaps.MapRecords.FOLDERID);
+            record.layerid = rs.getLong(DBMaps.MapRecords.LAYERID);
             record.name = rs.getString(DBMaps.MapRecords.NAME);
             record.extradata = rs.getString(DBMaps.MapRecords.EXTRADATA);
             record.admindiv = rs.getString(DBMaps.MapRecords.ADMINDIV);
@@ -110,13 +107,12 @@ public class MappingQ2 extends MappingQ1 {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapRecords.TABLE);
         select.addItem(DBMaps.MapRecords.RECORDID);
-        select.addItem(DBMaps.MapRecords.PROJECTID);
-        select.addItem(DBMaps.MapRecords.FOLDERID);
+        select.addItem(DBMaps.MapRecords.LAYERID);
         select.addItem(DBMaps.MapRecords.NAME);
         select.addItem(DBMaps.MapRecords.EXTRADATA);
         select.addItem(DBMaps.MapRecords.ADMINDIV);
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBMaps.MapRecords.FOLDERID, "=", folderid));
+        whr.addCondition(new SQLCondition(DBMaps.MapRecords.LAYERID, "=", folderid));
         //-------------------------------------------------------
         SQLOrderBy order = new SQLOrderBy();
         order.addColumn(DBMaps.MapRecords.NAME);
@@ -137,8 +133,7 @@ public class MappingQ2 extends MappingQ1 {
             while (rs.next()) {
                 record = new MapRecord();
                 record.recordid = rs.getLong(DBMaps.MapRecords.RECORDID);
-                record.projectid = rs.getLong(DBMaps.MapRecords.PROJECTID);
-                record.folderid = rs.getLong(DBMaps.MapRecords.FOLDERID);
+                record.layerid = rs.getLong(DBMaps.MapRecords.LAYERID);
                 record.name = rs.getString(DBMaps.MapRecords.NAME);
                 record.extradata = rs.getString(DBMaps.MapRecords.EXTRADATA);
                 record.admindiv = rs.getString(DBMaps.MapRecords.ADMINDIV);
@@ -170,7 +165,7 @@ public class MappingQ2 extends MappingQ1 {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLDelete delete = new SQLDelete(DBMaps.MapRecords.TABLE);
         SQLWhere whr = new SQLWhere();
-        if (folderid != 0) whr.addCondition(new SQLCondition(DBMaps.MapRecords.FOLDERID, "=", folderid));
+        if (folderid != 0) whr.addCondition(new SQLCondition(DBMaps.MapRecords.LAYERID, "=", folderid));
         if (recordid != 0) whr.addCondition(new SQLCondition(DBMaps.MapRecords.RECORDID, "=", recordid));
         sql.addClause(delete);
         sql.addClause(whr);

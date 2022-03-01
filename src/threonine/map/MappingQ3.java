@@ -246,14 +246,14 @@ public class MappingQ3 extends MappingQ2 {
         select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.NAME);
         select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.EXTRADATA);
         select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.ADMINDIV);
-        select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.FOLDERID);
+        select.addItem(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.LAYERID);
         select.addItem(DBMaps.FolderUsage.TABLE, DBMaps.FolderUsage.COSTPERUSE);
         //-------------------------
         SQLInnerJoin join = new SQLInnerJoin(DBMaps.FolderUsage.TABLE);
         SQLColumn columnrecord, columnusage;
         SQLCondition condition;
         //-------------------------
-        columnrecord = new SQLColumn(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.FOLDERID);
+        columnrecord = new SQLColumn(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.LAYERID);
         columnusage = new SQLColumn(DBMaps.FolderUsage.TABLE, DBMaps.FolderUsage.FOLDERID);
         condition = new SQLCondition(columnrecord, "=", columnusage);
         join.addCondition(condition);
@@ -287,7 +287,7 @@ public class MappingQ3 extends MappingQ2 {
                 record.name = rs.getString(2);
                 record.extradata = rs.getString(3);
                 record.admindiv = rs.getString(4);
-                record.folderid = rs.getLong(5);
+                record.layerid = rs.getLong(5);
                 records.add(record);
             }
             return records.toArray(new MapRecord[0]);

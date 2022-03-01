@@ -61,6 +61,9 @@ public class MappingAttlas extends MappingAtlasFolders {
      * @throws Exception 
      */
     public void createMapRecord (MapRecord record) throws AppException, Exception {
+        
+        
+        
         //------------------------------------------------------------------
         connection = electra.masterConnection();
         setDataBase();
@@ -71,8 +74,8 @@ public class MappingAttlas extends MappingAtlasFolders {
         lock.addTable(DBMaps.MapRecords.TABLE);
         this.getExclusiveTableAccess(lock);
         //------------------------------------------------------------------
-        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERID, record.folderid) == 0)
-            throw new AppException("Parent Folder Not Found", MapErrorCodes.MAPFOLDERNOTFOUND);
+        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERID, record.layerid) == 0)
+            throw new AppException("Layer Not Found", MapErrorCodes.MAPLAYERNOTFOUND);
         //------------------------------------------------------------------
         while (true) {
             record.recordid = Celaeno.getUniqueID();
@@ -82,6 +85,10 @@ public class MappingAttlas extends MappingAtlasFolders {
         this.insertMapRecord(record);
         this.releaseExclusiveTableAccess();
         //------------------------------------------------------------------
+        
+        
+        
+        
     }
     //**********************************************************************
     /**

@@ -32,8 +32,7 @@ public class DBMaps {
     public static class MapRecords {
         static final String TABLE = "maprecords";
         static final String RECORDID = "recordid";
-        static final String PROJECTID = "projectid";
-        static final String FOLDERID = "folderid";
+        static final String LAYERID = "layerid";
         static final String NAME = "name";
         static final String EXTRADATA = "extradata";
         static final String ADMINDIV = "admindivision";

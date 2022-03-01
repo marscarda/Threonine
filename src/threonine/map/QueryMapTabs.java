@@ -121,8 +121,7 @@ public class QueryMapTabs extends Alcyone {
         SQLCreateTable create = new SQLCreateTable(DBMaps.MapRecords.TABLE);
         create.setEngine(MySQLEngine.INNODB);
         create.addField(DBMaps.MapRecords.RECORDID, "BIGINT NOT NULL");
-        create.addField(DBMaps.MapRecords.PROJECTID, "BIGINT NOT NULL");
-        create.addField(DBMaps.MapRecords.FOLDERID, "BIGINT NOT NULL");
+        create.addField(DBMaps.MapRecords.LAYERID, "BIGINT NOT NULL");
         create.addField(DBMaps.MapRecords.NAME, "VARCHAR (100) NOT NULL");
         create.addField(DBMaps.MapRecords.EXTRADATA, "VARCHAR (100) NOT NULL");
         create.addField(DBMaps.MapRecords.ADMINDIV, "VARCHAR (50) NOT NULL");
