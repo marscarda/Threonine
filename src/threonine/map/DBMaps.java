@@ -30,7 +30,7 @@ public class DBMaps {
     }
     //**********************************************************************
     public static class MapRecords {
-        static final String TABLE = "maprecords";
+        static final String TABLE = "maprecord";
         static final String RECORDID = "recordid";
         static final String LAYERID = "layerid";
         static final String NAME = "name";
@@ -39,7 +39,7 @@ public class DBMaps {
     }
     //**********************************************************************
     public static class Objects {
-        static final String TABLE = "mapobjects";
+        static final String TABLE = "mapobject";
         static final String OBJECTID = "objectid";
         static final String RECORDID = "recordid";
         static final String OBJTYPE = "objtype";
@@ -47,7 +47,7 @@ public class DBMaps {
     }
     //**********************************************************************
     public static class LocationPoints {
-        static final String TABLE = "locationpoints";
+        static final String TABLE = "locationpoint";
         static final String RECORDID = "recordid";
         static final String OBJECTID = "objectid";
         static final String POINTINDEX = "pointindex";

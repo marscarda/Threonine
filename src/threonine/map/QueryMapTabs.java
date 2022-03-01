@@ -57,39 +57,6 @@ public class QueryMapTabs extends Alcyone {
         //-------------------------------------------------------------------        
     }
     //***********************************************************************
-    private void createFolderTree () throws Exception {
-        //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBMaps.FolderTree.TABLE);
-        create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBMaps.FolderTree.FOLDERID, "BIGINT NOT NULL");
-        create.addField(DBMaps.FolderTree.PROJECTID, "BIGINT NOT NULL");
-        create.addField(DBMaps.FolderTree.PARENTFOLDER, "BIGINT NOT NULL");
-        create.addField(DBMaps.FolderTree.FOLDERNAME, "VARCHAR (100) NOT NULL");
-        create.addField(DBMaps.FolderTree.PUBLICNAME, "VARCHAR (100) NOT NULL");
-        create.addField(DBMaps.FolderTree.SHAREPASS, "VARCHAR (100) NULL DEFAULT NULL");
-        create.addField(DBMaps.FolderTree.COSTPERUSE, "FLOAT (10,6) NOT NULL DEFAULT 0");
-        create.addField(DBMaps.FolderTree.SEARCHABLE, "INTEGER NOT NULL DEFAULT 0");
-        create.addUnique(DBMaps.FolderTree.FOLDERID);
-        //-------------------------------------------------------------------
-        PreparedStatement st = null;
-        this.setDataBase();
-        try {
-            st = connection.prepareStatement(create.getText());
-            st.execute();
-        }
-        catch (SQLException e) {
-            StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBMaps.FolderTree.TABLE);
-            err.append(" table\n");
-            err.append(e.getMessage());
-            throw new Exception(err.toString());
-        }
-        finally {
-            try { if (st != null) st.close(); } catch (Exception e) {}
-        }
-        //-------------------------------------------------------------------
-    }
-    //***********************************************************************
     private void createFolderShares () throws Exception {
         //-------------------------------------------------------------------
         SQLCreateTable create = new SQLCreateTable(DBMaps.FolderUsage.TABLE);

@@ -7,6 +7,8 @@ import methionine.sql.SQLLockTables;
 //**************************************************************************
 public class MappingAttlas extends MappingAtlasFolders {
     //**********************************************************************
+    /* LAYERS */
+    //**********************************************************************
     /**
      * Creates a Map Layer.
      * @param layer
@@ -15,7 +17,8 @@ public class MappingAttlas extends MappingAtlasFolders {
      */
     public void createLayer (MapLayer layer) throws AppException, Exception {
         //------------------------------------------------------------------
-        connection = electra.mainSrvConnection();
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
         setDataBase();
         //------------------------------------------------------------------
         if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, layer.layername, 
@@ -34,6 +37,22 @@ public class MappingAttlas extends MappingAtlasFolders {
     }
     //**********************************************************************
     /**
+     * Returns a layer given its ID.
+     * @param layerid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public MapLayer getLayer (long layerid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        return this.selectLayer(layerid);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
      * Returns Map Layers given a project ID.
      * @param projectid
      * @return
@@ -41,12 +60,37 @@ public class MappingAttlas extends MappingAtlasFolders {
      */
     public MapLayer[] getLayersByProject (long projectid) throws Exception {
         //------------------------------------------------------------------
-        connection = electra.nearSrvConnection();
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
         setDataBase();
         return this.selectLayersByProject(projectid);
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /* RECORDS */
+    //**********************************************************************
+    /**
+     * Adds a Map Record to the system.
+     * @param record
+     * @throws AppException
+     * @throws Exception 
+     */
+    public void createMapRecord (MapRecord record) throws AppException, Exception {
+        //------------------------------------------------------------------
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        while (true) {
+            try {
+                record.recordid = Celaeno.getUniqueID();
+                this.insertMapRecord(record);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }
+        //------------------------------------------------------------------
+    }
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************
@@ -60,7 +104,7 @@ public class MappingAttlas extends MappingAtlasFolders {
      * @throws AppException OBJECTNOTFOUND
      * @throws Exception 
      */
-    public void createMapRecord (MapRecord record) throws AppException, Exception {
+    public void createMapRecordO (MapRecord record) throws AppException, Exception {
         
         
         

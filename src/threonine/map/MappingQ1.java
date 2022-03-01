@@ -45,6 +45,48 @@ public class MappingQ1 extends QueryMapTabs {
         finally { if (st != null) try {st.close();} catch(Exception e){} }        
     }
     //**********************************************************************
+    protected MapLayer selectLayer (long layerid) throws AppException, Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapLayer.TABLE);
+        select.addItem(DBMaps.MapLayer.LAYERID);
+        select.addItem(DBMaps.MapLayer.PROJECTID);
+        select.addItem(DBMaps.MapLayer.LAYERNAME);
+        select.addItem(DBMaps.MapLayer.DESCRIPTION);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.MapLayer.LAYERID, "=", layerid));
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            if (!rs.next())
+                throw new AppException ("Layer not found", MapErrorCodes.MAPLAYERNOTFOUND);
+            MapLayer layer;
+            layer = new MapLayer();
+            layer.layerid = rs.getLong(DBMaps.MapLayer.LAYERID);
+            layer.projectid = rs.getLong(DBMaps.MapLayer.PROJECTID);
+            layer.layername = rs.getString(DBMaps.MapLayer.LAYERNAME);
+            layer.layerdescription = rs.getString(DBMaps.MapLayer.DESCRIPTION);
+            return layer;
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map layer by id. Code: tental\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }        
+        //-------------------------------------------------------
+    }
+    //**********************************************************************
     /**
      * Selects MapLayers given a project.
      * @param projectid
@@ -97,7 +139,6 @@ public class MappingQ1 extends QueryMapTabs {
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
     }
-    //**********************************************************************
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************
@@ -287,7 +328,7 @@ public class MappingQ1 extends QueryMapTabs {
             sql.setParameters(st, 1);
             rs = st.executeQuery();
             if (!rs.next())
-                throw new AppException("Folder not found", MapErrorCodes.MAPFOLDERNOTFOUND);
+                throw new AppException("Folder not found", MapErrorCodes.MAPLAYERNOTFOUND);
             MapFolder folder;
             folder = new MapFolder();
             folder.folderid = rs.getLong(DBMaps.FolderTree.FOLDERID);
@@ -342,7 +383,7 @@ public class MappingQ1 extends QueryMapTabs {
             sql.setParameters(st, 1);
             rs = st.executeQuery();
             if (!rs.next())
-                throw new AppException("Folder not found", MapErrorCodes.MAPFOLDERNOTFOUND);
+                throw new AppException("Folder not found", MapErrorCodes.MAPLAYERNOTFOUND);
             MapFolder folder;
             folder = new MapFolder();
             folder.folderid = rs.getLong(DBMaps.FolderTree.FOLDERID);
