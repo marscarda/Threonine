@@ -21,8 +21,8 @@ public class MappingAttlas extends MappingAtlasFolders {
         else connection = electra.nearSrvConnection();
         setDataBase();
         //------------------------------------------------------------------
-        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, layer.layername, 
-            DBMaps.FolderTree.PROJECTID, layer.projectid) != 0)
+        if (checkValueCount(DBMaps.MapLayer.TABLE, DBMaps.MapLayer.LAYERNAME, layer.layername, 
+            DBMaps.MapLayer.PROJECTID, layer.projectid) != 0)
                 throw new AppException("Layer Name already exists", MapErrorCodes.FOLDERNAMEALREADYEXISTS);
         //------------------------------------------------------------------
         while (true) {

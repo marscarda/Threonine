@@ -23,7 +23,7 @@ public class QueryMapTabs extends Alcyone {
         //if (!checkTableExists(DBMaps.FolderTree.TABLE, tables)) createFolderTree();
         if (!checkTableExists(DBMaps.FolderUsage.TABLE, tables)) createFolderShares();
         if (!checkTableExists(DBMaps.MapRecords.TABLE, tables)) createMapRecords();
-        if (!checkTableExists(DBMaps.Objects.TABLE, tables)) createMapObjects();
+        if (!checkTableExists(DBMaps.MapFeature.TABLE, tables)) createMapObjects();
         if (!checkTableExists(DBMaps.LocationPoints.TABLE, tables)) createLocationPoints();
         //===================================================================
     }
@@ -114,13 +114,13 @@ public class QueryMapTabs extends Alcyone {
     //***********************************************************************
     private void createMapObjects () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBMaps.Objects.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBMaps.MapFeature.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBMaps.Objects.OBJECTID, "BIGINT NOT NULL");
-        create.addField(DBMaps.Objects.RECORDID, "BIGINT NOT NULL");
-        create.addField(DBMaps.Objects.OBJTYPE, "INTEGER NOT NULL");
-        create.addField(DBMaps.Objects.COST, "FLOAT (10,6) NOT NULL DEFAULT 0");
-        create.addUnique(DBMaps.Objects.OBJECTID);
+        create.addField(DBMaps.MapFeature.OBJECTID, "BIGINT NOT NULL");
+        create.addField(DBMaps.MapFeature.RECORDID, "BIGINT NOT NULL");
+        create.addField(DBMaps.MapFeature.OBJTYPE, "INTEGER NOT NULL");
+        create.addField(DBMaps.MapFeature.COST, "FLOAT (10,6) NOT NULL DEFAULT 0");
+        create.addUnique(DBMaps.MapFeature.OBJECTID);
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -130,7 +130,7 @@ public class QueryMapTabs extends Alcyone {
         }
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBMaps.Objects.TABLE);
+            err.append(DBMaps.MapFeature.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());

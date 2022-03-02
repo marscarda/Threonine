@@ -38,8 +38,8 @@ public class DBMaps {
         static final String ADMINDIV = "admindivision";
     }
     //**********************************************************************
-    public static class Objects {
-        static final String TABLE = "mapobject";
+    public static class MapFeature {
+        static final String TABLE = "mapfeature";
         static final String OBJECTID = "objectid";
         static final String RECORDID = "recordid";
         static final String OBJTYPE = "objtype";

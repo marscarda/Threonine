@@ -195,11 +195,11 @@ public class MappingQ2 extends MappingQ1 {
      * @throws Exception 
      */
     protected void insertMapObject (MapObject object) throws SQLIntegrityConstraintViolationException, Exception {
-        SQLInsert insert = new SQLInsert(DBMaps.Objects.TABLE);
-        insert.addValue(DBMaps.Objects.OBJECTID, object.objectid);
-        insert.addValue(DBMaps.Objects.RECORDID, object.recordid);
-        insert.addValue(DBMaps.Objects.OBJTYPE, object.objtype);
-        insert.addValue(DBMaps.Objects.COST, object.cost);
+        SQLInsert insert = new SQLInsert(DBMaps.MapFeature.TABLE);
+        insert.addValue(DBMaps.MapFeature.OBJECTID, object.objectid);
+        insert.addValue(DBMaps.MapFeature.RECORDID, object.recordid);
+        insert.addValue(DBMaps.MapFeature.OBJTYPE, object.objtype);
+        insert.addValue(DBMaps.MapFeature.COST, object.cost);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -224,9 +224,9 @@ public class MappingQ2 extends MappingQ1 {
      */
     protected void deleteMapObjects (long recordid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLDelete delete = new SQLDelete(DBMaps.Objects.TABLE);
+        SQLDelete delete = new SQLDelete(DBMaps.MapFeature.TABLE);
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBMaps.Objects.RECORDID, "=", recordid));
+        whr.addCondition(new SQLCondition(DBMaps.MapFeature.RECORDID, "=", recordid));
         sql.addClause(delete);
         sql.addClause(whr);
         PreparedStatement st = null;
@@ -311,13 +311,13 @@ public class MappingQ2 extends MappingQ1 {
     protected MapObject selectMapObject (long objectid) throws AppException, Exception {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBMaps.Objects.TABLE);
-        select.addItem(DBMaps.Objects.OBJECTID);
-        select.addItem(DBMaps.Objects.RECORDID);
-        select.addItem(DBMaps.Objects.OBJTYPE);
+        SQLSelect select = new SQLSelect(DBMaps.MapFeature.TABLE);
+        select.addItem(DBMaps.MapFeature.OBJECTID);
+        select.addItem(DBMaps.MapFeature.RECORDID);
+        select.addItem(DBMaps.MapFeature.OBJTYPE);
         //-------------------------------------------------------
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBMaps.Objects.OBJECTID, "=", objectid));
+        whr.addCondition(new SQLCondition(DBMaps.MapFeature.OBJECTID, "=", objectid));
         //-------------------------------------------------------
         sql.addClause(select);
         sql.addClause(whr);
@@ -332,9 +332,9 @@ public class MappingQ2 extends MappingQ1 {
             if (!rs.next())
                 throw new AppException("Map Object not found", MapErrorCodes.MAPOBJECTNOTFOUND);
             MapObject object = new MapObject();
-            object.objectid = rs.getLong(DBMaps.Objects.OBJECTID);
-            object.recordid = rs.getLong(DBMaps.Objects.RECORDID);
-            object.objtype = rs.getInt(DBMaps.Objects.OBJTYPE);
+            object.objectid = rs.getLong(DBMaps.MapFeature.OBJECTID);
+            object.recordid = rs.getLong(DBMaps.MapFeature.RECORDID);
+            object.objtype = rs.getInt(DBMaps.MapFeature.OBJTYPE);
             return object;
         }
         catch (SQLException e) {
@@ -359,14 +359,14 @@ public class MappingQ2 extends MappingQ1 {
     protected MapObject[] selectMapObjects (long recordid) throws AppException, Exception {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBMaps.Objects.TABLE);
-        select.addItem(DBMaps.Objects.OBJECTID);
-        select.addItem(DBMaps.Objects.RECORDID);
-        select.addItem(DBMaps.Objects.OBJTYPE);
-        select.addItem(DBMaps.Objects.COST);
+        SQLSelect select = new SQLSelect(DBMaps.MapFeature.TABLE);
+        select.addItem(DBMaps.MapFeature.OBJECTID);
+        select.addItem(DBMaps.MapFeature.RECORDID);
+        select.addItem(DBMaps.MapFeature.OBJTYPE);
+        select.addItem(DBMaps.MapFeature.COST);
         //-------------------------------------------------------
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBMaps.Objects.RECORDID, "=", recordid));
+        whr.addCondition(new SQLCondition(DBMaps.MapFeature.RECORDID, "=", recordid));
         //-------------------------------------------------------
         sql.addClause(select);
         sql.addClause(whr);
@@ -382,10 +382,10 @@ public class MappingQ2 extends MappingQ1 {
             MapObject object;
             while (rs.next()) {
                 object = new MapObject();
-                object.objectid = rs.getLong(DBMaps.Objects.OBJECTID);
-                object.recordid = rs.getLong(DBMaps.Objects.RECORDID);
-                object.objtype = rs.getInt(DBMaps.Objects.OBJTYPE);
-                object.cost = rs.getFloat(DBMaps.Objects.COST);
+                object.objectid = rs.getLong(DBMaps.MapFeature.OBJECTID);
+                object.recordid = rs.getLong(DBMaps.MapFeature.RECORDID);
+                object.objtype = rs.getInt(DBMaps.MapFeature.OBJTYPE);
+                object.cost = rs.getFloat(DBMaps.MapFeature.COST);
                 objects.add(object);
             }            
             return objects.toArray(new MapObject[0]);
