@@ -92,6 +92,21 @@ public class MappingAttlas extends MappingAtlasFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * Returns map records given a folder
+     * @param layerid
+     * @return
+     * @throws Exception 
+     */
+    public MapRecord[] getMapRecords (long layerid) throws Exception {
+        //------------------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        return this.selectMapRecords(layerid);
+        //------------------------------------------------------------------
+    }
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************
@@ -149,22 +164,6 @@ public class MappingAttlas extends MappingAtlasFolders {
         setDataBase();
         //------------------------------------------------------------------
         return this.selectMapRecord(recordid);
-        //------------------------------------------------------------------
-    }
-    //**********************************************************************
-    /**
-     * Returns map records given a folder
-     * @param folderid
-     * @return
-     * @throws Exception 
-     */
-    public MapRecord[] getMapRecords (long folderid) throws Exception {
-        //------------------------------------------------------------------
-        if (usemaster) connection = electra.masterConnection();
-        else connection = electra.slaveConnection();
-        setDataBase();
-        //------------------------------------------------------------------
-        return this.selectMapRecords(folderid);
         //------------------------------------------------------------------
     }
     //**********************************************************************
