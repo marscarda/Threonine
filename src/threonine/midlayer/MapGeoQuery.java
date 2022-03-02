@@ -22,7 +22,7 @@ public class MapGeoQuery extends MapView {
         this.calculateLocationFromPlane(ptx, pty);
         MapObjectGraphic[] objects;
         //===================================================
-        for (MapRecordGraphic record : records) {
+        for (MapRecordDraw record : records) {
             //===============================================
             intersections = 0;
             objects = record.getMapObjects();

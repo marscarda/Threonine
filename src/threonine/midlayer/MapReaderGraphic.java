@@ -10,6 +10,13 @@ import threonine.universe.UniverseAtlas;
 //**************************************************************************
 public class MapReaderGraphic {
     //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
     ProjectLambda projectlambda = null;
     MappingAttlas mapslambda = null;
     UniverseAtlas universerlambda = null;
@@ -24,12 +31,12 @@ public class MapReaderGraphic {
      * @return 
      * @throws methionine.AppException 
      */
-    public MapRecordGraphic[] getDrawingRecords (MapGraphicGetParam param, long userid) throws AppException, Exception {
+    public MapRecordDraw[] getDrawingRecords (MapGraphicGetParam param, long userid) throws AppException, Exception {
         if (param.folderid != 0) 
             return recordsByFolder(param.folderid);
         if (param.universeid != 0)
             return recordsBySubset(param.universeid, param.subsetid);
-        return new MapRecordGraphic[0];
+        return new MapRecordDraw[0];
     }
     //**********************************************************************
     /**
@@ -39,15 +46,15 @@ public class MapReaderGraphic {
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic[] recordsByFolder (long folderid) throws AppException, Exception {
+    public MapRecordDraw[] recordsByFolder (long folderid) throws AppException, Exception {
         //------------------------------------------------------------------
         MapRecord[] records = mapslambda.getMapRecords(folderid);
-        if (records.length == 0) return new MapRecordGraphic[0];
+        if (records.length == 0) return new MapRecordDraw[0];
         int rcount = records.length;
-        MapRecordGraphic[] recordsg = new MapRecordGraphic[rcount];
+        MapRecordDraw[] recordsg = new MapRecordDraw[rcount];
         //------------------------------------------------------------------
         for (int n = 0; n < rcount; n++) {
-            recordsg[n] = new MapRecordGraphic();
+            recordsg[n] = new MapRecordDraw();
             recordsg[n].itemid = records[n].getID();
             recordsg[n].setObjects(mapslambda.getObjectsByRecord(recordsg[n].itemid, true));
         }
@@ -64,15 +71,15 @@ public class MapReaderGraphic {
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic[] recordsBySubset (long universeid, long subsetid) throws AppException, Exception {
+    public MapRecordDraw[] recordsBySubset (long universeid, long subsetid) throws AppException, Exception {
         //------------------------------------------------------------------
         SubSet[] subsets = universerlambda.getSubsets(universeid, subsetid);
-        if (subsets.length == 0) return new MapRecordGraphic[0];
+        if (subsets.length == 0) return new MapRecordDraw[0];
         int scount = subsets.length;
-        MapRecordGraphic[] recordsg = new MapRecordGraphic[scount];
+        MapRecordDraw[] recordsg = new MapRecordDraw[scount];
         //------------------------------------------------------------------
         for (int n = 0; n < scount; n++) {
-            recordsg[n] = new MapRecordGraphic();
+            recordsg[n] = new MapRecordDraw();
             recordsg[n].itemid = subsets[n].getSubsetID();
             recordsg[n].setObjects(universerlambda.getObjectsBySubset(recordsg[n].itemid, true));
         }
@@ -87,20 +94,20 @@ public class MapReaderGraphic {
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic getRecord (long recordid) throws AppException, Exception {
+    public MapRecordDraw getRecord (long recordid) throws AppException, Exception {
         MapRecord record = mapslambda.getMapRecord(recordid);
         return getRecord(record);
     }
     //======================================================================    
     /**
-     * Gets a MapRecordGraphic.Overload of previous subset.
+     * Gets a MapRecordDraw.Overload of previous subset.
      * @param record
      * @return
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic getRecord (MapRecord record) throws AppException, Exception {
-        MapRecordGraphic recordg = new MapRecordGraphic();
+    public MapRecordDraw getRecord (MapRecord record) throws AppException, Exception {
+        MapRecordDraw recordg = new MapRecordDraw();
         recordg.itemid = record.getID();
         recordg.setObjects(mapslambda.getObjectsByRecord(record.getID(), true));
         return recordg;
@@ -113,8 +120,8 @@ public class MapReaderGraphic {
      * @throws AppException
      * @throws Exception 
      */
-    public MapRecordGraphic subsetGetRecord (long subsetid) throws AppException, Exception {
-        MapRecordGraphic recordg = new MapRecordGraphic();
+    public MapRecordDraw subsetGetRecord (long subsetid) throws AppException, Exception {
+        MapRecordDraw recordg = new MapRecordDraw();
         recordg.itemid = subsetid;
         MapObject[] mapobjs = universerlambda.getObjectsBySubset(subsetid, true);
         recordg.setObjects(mapobjs);

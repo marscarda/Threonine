@@ -2,7 +2,7 @@ package threonine.midlayer;
 //**************************************************************************
 import threonine.map.MapObject;
 //**************************************************************************
-public class MapRecordGraphic {
+public class MapRecordDraw {
     //**********************************************************************
     long itemid = 0;
     int objcount = 0;

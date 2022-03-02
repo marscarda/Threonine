@@ -17,10 +17,10 @@ public class MapView {
     float east = -180;
     //************************************************************
     int recount = 0;
-    MapRecordGraphic[] records = null;
+    MapRecordDraw[] records = null;
     //============================================================
-    public void addRecord (MapRecordGraphic record) {
-        MapRecordGraphic[] newrecords = new MapRecordGraphic[recount + 1];
+    public void addRecord (MapRecordDraw record) {
+        MapRecordDraw[] newrecords = new MapRecordDraw[recount + 1];
         if (records != null)
             System.arraycopy(records, 0, newrecords, 0, recount);
         newrecords[recount] = record;
@@ -28,7 +28,7 @@ public class MapView {
         recount++;
     }
     //============================================================
-    public void setRecords (MapRecordGraphic[] records) { 
+    public void setRecords (MapRecordDraw[] records) { 
         this.records = records; 
         recount = records.length;
     }
@@ -109,8 +109,8 @@ public class MapView {
     //************************************************************
     public int recordsCount () { return recount; }
     //============================================================
-    public MapRecordGraphic[] getRecords () {
-        if (records == null) return new MapRecordGraphic[0];
+    public MapRecordDraw[] getRecords () {
+        if (records == null) return new MapRecordDraw[0];
         return records;
     }
     //************************************************************
@@ -124,7 +124,7 @@ public class MapView {
     public void makeDraw () {
         MapObjectGraphic[] objects;
         PointLocation[] points;
-        for (MapRecordGraphic record : records) {
+        for (MapRecordDraw record : records) {
             objects = record.getMapObjects();
             //===============================================
             for (MapObjectGraphic mobj : objects) {
@@ -179,7 +179,7 @@ public class MapView {
         if (west != 180) return false;
         if (east != -180) return false;
         //---------------------------------------------
-        for (MapRecordGraphic record : records) {
+        for (MapRecordDraw record : records) {
             if (record.getSouth() < south) south = record.getSouth();
             if (record.getNorth() > north) north = record.getNorth();
             if (record.getWest() < west) west = record.getWest();
