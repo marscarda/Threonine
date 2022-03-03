@@ -116,11 +116,11 @@ public class QueryMapTabs extends Alcyone {
         //-------------------------------------------------------------------
         SQLCreateTable create = new SQLCreateTable(DBMaps.MapFeature.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBMaps.MapFeature.OBJECTID, "BIGINT NOT NULL");
+        create.addField(DBMaps.MapFeature.FEATUREID, "BIGINT NOT NULL");
         create.addField(DBMaps.MapFeature.RECORDID, "BIGINT NOT NULL");
         create.addField(DBMaps.MapFeature.OBJTYPE, "INTEGER NOT NULL");
         create.addField(DBMaps.MapFeature.COST, "FLOAT (10,6) NOT NULL DEFAULT 0");
-        create.addUnique(DBMaps.MapFeature.OBJECTID);
+        create.addUnique(DBMaps.MapFeature.FEATUREID);
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();

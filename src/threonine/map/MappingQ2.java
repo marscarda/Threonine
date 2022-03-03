@@ -196,7 +196,7 @@ public class MappingQ2 extends MappingQ1 {
      */
     protected void insertMapObject (MapObject object) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBMaps.MapFeature.TABLE);
-        insert.addValue(DBMaps.MapFeature.OBJECTID, object.objectid);
+        insert.addValue(DBMaps.MapFeature.FEATUREID, object.objectid);
         insert.addValue(DBMaps.MapFeature.RECORDID, object.recordid);
         insert.addValue(DBMaps.MapFeature.OBJTYPE, object.objtype);
         insert.addValue(DBMaps.MapFeature.COST, object.cost);
@@ -312,12 +312,12 @@ public class MappingQ2 extends MappingQ1 {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapFeature.TABLE);
-        select.addItem(DBMaps.MapFeature.OBJECTID);
+        select.addItem(DBMaps.MapFeature.FEATUREID);
         select.addItem(DBMaps.MapFeature.RECORDID);
         select.addItem(DBMaps.MapFeature.OBJTYPE);
         //-------------------------------------------------------
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBMaps.MapFeature.OBJECTID, "=", objectid));
+        whr.addCondition(new SQLCondition(DBMaps.MapFeature.FEATUREID, "=", objectid));
         //-------------------------------------------------------
         sql.addClause(select);
         sql.addClause(whr);
@@ -332,7 +332,7 @@ public class MappingQ2 extends MappingQ1 {
             if (!rs.next())
                 throw new AppException("Map Object not found", MapErrorCodes.MAPOBJECTNOTFOUND);
             MapObject object = new MapObject();
-            object.objectid = rs.getLong(DBMaps.MapFeature.OBJECTID);
+            object.objectid = rs.getLong(DBMaps.MapFeature.FEATUREID);
             object.recordid = rs.getLong(DBMaps.MapFeature.RECORDID);
             object.objtype = rs.getInt(DBMaps.MapFeature.OBJTYPE);
             return object;
@@ -360,7 +360,7 @@ public class MappingQ2 extends MappingQ1 {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapFeature.TABLE);
-        select.addItem(DBMaps.MapFeature.OBJECTID);
+        select.addItem(DBMaps.MapFeature.FEATUREID);
         select.addItem(DBMaps.MapFeature.RECORDID);
         select.addItem(DBMaps.MapFeature.OBJTYPE);
         select.addItem(DBMaps.MapFeature.COST);
@@ -382,7 +382,7 @@ public class MappingQ2 extends MappingQ1 {
             MapObject object;
             while (rs.next()) {
                 object = new MapObject();
-                object.objectid = rs.getLong(DBMaps.MapFeature.OBJECTID);
+                object.objectid = rs.getLong(DBMaps.MapFeature.FEATUREID);
                 object.recordid = rs.getLong(DBMaps.MapFeature.RECORDID);
                 object.objtype = rs.getInt(DBMaps.MapFeature.OBJTYPE);
                 object.cost = rs.getFloat(DBMaps.MapFeature.COST);

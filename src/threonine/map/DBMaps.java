@@ -40,16 +40,16 @@ public class DBMaps {
     //**********************************************************************
     public static class MapFeature {
         static final String TABLE = "mapfeature";
-        static final String OBJECTID = "objectid";
+        static final String FEATUREID = "featureid";
         static final String RECORDID = "recordid";
-        static final String OBJTYPE = "objtype";
+        static final String OBJTYPE = "featuretype";
         static final String COST = "cost";
     }
     //**********************************************************************
     public static class LocationPoints {
         static final String TABLE = "locationpoint";
         static final String RECORDID = "recordid";
-        static final String OBJECTID = "objectid";
+        static final String OBJECTID = "featureid";
         static final String POINTINDEX = "pointindex";
         static final String LATITUDE = "latitude";
         static final String LONGITUDE = "longitude";

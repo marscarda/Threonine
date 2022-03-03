@@ -55,8 +55,8 @@ public class MapReaderGraphic {
         //------------------------------------------------------------------
         for (int n = 0; n < rcount; n++) {
             recordsg[n] = new MapRecordDraw();
-            recordsg[n].itemid = records[n].getID();
-            recordsg[n].setObjects(mapslambda.getObjectsByRecord(recordsg[n].itemid, true));
+            recordsg[n].matchid = records[n].getID();
+            recordsg[n].setObjects(mapslambda.getObjectsByRecord(recordsg[n].matchid, true));
         }
         //------------------------------------------------------------------
         return recordsg;
@@ -80,8 +80,8 @@ public class MapReaderGraphic {
         //------------------------------------------------------------------
         for (int n = 0; n < scount; n++) {
             recordsg[n] = new MapRecordDraw();
-            recordsg[n].itemid = subsets[n].getSubsetID();
-            recordsg[n].setObjects(universerlambda.getObjectsBySubset(recordsg[n].itemid, true));
+            recordsg[n].matchid = subsets[n].getSubsetID();
+            recordsg[n].setObjects(universerlambda.getObjectsBySubset(recordsg[n].matchid, true));
         }
         //------------------------------------------------------------------
         return recordsg;
@@ -108,7 +108,7 @@ public class MapReaderGraphic {
      */
     public MapRecordDraw getRecord (MapRecord record) throws AppException, Exception {
         MapRecordDraw recordg = new MapRecordDraw();
-        recordg.itemid = record.getID();
+        recordg.matchid = record.getID();
         recordg.setObjects(mapslambda.getObjectsByRecord(record.getID(), true));
         return recordg;
     }
@@ -122,7 +122,7 @@ public class MapReaderGraphic {
      */
     public MapRecordDraw subsetGetRecord (long subsetid) throws AppException, Exception {
         MapRecordDraw recordg = new MapRecordDraw();
-        recordg.itemid = subsetid;
+        recordg.matchid = subsetid;
         MapObject[] mapobjs = universerlambda.getObjectsBySubset(subsetid, true);
         recordg.setObjects(mapobjs);
         return recordg;
