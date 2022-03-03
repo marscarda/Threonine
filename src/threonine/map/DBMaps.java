@@ -22,6 +22,12 @@ public class DBMaps {
         static final String SEARCHABLE = "searchable";
     }
     //**********************************************************************
+    public static class LayerUse {
+        static final String TABLE = "layeruse";
+        static final String PROJECTID = "projectid";
+        static final String LAYERID = "layerid";
+    }
+    //**********************************************************************
     public static class FolderUsage {
         static final String TABLE = "folderusage";
         static final String PROJECTID = "projectid";

@@ -8,47 +8,6 @@ import methionine.sql.SQLLockTables;
 //**************************************************************************
 public class MappingAtlasFolders extends LockMap {
     //**********************************************************************
-    /**
-     * Creates a new map folder
-     * @param folder
-     * @throws Exception 
-     */
-    public void createFolder (MapFolder folder) throws AppException, Exception {
-        //------------------------------------------------------------------
-        connection = electra.masterConnection();
-        setDataBase();
-        //------------------------------------------------------------------
-        if (folder.parentid != 0) {
-            if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERID, folder.parentid) == 0)
-                throw new AppException("Parent Folder Not Found", MapErrorCodes.MAPLAYERNOTFOUND);
-            if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, folder.name, 
-                DBMaps.FolderTree.PARENTFOLDER, folder.parentid) != 0)
-                    throw new AppException("Folder Name already exists", MapErrorCodes.FOLDERNAMEALREADYEXISTS);
-        } else {
-            if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.FOLDERNAME, folder.name, 
-                DBMaps.FolderTree.PROJECTID, folder.projectid) != 0)
-                    throw new AppException("Folder Name already exists", MapErrorCodes.FOLDERNAMEALREADYEXISTS);
-        }
-        //------------------------------------------------------------------
-        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, folder.publicname) != 0)
-            throw new AppException("Public name already used", MapErrorCodes.FOLDERPUBLICNAMEALREADYUSED);
-        //------------------------------------------------------------------
-        while (true) {
-            try {
-                folder.folderid = Celaeno.getUniqueID();
-                this.insertMapFolder(folder);
-                break;
-            }
-            catch (SQLIntegrityConstraintViolationException e) {}
-        }
-        //------------------------------------------------------------------
-        FolderUsage usage = new FolderUsage();
-        usage.projectid = folder.projectid;
-        usage.folderid = folder.folderid;
-        this.insertFolderUsage(usage);
-        //------------------------------------------------------------------
-    }
-    //**********************************************************************
     @Override
     public void updateMapFolderPublicName (long folderid, String value) throws Exception {
         //------------------------------------------------------------------

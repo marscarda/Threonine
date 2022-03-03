@@ -36,6 +36,7 @@ public class MapCenter {
      * @throws AppException
      * @throws Exception 
      */
+    @Deprecated
     public void createFolder (MapFolder folder, long userid) throws AppException, Exception {
         //========================================================
         projectlambda.checkAccess(folder.projectID(), userid, 2);
@@ -54,7 +55,6 @@ public class MapCenter {
         mapslambda.lockTables(tabs);
         //================================================================
         projectlambda.inMasterProject(folder.projectID());
-        mapslambda.createFolder(folder);
         //========================================================
         mapslambda.commit();
         //========================================================

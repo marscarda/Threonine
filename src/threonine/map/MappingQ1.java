@@ -147,42 +147,12 @@ public class MappingQ1 extends QueryMapTabs {
     //**********************************************************************
     //**********************************************************************
     /**
-     * Inserts a new map folder into the database.
-     * @param folder
-     * @throws Exception 
-     */
-    @Deprecated
-    protected void insertMapFolder (MapFolder folder) throws SQLIntegrityConstraintViolationException, Exception {
-        SQLInsert insert = new SQLInsert(DBMaps.FolderTree.TABLE);
-        insert.addValue(DBMaps.FolderTree.FOLDERID, folder.folderid);
-        insert.addValue(DBMaps.FolderTree.PROJECTID, folder.projectid);
-        insert.addValue(DBMaps.FolderTree.PARENTFOLDER, folder.parentid);
-        insert.addValue(DBMaps.FolderTree.FOLDERNAME, folder.name);
-        insert.addValue(DBMaps.FolderTree.PUBLICNAME, folder.publicname);
-        insert.addValue(DBMaps.FolderTree.SHAREPASS, folder.sharepass);
-        PreparedStatement st = null;
-        try {
-            st = connection.prepareStatement(insert.getText());
-            insert.setParameters(st, 1);
-            st.execute();            
-        }
-        catch (SQLIntegrityConstraintViolationException e) { throw e; }
-        catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to insert new mapfolder\n");
-            msg.append(e.getMessage());
-            throw new Exception(msg.toString());
-        }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-        }        
-    }
-    //**********************************************************************
-    /**
      * Updates a folder public name field to a given map folder id.
      * @param folderid
      * @param value
      * @throws Exception 
      */
+    @Deprecated
     protected void updateMapFolderPublicName (long folderid, String value) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLUpdate update = new SQLUpdate(DBMaps.FolderTree.TABLE);
@@ -213,6 +183,7 @@ public class MappingQ1 extends QueryMapTabs {
      * @param value
      * @throws Exception 
      */
+    @Deprecated
     protected void updateMapFolderSharePass (long folderid, String value) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLUpdate update = new SQLUpdate(DBMaps.FolderTree.TABLE);

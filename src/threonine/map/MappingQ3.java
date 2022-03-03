@@ -19,15 +19,14 @@ import methionine.sql.SQLWhere;
 public class MappingQ3 extends MappingQ2 {
     //**********************************************************************
     /**
-     * Insert a new folder usage into the table.
-     * @param usage
+     * Inserts a new Layer Use in the DB.
+     * @param use
      * @throws Exception 
      */
-    protected void insertFolderUsage (FolderUsage usage) throws Exception {
-        SQLInsert insert = new SQLInsert(DBMaps.FolderUsage.TABLE);
-        insert.addValue(DBMaps.FolderUsage.PROJECTID, usage.projectid);
-        insert.addValue(DBMaps.FolderUsage.FOLDERID, usage.folderid);
-        insert.addValue(DBMaps.FolderUsage.COSTPERUSE, usage.costperuse);
+    protected void insertLayerUse (LayerUse use) throws Exception {
+        SQLInsert insert = new SQLInsert(DBMaps.LayerUse.TABLE);
+        insert.addValue(DBMaps.LayerUse.PROJECTID, use.projectid);
+        insert.addValue(DBMaps.LayerUse.LAYERID, use.layerid);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -35,13 +34,33 @@ public class MappingQ3 extends MappingQ2 {
             st.execute();            
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to insert new mapfolder usage\n");
+            StringBuilder msg = new StringBuilder("Failed to insert new layer use\n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-        }        
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
+    }
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    /**
+     * Insert a new folder usage into the table.
+     * @param usage
+     * @throws Exception 
+     */
+    protected void insertFolderUsage (FolderUsage usage) throws Exception {
     }
     //**********************************************************************
     /**

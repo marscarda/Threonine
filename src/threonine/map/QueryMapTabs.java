@@ -20,8 +20,7 @@ public class QueryMapTabs extends Alcyone {
         }
         //===================================================================
         if (!checkTableExists(DBMaps.MapLayer.TABLE, tables)) createLayer();
-        //if (!checkTableExists(DBMaps.FolderTree.TABLE, tables)) createFolderTree();
-        if (!checkTableExists(DBMaps.FolderUsage.TABLE, tables)) createFolderShares();
+        if (!checkTableExists(DBMaps.LayerUse.TABLE, tables)) createLayerUse();
         if (!checkTableExists(DBMaps.MapRecords.TABLE, tables)) createMapRecords();
         if (!checkTableExists(DBMaps.MapFeature.TABLE, tables)) createMapObjects();
         if (!checkTableExists(DBMaps.LocationPoints.TABLE, tables)) createLocationPoints();
@@ -57,13 +56,12 @@ public class QueryMapTabs extends Alcyone {
         //-------------------------------------------------------------------        
     }
     //***********************************************************************
-    private void createFolderShares () throws Exception {
+    private void createLayerUse () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBMaps.FolderUsage.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBMaps.LayerUse.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBMaps.FolderUsage.PROJECTID, "BIGINT NOT NULL");
-        create.addField(DBMaps.FolderUsage.FOLDERID, "BIGINT NOT NULL");
-        create.addField(DBMaps.FolderUsage.COSTPERUSE, "FLOAT (10,6) NOT NULL DEFAULT 0");
+        create.addField(DBMaps.LayerUse.PROJECTID, "BIGINT NOT NULL");
+        create.addField(DBMaps.LayerUse.LAYERID, "BIGINT NOT NULL");
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -81,7 +79,7 @@ public class QueryMapTabs extends Alcyone {
         finally {
             try { if (st != null) st.close(); } catch (Exception e) {}
         }
-        //-------------------------------------------------------------------
+        //-------------------------------------------------------------------        
     }
     //***********************************************************************
     private void createMapRecords () throws Exception {
