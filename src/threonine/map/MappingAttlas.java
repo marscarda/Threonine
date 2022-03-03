@@ -69,6 +69,11 @@ public class MappingAttlas extends MappingAtlasFolders {
     //**********************************************************************
     /* LAYER USES */
     //**********************************************************************
+    /**
+     * Creates a layer use.
+     * @param use
+     * @throws Exception 
+     */
     public void createLayerUse (LayerUse use) throws Exception {
         //------------------------------------------------------------------
         if (wrmainsrv) connection = electra.mainSrvConnection();
@@ -76,6 +81,21 @@ public class MappingAttlas extends MappingAtlasFolders {
         setDataBase();
         //------------------------------------------------------------------
         this.insertLayerUse(use);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Returns Layers used in a project.
+     * @param projectid
+     * @return
+     * @throws Exception 
+     */
+    public MapLayer[] getUsedLayers (long projectid) throws Exception {
+        //------------------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        return this.selectLayersByUse(projectid);
         //------------------------------------------------------------------
     }
     //**********************************************************************

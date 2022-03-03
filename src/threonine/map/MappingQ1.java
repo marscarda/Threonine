@@ -7,8 +7,10 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
+import methionine.sql.SQLColumn;
 import methionine.sql.SQLCondition;
 import methionine.sql.SQLDelete;
+import methionine.sql.SQLInnerJoin;
 import methionine.sql.SQLInsert;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
@@ -140,6 +142,69 @@ public class MappingQ1 extends QueryMapTabs {
         }
     }
     //**********************************************************************
+    /**
+     * Selects and return the layers used in one project.
+     * @param projectid
+     * @return
+     * @throws Exception 
+     */
+    protected MapLayer[] selectLayersByUse (long projectid) throws Exception {
+        //----------------------------------------------------------
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapLayer.TABLE);
+        select.addItem(DBMaps.MapLayer.TABLE, DBMaps.MapLayer.LAYERID);
+        select.addItem(DBMaps.MapLayer.TABLE, DBMaps.MapLayer.PROJECTID);
+        select.addItem(DBMaps.MapLayer.TABLE, DBMaps.MapLayer.LAYERNAME);
+        select.addItem(DBMaps.MapLayer.TABLE, DBMaps.MapLayer.DESCRIPTION);
+        //----------------------------------------------------------
+        SQLInnerJoin join = new SQLInnerJoin(DBMaps.LayerUse.TABLE);
+        SQLColumn columnlayer, columnuse;
+        SQLCondition condition;
+        //----------------------------------------------------------
+        columnlayer = new SQLColumn(DBMaps.MapLayer.TABLE, DBMaps.MapLayer.LAYERID);
+        columnuse = new SQLColumn(DBMaps.LayerUse.TABLE, DBMaps.LayerUse.LAYERID);
+        condition = new SQLCondition(columnlayer, "=", columnuse);
+        join.addCondition(condition);
+        //-------------------------
+        columnuse = new SQLColumn(DBMaps.LayerUse.TABLE, DBMaps.LayerUse.PROJECTID);
+        condition = new SQLCondition(columnuse, "=", projectid);
+        join.addCondition(condition);
+        //----------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBMaps.MapLayer.LAYERNAME);
+        //----------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(join);
+        sql.addClause(order);
+        //----------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<MapLayer> layers = new ArrayList<>();
+            MapLayer layer;
+            while (rs.next()) {
+                layer = new MapLayer();
+                layer.layerid = rs.getLong(1);
+                layer.projectid = rs.getLong(2);
+                layer.layername = rs.getString(3);
+                layer.layerdescription = rs.getString(4);
+                layers.add(layer);
+            }
+            return layers.toArray(new MapLayer[0]);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select layers used in project jrvjuys\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+    }
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************
