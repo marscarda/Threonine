@@ -67,6 +67,22 @@ public class MappingAttlas extends MappingAtlasFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * 
+     * @param projectid
+     * @param searchkey
+     * @return
+     * @throws Exception 
+     */
+    public MapLayer[] searchLayers (long projectid, String searchkey) throws Exception {
+        //------------------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        return this.selectLayersByKey(projectid, searchkey);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
     /* LAYER USES */
     //**********************************************************************
     /**

@@ -9,6 +9,7 @@ import java.util.List;
 import methionine.AppException;
 import methionine.sql.SQLColumn;
 import methionine.sql.SQLCondition;
+import methionine.sql.SQLConditionSet;
 import methionine.sql.SQLDelete;
 import methionine.sql.SQLInnerJoin;
 import methionine.sql.SQLInsert;
@@ -140,6 +141,65 @@ public class MappingQ1 extends QueryMapTabs {
             if (st != null) try {st.close();} catch(Exception e){}
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
+    }
+    //**********************************************************************
+    /**
+     * 
+     * @param projectid
+     * @param searchkey
+     * @return
+     * @throws Exception 
+     */
+    protected MapLayer[] selectLayersByKey (long projectid, String searchkey) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapLayer.TABLE);
+        select.addItem(DBMaps.MapLayer.LAYERID);
+        select.addItem(DBMaps.MapLayer.PROJECTID);
+        select.addItem(DBMaps.MapLayer.LAYERNAME);
+        select.addItem(DBMaps.MapLayer.DESCRIPTION);
+        SQLWhere whr = new SQLWhere();
+        SQLConditionSet conditions = new SQLConditionSet();
+        conditions.setLogicalOperator("OR");
+        conditions.addCondition(new SQLCondition(DBMaps.MapLayer.PROJECTID, "=", 0));
+        conditions.addCondition(new SQLCondition(DBMaps.MapLayer.PROJECTID, "=", projectid));
+        whr.addConditionSet(conditions);
+        whr.addCondition(new SQLCondition(DBMaps.MapLayer.LAYERNAME, "like", "%" + searchkey + "%"));
+        //-------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBMaps.MapLayer.LAYERNAME);
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        sql.addClause(order);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<MapLayer> layers = new ArrayList<>();
+            MapLayer layer;
+            while (rs.next()) {
+                layer = new MapLayer();
+                layer.layerid = rs.getLong(DBMaps.MapLayer.LAYERID);
+                layer.projectid = rs.getLong(DBMaps.MapLayer.PROJECTID);
+                layer.layername = rs.getString(DBMaps.MapLayer.LAYERNAME);
+                layer.layerdescription = rs.getString(DBMaps.MapLayer.DESCRIPTION);
+                layers.add(layer);
+            }
+            return layers.toArray(new MapLayer[0]);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select map layers. Code: hrnfgsa \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }        
     }
     //**********************************************************************
     /**
