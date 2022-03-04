@@ -96,6 +96,9 @@ public class MappingAttlas extends MappingAtlasFolders {
         else connection = electra.nearSrvConnection();
         setDataBase();
         //------------------------------------------------------------------
+        int count = checkValueCount(DBMaps.LayerUse.TABLE, DBMaps.LayerUse.PROJECTID, use.projectid, DBMaps.LayerUse.LAYERID, use.layerid);
+        if (count != 0)
+            throw new AppException("Layer already added", MapErrorCodes.LAYERUSEALREADYADDED);
         this.insertLayerUse(use);
         //------------------------------------------------------------------
     }
@@ -155,6 +158,10 @@ public class MappingAttlas extends MappingAtlasFolders {
         return this.selectMapRecords(layerid);
         //------------------------------------------------------------------
     }
+    //**********************************************************************
+    /* LAYER USES */
+    //**********************************************************************
+    //**********************************************************************
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************

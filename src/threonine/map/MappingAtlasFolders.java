@@ -19,8 +19,8 @@ public class MappingAtlasFolders extends LockMap {
         lock.addTable(DBMaps.FolderTree.TABLE);
         this.getExclusiveTableAccess(lock);
         //------------------------------------------------------------------
-        if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, value) != 0)
-            throw new AppException("Public name already used", MapErrorCodes.FOLDERPUBLICNAMEALREADYUSED);
+        //if (checkValueCount(DBMaps.FolderTree.TABLE, DBMaps.FolderTree.PUBLICNAME, value) != 0)
+        //    throw new AppException("Public name already used", MapErrorCodes.FOLDERPUBLICNAMEALREADYUSED);
         //------------------------------------------------------------------
         super.updateMapFolderPublicName(folderid, value);
         //------------------------------------------------------------------
