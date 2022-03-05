@@ -144,6 +144,23 @@ public class MappingAttlas extends MappingAtlasFolders {
     }
     //**********************************************************************
     /**
+     * Returns a map record given its ID.
+     * @param recordid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    public MapRecord getMapRecord (long recordid) throws AppException, Exception {
+        //------------------------------------------------------------------
+        if (usemaster) connection = electra.masterConnection();
+        else connection = electra.slaveConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        return this.selectMapRecord(recordid);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
      * Returns map records given a folder
      * @param layerid
      * @return
@@ -205,22 +222,6 @@ public class MappingAttlas extends MappingAtlasFolders {
         
     }
     //**********************************************************************
-    /**
-     * Returns a map record given its ID.
-     * @param recordid
-     * @return
-     * @throws AppException
-     * @throws Exception 
-     */
-    public MapRecord getMapRecord (long recordid) throws AppException, Exception {
-        //------------------------------------------------------------------
-        if (usemaster) connection = electra.masterConnection();
-        else connection = electra.slaveConnection();
-        setDataBase();
-        //------------------------------------------------------------------
-        return this.selectMapRecord(recordid);
-        //------------------------------------------------------------------
-    }
     //**********************************************************************
     /**
      * 

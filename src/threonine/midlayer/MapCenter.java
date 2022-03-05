@@ -224,6 +224,11 @@ public class MapCenter {
      * @throws AppException
      * @throws Exception 
      */
+    
+    
+    
+    
+    
     public MapRecord[] getMapRecords(String rawrecordids) throws AppException, Exception {
         //---------------------------------------------------
         if (rawrecordids == null) return new MapRecord[0];
@@ -243,6 +248,11 @@ public class MapCenter {
         }
         return records.toArray(new MapRecord[0]);
     }
+    
+    
+    
+    
+    
     //**********************************************************************
     public void updateFolderAttribute (long folderid, UpdateMapFolderAttr updateattr, long userid) throws AppException, Exception {
         MapFolder folder = mapslambda.getMapFolder(folderid);
