@@ -176,6 +176,47 @@ public class MappingAttlas extends MappingAtlasFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /* FEATURES */
+    //**********************************************************************
+    public void createMapObject (long recordid, PointLocation[] points, float cost) throws AppException, Exception {
+        //=============================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //=============================================================
+        //We check the map record exists.
+        if (checkValueCount(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.RECORDID, recordid) == 0)
+            throw new AppException("Map Record not found", MapErrorCodes.MAPRECORDNOTFOUND);
+        //=============================================================
+        MapObject object = new MapObject();
+        object.recordid = recordid;
+        object.cost = cost;
+        while (true) {
+            object.objectid = Celaeno.getUniqueID();
+            try { this.insertMapObject(object); }
+            catch (SQLIntegrityConstraintViolationException e) { continue; }
+            break;
+        }
+        //-------------------------------------------------------------
+        for (PointLocation point : points) {
+            point.recordid = recordid;
+            point.objectid = object.objectid;
+            this.insertPointLocation(point);
+        }
+        //=============================================================
+    }    
+    //**********************************************************************
+    public void clearMapObjects (long recordid) throws Exception {
+        //=============================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //=============================================================
+        this.deleteMapObjects(recordid);
+        this.deletePointLocations(recordid);
+        //=============================================================
+    }
+    //**********************************************************************
     /* LAYER USES */
     //**********************************************************************
     //**********************************************************************
@@ -246,47 +287,12 @@ public class MappingAttlas extends MappingAtlasFolders {
      * @throws AppException
      * @throws Exception 
      */
-    public void createMapObject (long recordid, PointLocation[] points, float cost) throws AppException, Exception {
-        //=============================================================
-        connection = electra.masterConnection();
-        setDataBase();
-        //=============================================================
-        //We check the map record exists.
-        if (checkValueCount(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.RECORDID, recordid) == 0)
-            throw new AppException("Map Record not found", MapErrorCodes.MAPRECORDNOTFOUND);
-        //=============================================================
-        MapObject object = new MapObject();
-        object.recordid = recordid;
-        object.cost = cost;
-        while (true) {
-            object.objectid = Celaeno.getUniqueID();
-            try { this.insertMapObject(object); }
-            catch (SQLIntegrityConstraintViolationException e) { continue; }
-            break;
-        }
-        //-------------------------------------------------------------
-        for (PointLocation point : points) {
-            point.recordid = recordid;
-            point.objectid = object.objectid;
-            this.insertPointLocation(point);
-        }
-        //=============================================================
-    }
     //**********************************************************************
     /**
      * Clear map objects from a map record.
      * @param recordid
      * @throws Exception 
      */
-    public void clearMapObjects (long recordid) throws Exception {
-        //=============================================================
-        connection = electra.masterConnection();
-        setDataBase();
-        //=============================================================
-        this.deleteMapObjects(recordid);
-        this.deletePointLocations(recordid);
-        //=============================================================
-    }
     //**********************************************************************
     /**
      * 
