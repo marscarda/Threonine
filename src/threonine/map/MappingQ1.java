@@ -45,7 +45,7 @@ public class MappingQ1 extends QueryMapTabs {
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
-        finally { if (st != null) try {st.close();} catch(Exception e){} }        
+        finally { if (st != null) try {st.close();} catch(Exception e){} }
     }
     //**********************************************************************
     protected MapLayer selectLayer (long layerid) throws AppException, Exception {
@@ -266,6 +266,37 @@ public class MappingQ1 extends QueryMapTabs {
         }
     }
     //**********************************************************************
+    /**
+     * 
+     * @param layerid
+     * @param value
+     * @throws Exception 
+     */
+    protected void updateForPub (long layerid, int value) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBMaps.MapLayer.TABLE);
+        update.addSetColumn(DBMaps.MapLayer.FORPUB, value);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.MapLayer.LAYERID, "=", layerid));
+        //-------------------------------------------------------
+        sql.addClause(update);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update map layer forpub \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
+        //-------------------------------------------------------
+    }
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************

@@ -35,6 +35,7 @@ public class QueryMapTabs extends Alcyone {
         create.addField(DBMaps.MapLayer.PROJECTID, "BIGINT NOT NULL");
         create.addField(DBMaps.MapLayer.LAYERNAME, "VARCHAR (100) NOT NULL");
         create.addField(DBMaps.MapLayer.DESCRIPTION, "VARCHAR (300) NOT NULL");
+        create.addField(DBMaps.MapLayer.FORPUB, "INTEGER NOT NULL DEFAULT 0");
         create.addUnique(DBMaps.MapLayer.LAYERID);
         //-------------------------------------------------------------------
         PreparedStatement st = null;

@@ -83,6 +83,22 @@ public class MappingAttlas extends MappingAtlasFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * 
+     * @param layerid
+     * @param value
+     * @throws Exception 
+     */
+    public void setForPub (long layerid, int value) throws Exception {
+        //------------------------------------------------------------------
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        this.updateForPub(layerid, value);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
     /* LAYER USES */
     //**********************************************************************
     /**
