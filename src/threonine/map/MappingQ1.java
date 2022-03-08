@@ -13,6 +13,7 @@ import methionine.sql.SQLConditionSet;
 import methionine.sql.SQLDelete;
 import methionine.sql.SQLInnerJoin;
 import methionine.sql.SQLInsert;
+import methionine.sql.SQLLimit;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
@@ -20,6 +21,8 @@ import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
 //**************************************************************************
 public class MappingQ1 extends QueryMapTabs {
+    //**********************************************************************
+    protected int PUBLICCOUNT = 15;    
     //**********************************************************************
     /**
      * Inserts a map layer into the table.
@@ -203,6 +206,64 @@ public class MappingQ1 extends QueryMapTabs {
     }
     //**********************************************************************
     /**
+     * 
+     * @param offset
+     * @return
+     * @throws Exception 
+     */
+    protected MapLayer[] selectPublicLayers (int offset) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapLayer.TABLE);
+        select.addItem(DBMaps.MapLayer.LAYERID);
+        select.addItem(DBMaps.MapLayer.PROJECTID);
+        select.addItem(DBMaps.MapLayer.LAYERNAME);
+        select.addItem(DBMaps.MapLayer.DESCRIPTION);
+        //-------------------------------------------------------
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.MapLayer.PROJECTID, "=", 0));
+        //-------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBMaps.MapLayer.LAYERNAME);
+        //-------------------------------------------------------
+        SQLLimit limit = new SQLLimit(offset, PUBLICCOUNT);
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        sql.addClause(order);
+        sql.addClause(limit);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<MapLayer> layers = new ArrayList<>();
+            MapLayer layer;
+            while (rs.next()) {
+                layer = new MapLayer();
+                layer.layerid = rs.getLong(DBMaps.MapLayer.LAYERID);
+                layer.projectid = rs.getLong(DBMaps.MapLayer.PROJECTID);
+                layer.layername = rs.getString(DBMaps.MapLayer.LAYERNAME);
+                layer.layerdescription = rs.getString(DBMaps.MapLayer.DESCRIPTION);
+                layers.add(layer);
+            }
+            return layers.toArray(new MapLayer[0]);            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select public map layers. Code: sharidsgert \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+        //-------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
      * Selects and return the layers used in one project.
      * @param projectid
      * @return
@@ -264,6 +325,41 @@ public class MappingQ1 extends QueryMapTabs {
             if (st != null) try {st.close();} catch(Exception e){}
             if (rs != null) try {rs.close();} catch(Exception e){}
         }
+    }
+    //**********************************************************************
+    /**
+     * Selects the count of layers no belonging to a project.
+     * @return
+     * @throws Exception 
+     */
+    protected int selectPublicLayerCount () throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapLayer.TABLE);
+        select.addItem("COUNT", "*", "C");
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.MapLayer.PROJECTID , "=", 0));
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select public map layers count\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }        
     }
     //**********************************************************************
     /**

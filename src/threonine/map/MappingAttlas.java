@@ -1,6 +1,7 @@
 package threonine.map;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Random;
 import methionine.AppException;
 import methionine.Celaeno;
 import methionine.sql.SQLLockTables;
@@ -80,6 +81,29 @@ public class MappingAttlas extends MappingAtlasFolders {
         else connection = electra.nearSrvConnection();
         setDataBase();
         return this.selectLayersByKey(projectid, searchkey);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Returns a random list of public layers.
+     * @return
+     * @throws Exception 
+     */
+    public MapLayer[] publicLayers () throws Exception {
+        //------------------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        int publiccount = this.selectPublicLayerCount();
+        int offset = 0;
+        //------------------------------------------------------------------
+        if (publiccount > PUBLICCOUNT) {
+            Random rand = new Random();
+            offset = rand.nextInt(publiccount - PUBLICCOUNT);
+        }
+        //------------------------------------------------------------------
+        return selectPublicLayers(offset);
         //------------------------------------------------------------------
     }
     //**********************************************************************

@@ -50,7 +50,7 @@ public class MappingQ4 extends MappingQ3 {
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
             if (rs != null) try {rs.close();} catch(Exception e){}
-        }        
+        }
     }
     //**********************************************************************
     /**
@@ -85,7 +85,8 @@ public class MappingQ4 extends MappingQ3 {
         if (search == null) {
             SQLLimit limit = new SQLLimit(offset, PUBLICCOUNT);
             sql.addClause(limit);
-        }        //-------------------------------------------------------
+        }        
+        //-------------------------------------------------------
         PreparedStatement st = null;
         ResultSet rs = null;
         //-------------------------------------------------------
