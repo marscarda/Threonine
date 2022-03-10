@@ -12,11 +12,11 @@ import methionine.finance.FinanceAtlas;
 import methionine.finance.FinanceRules;
 import methionine.project.Project;
 import methionine.project.ProjectLambda;
-import threonine.map.FolderUsage;
-import threonine.map.MapFolder;
-import threonine.map.MapRecord;
-import threonine.map.MappingAttlas;
-import threonine.map.PointLocation;
+import threonine.mapping.FolderUsage;
+import threonine.mapping.MapFolder;
+import threonine.mapping.MapRecord;
+import threonine.mapping.MappingAttlas;
+import threonine.mapping.PointLocation;
 //**************************************************************************
 public class MapCenter {
     //**********************************************************************

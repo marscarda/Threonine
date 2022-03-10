@@ -13,8 +13,8 @@ import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
 import methionine.sql.SQLWhere;
-import threonine.map.MapObject;
-import threonine.map.PointLocation;
+import threonine.mapping.MapObject;
+import threonine.mapping.PointLocation;
 //**************************************************************************
 public class UniverseQ3 extends UniverseQ2 {
     //**********************************************************************

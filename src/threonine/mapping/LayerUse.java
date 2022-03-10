@@ -1,4 +1,4 @@
-package threonine.map;
+package threonine.mapping;
 //**************************************************************************
 public class LayerUse {
     long projectid = 0;

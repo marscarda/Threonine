@@ -1,7 +1,7 @@
 package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
-import threonine.map.PointLocation;
+import threonine.mapping.PointLocation;
 //**************************************************************************
 public class MapObjectGraphic {
     //**********************************************************************

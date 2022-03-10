@@ -1,6 +1,6 @@
 package threonine.midlayer;
 //**************************************************************************
-import threonine.map.PointLocation;
+import threonine.mapping.PointLocation;
 //**************************************************************************
 public class MapView {
     //************************************************************

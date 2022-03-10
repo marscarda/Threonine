@@ -1,8 +1,8 @@
 package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
-import threonine.map.MapErrorCodes;
-import threonine.map.PointLocation;
+import threonine.mapping.MapErrorCodes;
+import threonine.mapping.PointLocation;
 //**************************************************************************
 public class MapValidationAndMath {
     //**********************************************************************

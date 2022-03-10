@@ -2,9 +2,9 @@ package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
 import methionine.project.ProjectLambda;
-import threonine.map.MapObject;
-import threonine.map.MapRecord;
-import threonine.map.MappingAttlas;
+import threonine.mapping.MapObject;
+import threonine.mapping.MapRecord;
+import threonine.mapping.MappingAttlas;
 import threonine.universe.SubSet;
 import threonine.universe.UniverseAtlas;
 //**************************************************************************

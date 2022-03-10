@@ -1,4 +1,4 @@
-package threonine.map;
+package threonine.mapping;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Random;

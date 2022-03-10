@@ -6,8 +6,8 @@ import java.util.Random;
 import java.util.TimeZone;
 import methionine.AppException;
 import methionine.Celaeno;
-import threonine.map.MapObject;
-import threonine.map.PointLocation;
+import threonine.mapping.MapObject;
+import threonine.mapping.PointLocation;
 //**************************************************************************
 public class UniverseAtlas extends UniverseLock {
     //**********************************************************************

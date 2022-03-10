@@ -1,4 +1,4 @@
-package threonine.map;
+package threonine.mapping;
 //*****************************************************************************
 public class MapErrorCodes {
     public static final int MAPLAYERNOTFOUND = 1000;
