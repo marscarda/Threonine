@@ -328,6 +328,60 @@ public class MappingQ1 extends QueryMapTabs {
     }
     //**********************************************************************
     /**
+     * Selects and returns a list of layers that are for publish.
+     * @return
+     * @throws Exception 
+     */
+    protected MapLayer[] selectForPublishLayers () throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBMaps.MapLayer.TABLE);
+        select.addItem(DBMaps.MapLayer.LAYERID);
+        select.addItem(DBMaps.MapLayer.PROJECTID);
+        select.addItem(DBMaps.MapLayer.LAYERNAME);
+        select.addItem(DBMaps.MapLayer.DESCRIPTION);
+        //-------------------------------------------------------
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.MapLayer.FORPUB, "!=", 0));
+        //-------------------------------------------------------
+        SQLOrderBy order = new SQLOrderBy();
+        order.addColumn(DBMaps.MapLayer.LAYERID);
+        //-------------------------------------------------------
+        sql.addClause(select);
+        sql.addClause(whr);
+        sql.addClause(order);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            List<MapLayer> layers = new ArrayList<>();
+            MapLayer layer;
+            while (rs.next()) {
+                layer = new MapLayer();
+                layer.layerid = rs.getLong(DBMaps.MapLayer.LAYERID);
+                layer.projectid = rs.getLong(DBMaps.MapLayer.PROJECTID);
+                layer.layername = rs.getString(DBMaps.MapLayer.LAYERNAME);
+                layer.layerdescription = rs.getString(DBMaps.MapLayer.DESCRIPTION);
+                layers.add(layer);
+            }
+            return layers.toArray(new MapLayer[0]);            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select for publish map layers. Code: sharidsgert \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+        //-------------------------------------------------------        
+    }
+    //**********************************************************************
+    /**
      * Selects the count of layers no belonging to a project.
      * @return
      * @throws Exception 

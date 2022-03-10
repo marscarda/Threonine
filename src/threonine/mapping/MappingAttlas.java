@@ -108,6 +108,21 @@ public class MappingAttlas extends MappingAtlasFolders {
     }
     //**********************************************************************
     /**
+     * Returns the list of layers for Publish.
+     * @return
+     * @throws Exception 
+     */
+    public MapLayer[] forPublishLayers () throws Exception {
+        //------------------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        return selectForPublishLayers();
+        //------------------------------------------------------------------
+    }    
+    //**********************************************************************
+    /**
      * 
      * @param layerid
      * @param value
