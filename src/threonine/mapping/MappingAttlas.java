@@ -335,7 +335,6 @@ public class MappingAttlas extends MappingAtlasFolders {
         
     }
     //**********************************************************************
-    //**********************************************************************
     /**
      * 
      * @param recordid
@@ -351,20 +350,6 @@ public class MappingAttlas extends MappingAtlasFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
-    /**
-     * 
-     * @param recordid
-     * @param points
-     * @param cost
-     * @throws AppException
-     * @throws Exception 
-     */
-    //**********************************************************************
-    /**
-     * Clear map objects from a map record.
-     * @param recordid
-     * @throws Exception 
-     */
     //**********************************************************************
     /**
      * 
