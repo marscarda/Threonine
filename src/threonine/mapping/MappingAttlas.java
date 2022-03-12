@@ -138,6 +138,23 @@ public class MappingAttlas extends MappingAtlasFolders {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * 
+     * @param layerid
+     * @param name
+     * @param description
+     * @throws Exception 
+     */
+    public void setPublic (long layerid, String name, String description) throws Exception {
+        //------------------------------------------------------------------
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        this.updateLayerToPublic(layerid, name, description);
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
     /* LAYER USES */
     //**********************************************************************
     /**

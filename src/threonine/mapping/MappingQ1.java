@@ -448,6 +448,40 @@ public class MappingQ1 extends QueryMapTabs {
         //-------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * 
+     * @param layerid
+     * @param name
+     * @param description
+     * @throws Exception 
+     */
+    protected void updateLayerToPublic (long layerid, String name, String description) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLUpdate update = new SQLUpdate(DBMaps.MapLayer.TABLE);
+        update.addSetColumn(DBMaps.MapLayer.PROJECTID, 0);
+        update.addSetColumn(DBMaps.MapLayer.LAYERNAME, name);
+        update.addSetColumn(DBMaps.MapLayer.DESCRIPTION, description);
+        update.addSetColumn(DBMaps.MapLayer.FORPUB, 0);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBMaps.MapLayer.LAYERID, "=", layerid));
+        sql.addClause(update);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to update map layer forpub \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
+        //-------------------------------------------------------        
+    }
     //**********************************************************************
     //**********************************************************************
     //**********************************************************************
