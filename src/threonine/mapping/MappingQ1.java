@@ -328,60 +328,6 @@ public class MappingQ1 extends QueryMapTabs {
     }
     //**********************************************************************
     /**
-     * Selects and returns a list of layers that are for publish.
-     * @return
-     * @throws Exception 
-     */
-    protected MapLayer[] selectForPublishLayers () throws Exception {
-        SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBMaps.MapLayer.TABLE);
-        select.addItem(DBMaps.MapLayer.LAYERID);
-        select.addItem(DBMaps.MapLayer.PROJECTID);
-        select.addItem(DBMaps.MapLayer.LAYERNAME);
-        select.addItem(DBMaps.MapLayer.DESCRIPTION);
-        //-------------------------------------------------------
-        SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBMaps.MapLayer.FORPUB, "!=", 0));
-        //-------------------------------------------------------
-        SQLOrderBy order = new SQLOrderBy();
-        order.addColumn(DBMaps.MapLayer.LAYERID);
-        //-------------------------------------------------------
-        sql.addClause(select);
-        sql.addClause(whr);
-        sql.addClause(order);
-        //-------------------------------------------------------
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        //-------------------------------------------------------
-        try {
-            st = connection.prepareStatement(sql.getText());
-            sql.setParameters(st, 1);
-            rs = st.executeQuery();
-            List<MapLayer> layers = new ArrayList<>();
-            MapLayer layer;
-            while (rs.next()) {
-                layer = new MapLayer();
-                layer.layerid = rs.getLong(DBMaps.MapLayer.LAYERID);
-                layer.projectid = rs.getLong(DBMaps.MapLayer.PROJECTID);
-                layer.layername = rs.getString(DBMaps.MapLayer.LAYERNAME);
-                layer.layerdescription = rs.getString(DBMaps.MapLayer.DESCRIPTION);
-                layers.add(layer);
-            }
-            return layers.toArray(new MapLayer[0]);            
-        }
-        catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to select for publish map layers. Code: sharidsgert \n");
-            msg.append(e.getMessage());
-            throw new Exception(msg.toString());
-        }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-            if (rs != null) try {rs.close();} catch(Exception e){}
-        }
-        //-------------------------------------------------------        
-    }
-    //**********************************************************************
-    /**
      * Selects the count of layers no belonging to a project.
      * @return
      * @throws Exception 
@@ -419,38 +365,6 @@ public class MappingQ1 extends QueryMapTabs {
     /**
      * 
      * @param layerid
-     * @param value
-     * @throws Exception 
-     */
-    protected void updateForPub (long layerid, int value) throws Exception {
-        SQLQueryCmd sql = new SQLQueryCmd();
-        SQLUpdate update = new SQLUpdate(DBMaps.MapLayer.TABLE);
-        update.addSetColumn(DBMaps.MapLayer.FORPUB, value);
-        SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBMaps.MapLayer.LAYERID, "=", layerid));
-        //-------------------------------------------------------
-        sql.addClause(update);
-        sql.addClause(whr);
-        //-------------------------------------------------------
-        PreparedStatement st = null;
-        try {
-            st = connection.prepareStatement(sql.getText());
-            sql.setParameters(st, 1);
-            st.execute();            
-        }
-        catch (SQLIntegrityConstraintViolationException e) { throw e; }
-        catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to update map layer forpub \n");
-            msg.append(e.getMessage());
-            throw new Exception(msg.toString());
-        }
-        finally { if (st != null) try {st.close();} catch(Exception e){} }        
-        //-------------------------------------------------------
-    }
-    //**********************************************************************
-    /**
-     * 
-     * @param layerid
      * @param name
      * @param description
      * @throws Exception 
@@ -461,7 +375,6 @@ public class MappingQ1 extends QueryMapTabs {
         update.addSetColumn(DBMaps.MapLayer.PROJECTID, 0);
         update.addSetColumn(DBMaps.MapLayer.LAYERNAME, name);
         update.addSetColumn(DBMaps.MapLayer.DESCRIPTION, description);
-        update.addSetColumn(DBMaps.MapLayer.FORPUB, 0);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBMaps.MapLayer.LAYERID, "=", layerid));
         sql.addClause(update);

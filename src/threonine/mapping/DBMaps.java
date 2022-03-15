@@ -8,7 +8,6 @@ public class DBMaps {
         static final String PROJECTID = "projectid";
         static final String LAYERNAME = "layername";
         static final String DESCRIPTION = "description";
-        static final String FORPUB = "forpub";
     }
     //**********************************************************************
     public static class FolderTree {
