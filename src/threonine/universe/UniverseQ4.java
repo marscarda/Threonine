@@ -100,7 +100,6 @@ public class UniverseQ4 extends UniverseQ3 {
         select.addItem(DBUniverse.Universe.DESCRIPTION);
         select.addItem(DBUniverse.Universe.PUBLIC);
         select.addItem(DBUniverse.Universe.PRICE);
-        select.addItem(DBUniverse.Universe.CHANGETOPUB);
         //-------------------------------------------------------
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.Universe.PUBLIC, "!=", 0));
@@ -136,7 +135,6 @@ public class UniverseQ4 extends UniverseQ3 {
                 universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
                 universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
                 universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
-                universe.edittopub = rs.getInt(DBUniverse.Universe.CHANGETOPUB);
                 universes.add(universe);
             }
             return universes.toArray(new Universe[0]);

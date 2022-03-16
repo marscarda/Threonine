@@ -10,7 +10,6 @@ public class Universe extends ValidData {
     String description = null;
     int ispublic = 0;
     float price = 0;
-    int edittopub = 0;
     long userid = 0;
     String username = null;
     //------------------------------------------------------
@@ -18,7 +17,6 @@ public class Universe extends ValidData {
     //------------------------------------------------------
     public void setProjectId (long projectid) { this.projectid = projectid; }
     public void setName (String name) { this.name = name; }
-    public void setEditToPubs (int edits) { edittopub = edits; }
     public void setUserID (long userid) { this.userid = userid; }
     public void setUserName (String username) { this.username = username; }
     //------------------------------------------------------
@@ -27,7 +25,6 @@ public class Universe extends ValidData {
     public void setDescription (String description) { this.description = description; }
     public boolean isPublic () { return ispublic != 0; }
     public float getPrice () { return price; }
-    public int editsTuPub () { return edittopub; }
     public String getName () {
         if (name == null) return "";
         return name;
@@ -40,8 +37,6 @@ public class Universe extends ValidData {
         if (username == null) return "";
         return username;
     }
-    //**********************************************************
-    public boolean allowToPublish () { return edittopub == 0; }
     //**********************************************************
     public static int PUBUNTILDAYS = 21;
     //**********************************************************
