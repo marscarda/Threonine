@@ -19,7 +19,6 @@ public class DBUniverse {
         static final String UNIVERSEID = "universeid";
         static final String PARENTSUBSET = "parentsubset";
         static final String NAME = "name";
-        static final String DESCRIPTION = "description";
         static final String POPULATION = "population";
         static final String WEIGHT = "weight";
         static final String MAPSTATUS = "mapstatus";

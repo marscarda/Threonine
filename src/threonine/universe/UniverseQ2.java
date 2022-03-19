@@ -32,7 +32,6 @@ public class UniverseQ2 extends UniverseQ1 {
         insert.addValue(DBUniverse.SubSets.UNIVERSEID, subset.universeid);
         insert.addValue(DBUniverse.SubSets.PARENTSUBSET, subset.parentsubset);
         insert.addValue(DBUniverse.SubSets.NAME, subset.name);
-        insert.addValue(DBUniverse.SubSets.DESCRIPTION, subset.description);
         insert.addValue(DBUniverse.SubSets.POPULATION, subset.population);
         insert.addValue(DBUniverse.SubSets.WEIGHT, subset.weight);
         insert.addValue(DBUniverse.SubSets.MAPSTATUS, subset.mapstatus);
@@ -69,7 +68,6 @@ public class UniverseQ2 extends UniverseQ1 {
         select.addItem(DBUniverse.SubSets.UNIVERSEID);
         select.addItem(DBUniverse.SubSets.PARENTSUBSET);
         select.addItem(DBUniverse.SubSets.NAME);
-        select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
         select.addItem(DBUniverse.SubSets.MAPSTATUS);
@@ -96,7 +94,6 @@ public class UniverseQ2 extends UniverseQ1 {
             subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
             subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
             subset.name = rs.getString(DBUniverse.SubSets.NAME);
-            subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
             subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
             subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
             subset.mapstatus = rs.getInt(DBUniverse.SubSets.MAPSTATUS);
@@ -130,7 +127,6 @@ public class UniverseQ2 extends UniverseQ1 {
         select.addItem(DBUniverse.SubSets.UNIVERSEID);
         select.addItem(DBUniverse.SubSets.PARENTSUBSET);
         select.addItem(DBUniverse.SubSets.NAME);
-        select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
         select.addItem(DBUniverse.SubSets.MAPSTATUS);
@@ -157,7 +153,6 @@ public class UniverseQ2 extends UniverseQ1 {
             subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
             subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
             subset.name = rs.getString(DBUniverse.SubSets.NAME);
-            subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
             subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
             subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
             subset.mapstatus = rs.getInt(DBUniverse.SubSets.MAPSTATUS);
@@ -190,7 +185,6 @@ public class UniverseQ2 extends UniverseQ1 {
         select.addItem(DBUniverse.SubSets.UNIVERSEID);
         select.addItem(DBUniverse.SubSets.PARENTSUBSET);
         select.addItem(DBUniverse.SubSets.NAME);
-        select.addItem(DBUniverse.SubSets.DESCRIPTION);
         select.addItem(DBUniverse.SubSets.POPULATION);
         select.addItem(DBUniverse.SubSets.WEIGHT);
         select.addItem(DBUniverse.SubSets.MAPSTATUS);
@@ -220,7 +214,6 @@ public class UniverseQ2 extends UniverseQ1 {
                 subset.universeid = rs.getLong(DBUniverse.SubSets.UNIVERSEID);
                 subset.parentsubset = rs.getLong(DBUniverse.SubSets.PARENTSUBSET);
                 subset.name = rs.getString(DBUniverse.SubSets.NAME);
-                subset.description = rs.getString(DBUniverse.SubSets.DESCRIPTION);
                 subset.population = rs.getInt(DBUniverse.SubSets.POPULATION);
                 subset.weight = rs.getInt(DBUniverse.SubSets.WEIGHT);
                 subset.mapstatus = rs.getInt(DBUniverse.SubSets.MAPSTATUS);
