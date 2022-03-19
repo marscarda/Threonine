@@ -1,9 +1,7 @@
 package threonine.universe;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Calendar;
 import java.util.Random;
-import java.util.TimeZone;
 import methionine.AppException;
 import methionine.Celaeno;
 import threonine.mapping.MapObject;
@@ -54,11 +52,14 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception UNIVERSENOTFOUND
      */
     public Universe getUniverse (long universeid) throws AppException, Exception {
-        connection = electra.slaveConnection();
+        //----------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
         setDataBase();
+        //----------------------------------------------------------
         Universe universe = this.selectUniverse(universeid);
-        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         return universe;
+        //----------------------------------------------------------
     }
     //**********************************************************************
     /**
@@ -180,10 +181,11 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception 
      */
     public void createSubSet (SubSet subset) throws AppException, Exception {
-        //-------------------------------------------------------------------
-        connection = electra.masterConnection();
+        //================================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
         setDataBase();
-        //-------------------------------------------------------------------
+        //================================================================
         if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, subset.universeid) == 0) {
             throw new AppException("Universe not found", UniverseErrorCodes.UNIVERSENOTFOUND);
         }
@@ -231,10 +233,11 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception 
      */
     public SubSet getSubset (long universeid, long subsetid) throws AppException, Exception {
-        //-------------------------------------------------------------------
-        connection = electra.slaveConnection();
-        this.setDataBase();
-        //-------------------------------------------------------------------
+        //----------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //----------------------------------------------------------        
         SubSet subset = this.selectSubset(universeid, subsetid);
         subset.valid = true;
         return subset;
@@ -248,8 +251,11 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception 
      */
     public SubSet[] getSubsets (long universid, long parentid) throws Exception {
-        connection = electra.slaveConnection();
-        this.setDataBase();
+        //----------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //----------------------------------------------------------        
         SubSet[] subsets = this.selectSubsets(universid, parentid);
         for (SubSet subset : subsets)
             subset.valid = true;

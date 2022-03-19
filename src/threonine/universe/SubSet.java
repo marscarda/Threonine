@@ -6,7 +6,6 @@ public class SubSet {
     long universeid = 0;
     long parentsubset = 0;
     String name = null;
-    String description;
     int population = 0;
     int weight = 0;
     int mapstatus = 0;
@@ -20,7 +19,6 @@ public class SubSet {
     public void setUniverseID (long universeid) { this.universeid = universeid; }
     public void setParentSubset (long parsentsubset) { this.parentsubset = parsentsubset; }
     public void setName (String name) { this.name = name; }
-    public void setDescription (String description) { this.description = description; }
     public void setPopulation (int population) { this.population = population; }
     public void setWeight (int weight) { this.weight = weight; }
     //-----------------------------------------------
@@ -37,11 +35,6 @@ public class SubSet {
     public String getName () {
         if (name == null) return "";
         return name;
-    }
-    //-----------------------------------------------
-    public String getDescription () {
-        if (description == null) return "";
-        return description;
     }
     //===============================================
     public void setValid () { valid = true; }
