@@ -17,13 +17,13 @@ public class UniverseLock extends UniverseQ4 {
     @Deprecated
     public void AddLockMapRecord (TabList tabs) {
         tabs.addTable(databasename, DBUniverse.SubSets.TABLE);
-        tabs.addTable(databasename, DBUniverse.SubsetMapObject.TABLE);
+        tabs.addTable(databasename, DBUniverse.SubsetMapFeature.TABLE);
         tabs.addTable(databasename, DBUniverse.LocationPoints.TABLE);
     }
     //**********************************************************************
     public void lockUniverse (TabList tabs) { tabs.addTable(databasename, DBUniverse.Universe.TABLE); }
     public void lockSubset (TabList tabs) { tabs.addTable(databasename, DBUniverse.SubSets.TABLE); }
-    public void lockMapObject (TabList tabs) { tabs.addTable(databasename, DBUniverse.SubsetMapObject.TABLE); }
+    public void lockMapObject (TabList tabs) { tabs.addTable(databasename, DBUniverse.SubsetMapFeature.TABLE); }
     public void lockLocationPoint (TabList tabs) { tabs.addTable(databasename, DBUniverse.LocationPoints.TABLE); }    
     //**********************************************************************
 }

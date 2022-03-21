@@ -304,7 +304,7 @@ public class UniverseAtlas extends UniverseLock {
         object.recordid = subsetid;
         while(true) {
             object.objectid = Celaeno.getUniqueID();
-            if (checkValueCount(DBUniverse.SubsetMapObject.TABLE, DBUniverse.SubsetMapObject.OBJECTID, object.objectid) == 0) break;
+            if (checkValueCount(DBUniverse.SubsetMapFeature.TABLE, DBUniverse.SubsetMapFeature.OBJECTID, object.objectid) == 0) break;
         }
         //-------------------------------------------------------------------
         //We insert the map object.

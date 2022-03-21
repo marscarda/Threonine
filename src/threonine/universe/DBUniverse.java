@@ -26,8 +26,8 @@ public class DBUniverse {
         static final String MAPCOST = "mapcost";
     }
     //**********************************************************************
-    public static class SubsetMapObject {
-        static final String TABLE = "sbmapfeature";
+    public static class SubsetMapFeature {
+        static final String TABLE = "subsetmapfeature";
         static final String OBJECTID = "featureid";
         static final String SUBSETID = "subsetid";
         static final String OBJTYPE = "featuretype";

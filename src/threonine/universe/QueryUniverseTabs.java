@@ -21,7 +21,7 @@ public class QueryUniverseTabs extends Alcyone {
         //===================================================================
         if (!checkTableExists(DBUniverse.Universe.TABLE, tables)) createUniverses();
         if (!checkTableExists(DBUniverse.SubSets.TABLE, tables)) createSubSets();
-        if (!checkTableExists(DBUniverse.SubsetMapObject.TABLE, tables)) createMapObject();
+        if (!checkTableExists(DBUniverse.SubsetMapFeature.TABLE, tables)) createMapObject();
         if (!checkTableExists(DBUniverse.LocationPoints.TABLE, tables)) createLocationPoints();
         //===================================================================
     }
@@ -94,12 +94,12 @@ public class QueryUniverseTabs extends Alcyone {
     //***********************************************************************
     private void createMapObject () throws Exception {
         //-------------------------------------------------------------------
-        SQLCreateTable create = new SQLCreateTable(DBUniverse.SubsetMapObject.TABLE);
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.SubsetMapFeature.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBUniverse.SubsetMapObject.OBJECTID, "BIGINT NOT NULL");
-        create.addField(DBUniverse.SubsetMapObject.SUBSETID, "BIGINT NOT NULL");
-        create.addField(DBUniverse.SubsetMapObject.OBJTYPE, "INTEGER NOT NULL");
-        create.addUnique(DBUniverse.SubsetMapObject.OBJECTID);
+        create.addField(DBUniverse.SubsetMapFeature.OBJECTID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetMapFeature.SUBSETID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetMapFeature.OBJTYPE, "INTEGER NOT NULL");
+        create.addUnique(DBUniverse.SubsetMapFeature.OBJECTID);
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -109,7 +109,7 @@ public class QueryUniverseTabs extends Alcyone {
         }
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
-            err.append(DBUniverse.SubsetMapObject.TABLE);
+            err.append(DBUniverse.SubsetMapFeature.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());

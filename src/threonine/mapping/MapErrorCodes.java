@@ -10,6 +10,8 @@ public class MapErrorCodes {
     public static final int MAXALLOWEDPOINTSEXCEDED = 1006;
     public static final int FOLDERNAMEALREADYEXISTS = 1007;
     public static final int LAYERUSEALREADYADDED = 1008;
+    @Deprecated
     public static final int FOLDERUSEAGENOTFOUND = 1009;
+    public static final int LAYERUSENOTFOUND = 1009;
 }
 //*****************************************************************************

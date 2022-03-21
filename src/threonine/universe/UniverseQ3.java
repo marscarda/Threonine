@@ -24,10 +24,10 @@ public class UniverseQ3 extends UniverseQ2 {
      * @throws Exception 
      */
     protected void insertMapObject (MapObject object) throws Exception {
-        SQLInsert insert = new SQLInsert(DBUniverse.SubsetMapObject.TABLE);
-        insert.addValue(DBUniverse.SubsetMapObject.OBJECTID, object.objectid);
-        insert.addValue(DBUniverse.SubsetMapObject.SUBSETID, object.recordid);
-        insert.addValue(DBUniverse.SubsetMapObject.OBJTYPE, object.objtype);
+        SQLInsert insert = new SQLInsert(DBUniverse.SubsetMapFeature.TABLE);
+        insert.addValue(DBUniverse.SubsetMapFeature.OBJECTID, object.objectid);
+        insert.addValue(DBUniverse.SubsetMapFeature.SUBSETID, object.recordid);
+        insert.addValue(DBUniverse.SubsetMapFeature.OBJTYPE, object.objtype);
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(insert.getText());
@@ -54,13 +54,13 @@ public class UniverseQ3 extends UniverseQ2 {
     protected MapObject[] selectMapObjects (long subsetid) throws AppException, Exception {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBUniverse.SubsetMapObject.TABLE);
-        select.addItem(DBUniverse.SubsetMapObject.OBJECTID);
-        select.addItem(DBUniverse.SubsetMapObject.SUBSETID);
-        select.addItem(DBUniverse.SubsetMapObject.OBJTYPE);
+        SQLSelect select = new SQLSelect(DBUniverse.SubsetMapFeature.TABLE);
+        select.addItem(DBUniverse.SubsetMapFeature.OBJECTID);
+        select.addItem(DBUniverse.SubsetMapFeature.SUBSETID);
+        select.addItem(DBUniverse.SubsetMapFeature.OBJTYPE);
         //-------------------------------------------------------
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.SubsetMapObject.SUBSETID, "=", subsetid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubsetMapFeature.SUBSETID, "=", subsetid));
         //-------------------------------------------------------
         sql.addClause(select);
         sql.addClause(whr);
@@ -76,9 +76,9 @@ public class UniverseQ3 extends UniverseQ2 {
             MapObject object;
             while (rs.next()) {
                 object = new MapObject();
-                object.objectid = rs.getLong(DBUniverse.SubsetMapObject.OBJECTID);
-                object.recordid = rs.getLong(DBUniverse.SubsetMapObject.SUBSETID);
-                object.objtype = rs.getInt(DBUniverse.SubsetMapObject.OBJTYPE);
+                object.objectid = rs.getLong(DBUniverse.SubsetMapFeature.OBJECTID);
+                object.recordid = rs.getLong(DBUniverse.SubsetMapFeature.SUBSETID);
+                object.objtype = rs.getInt(DBUniverse.SubsetMapFeature.OBJTYPE);
                 objects.add(object);
             }            
             return objects.toArray(new MapObject[0]);
@@ -102,9 +102,9 @@ public class UniverseQ3 extends UniverseQ2 {
      */
     protected void deleteMapObject (long subsetid) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
-        SQLDelete delete = new SQLDelete(DBUniverse.SubsetMapObject.TABLE);
+        SQLDelete delete = new SQLDelete(DBUniverse.SubsetMapFeature.TABLE);
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.SubsetMapObject.SUBSETID, "=", subsetid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubsetMapFeature.SUBSETID, "=", subsetid));
         sql.addClause(delete);
         sql.addClause(whr);
         PreparedStatement st = null;
