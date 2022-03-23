@@ -292,10 +292,11 @@ public class UniverseAtlas extends UniverseLock {
     //*** MAP PART ***
     //**********************************************************************
     public void addMapObject (long subsetid, PointLocation[] points) throws Exception {
-        //-------------------------------------------------------------------
-        connection = electra.masterConnection();
-        this.setDataBase();
-        //-------------------------------------------------------------------
+        //==================================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //==================================================================
         //We check the subset exists in the master
         if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subsetid) == 0)
             throw new AppException("Subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
