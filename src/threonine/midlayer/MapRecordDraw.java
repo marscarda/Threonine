@@ -2,10 +2,9 @@ package threonine.midlayer;
 //**************************************************************************
 import threonine.mapping.MapObject;
 //**************************************************************************
-
 public class MapRecordDraw {
     //**********************************************************************
-    long matchid = 0;
+    public long relationid = 0;
     int objcount = 0;
     MapObjectGraphic[] mapobjects = null;
     //**********************************************************************
@@ -31,7 +30,7 @@ public class MapRecordDraw {
         objcount++;
     }
     //**********************************************************************
-    public long matchID () { return matchid; }
+    public long matchID () { return relationid; }
     //@Deprecated
     //public long getRecordId () { return matchid; }
     public int getObjectsCount () { return objcount; }
@@ -72,8 +71,7 @@ public class MapRecordDraw {
         return e;
     }
     //**********************************************************************
-    public void setMatch (long newid) { matchid = newid; }
+    public void setMatch (long newid) { relationid = newid; }
     //**********************************************************************
 }
-
 //**************************************************************************

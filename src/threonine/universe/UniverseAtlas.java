@@ -336,10 +336,11 @@ public class UniverseAtlas extends UniverseLock {
     }
     //**********************************************************************
     public MapObject[] getObjectsBySubset (long recordid, boolean fillpoints) throws Exception {
-        //------------------------------------------------------------------
-        connection = electra.slaveConnection();
+        //----------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
         setDataBase();
-        //------------------------------------------------------------------
+        //----------------------------------------------------------        
         MapObject[] objects = this.selectMapObjects(recordid);
         if (!fillpoints) return objects;
         //------------------------------------------------------------------
