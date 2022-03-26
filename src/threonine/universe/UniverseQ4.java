@@ -19,7 +19,7 @@ public class UniverseQ4 extends UniverseQ3 {
     //**********************************************************************
     protected static final int PUBLICCOUNT = 15;
     //**********************************************************************
-    //TEMPLATE SUBSET
+    //TEMPLATE UNIVERSE
     //**********************************************************************
     /**
      * Inserts a new Universe Template.
@@ -48,7 +48,37 @@ public class UniverseQ4 extends UniverseQ3 {
     }
     //**********************************************************************
     //**********************************************************************
+    //TEMPLATE SUBSET
     //**********************************************************************
+    /**
+     * 
+     * @param subset
+     * @throws SQLIntegrityConstraintViolationException
+     * @throws Exception 
+     */
+    protected void insertTemplateSubset(SubSet subset) throws SQLIntegrityConstraintViolationException, Exception {
+        SQLInsert insert = new SQLInsert(DBUniverse.SubsetTemplate.TABLE);
+        insert.addValue(DBUniverse.SubsetTemplate.SUBSETID, subset.subsetid);
+        insert.addValue(DBUniverse.SubsetTemplate.UNIVERSEID, subset.universeid);
+        insert.addValue(DBUniverse.SubsetTemplate.PARENTSUBSET, subset.parentsubset);
+        insert.addValue(DBUniverse.SubsetTemplate.NAME, subset.name);
+        insert.addValue(DBUniverse.SubsetTemplate.POPULATION, subset.population);
+        insert.addValue(DBUniverse.SubsetTemplate.WEIGHT, subset.weight);
+        insert.addValue(DBUniverse.SubsetTemplate.MAPSTATUS, subset.mapstatus);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(insert.getText());
+            insert.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to insert subset template \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }
+    }
     //**********************************************************************
     //**********************************************************************
     /**

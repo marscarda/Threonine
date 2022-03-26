@@ -49,9 +49,7 @@ public class UniverseQ2 extends UniverseQ1 {
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-        }        
+        finally { if (st != null) try {st.close();} catch(Exception e){} }
     }
     //******************************************************************
     /**

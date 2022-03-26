@@ -22,6 +22,7 @@ public class TabsUniverse extends Alcyone {
         if (!checkTableExists(DBUniverse.Universe.TABLE, tables)) createUniverses();
         if (!checkTableExists(DBUniverse.UniverseTemplate.TABLE, tables)) createTemplateUniverse();
         if (!checkTableExists(DBUniverse.SubSets.TABLE, tables)) createSubSets();
+        if (!checkTableExists(DBUniverse.SubsetTemplate.TABLE, tables)) createTemplateSubSets();
         if (!checkTableExists(DBUniverse.SubsetMapFeature.TABLE, tables)) createMapObject();
         if (!checkTableExists(DBUniverse.LocationPoints.TABLE, tables)) createLocationPoints();
         //===================================================================
@@ -80,9 +81,7 @@ public class TabsUniverse extends Alcyone {
             err.append(e.getMessage());
             throw new Exception(err.toString());
         }
-        finally {
-            try { if (st != null) st.close(); } catch (Exception e) {}
-        }
+        finally { try { if (st != null) st.close(); } catch (Exception e) {} }
         //-------------------------------------------------------------------        
     }
     //***********************************************************************
@@ -114,9 +113,37 @@ public class TabsUniverse extends Alcyone {
             err.append(e.getMessage());
             throw new Exception(err.toString());
         }
-        finally {
-            try { if (st != null) st.close(); } catch (Exception e) {}
+        finally { try { if (st != null) st.close(); } catch (Exception e) {} }
+        //-------------------------------------------------------------------
+    }
+    //***********************************************************************
+    private void createTemplateSubSets () throws Exception {
+        //-------------------------------------------------------------------
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.SubsetTemplate.TABLE);
+        create.setEngine(MySQLEngine.INNODB);
+        create.addField(DBUniverse.SubsetTemplate.SUBSETID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetTemplate.UNIVERSEID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetTemplate.PARENTSUBSET, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetTemplate.NAME, "VARCHAR (50) NOT NULL");
+        create.addField(DBUniverse.SubsetTemplate.POPULATION, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.SubsetTemplate.WEIGHT, "INTEGER NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.SubsetTemplate.MAPSTATUS, "INTEGER NOT NULL DEFAULT 0");
+        create.addUnique(DBUniverse.SubsetTemplate.SUBSETID);
+        //-------------------------------------------------------------------
+        PreparedStatement st = null;
+        this.setDataBase();
+        try {
+            st = connection.prepareStatement(create.getText());
+            st.execute();
         }
+        catch (SQLException e) {
+            StringBuilder err = new StringBuilder("Failed to create ");
+            err.append(DBUniverse.SubSets.TABLE);
+            err.append(" table\n");
+            err.append(e.getMessage());
+            throw new Exception(err.toString());
+        }
+        finally { try { if (st != null) st.close(); } catch (Exception e) {} }
         //-------------------------------------------------------------------
     }
     //***********************************************************************
@@ -142,9 +169,7 @@ public class TabsUniverse extends Alcyone {
             err.append(e.getMessage());
             throw new Exception(err.toString());
         }
-        finally {
-            try { if (st != null) st.close(); } catch (Exception e) {}
-        }
+        finally { try { if (st != null) st.close(); } catch (Exception e) {} }
         //-------------------------------------------------------------------
     }
     //***********************************************************************
@@ -171,9 +196,7 @@ public class TabsUniverse extends Alcyone {
             err.append(e.getMessage());
             throw new Exception(err.toString());
         }
-        finally {
-            try { if (st != null) st.close(); } catch (Exception e) {}
-        }
+        finally { try { if (st != null) st.close(); } catch (Exception e) {} }
         //-------------------------------------------------------------------
     }    
     //***********************************************************************

@@ -1,35 +1,15 @@
 package threonine.universe;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
-import methionine.AppException;
 import methionine.Celaeno;
 //**************************************************************************
 public class UniverseAtlasTemplate extends UniverseLock {
     //**********************************************************************
-    /**
-     * Copies an existent universe to universe templates table.Returns the ID of the new Universe ID.
-     * @param universeid
-     * @param name
-     * @param description
-     * @return the ID of the new Universe Template.
-     * @throws AppException
-     * @throws Exception 
-     */
-    public Universe universeToTemplate (long universeid, String name, String description) throws AppException, Exception {
+    public void addTemplate (Universe universe) throws Exception {
         //==================================================================
         if (wrmainsrv) connection = electra.mainSrvConnection();
         else connection = electra.nearSrvConnection();
         setDataBase();
-        //==================================================================
-        Universe universe = this.selectUniverse(universeid);
-        //==================================================================
-        if (name != null)
-            if (name.length() != 0)
-                universe.name = name;
-        //------------------------------------------------------------------
-        if (description != null)
-            if (description.length() != 0)
-                universe.description = description;
         //==================================================================
         while (true) {
             try {
@@ -38,13 +18,27 @@ public class UniverseAtlasTemplate extends UniverseLock {
                 break;
             }
             catch (SQLIntegrityConstraintViolationException e) {}
-        }        
-        //==================================================================
-        return universe;
+        }
         //==================================================================
     }
     //**********************************************************************
-    
+    public void templateAddSubset (SubSet subset) throws Exception {
+        //==================================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();        
+        //==================================================================
+        while (true) {
+            try {
+                subset.subsetid = Celaeno.getUniqueID();
+                this.insertTemplateSubset(subset);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }
+        //==================================================================
+    }
+    //**********************************************************************
     //**********************************************************************
 }
 //**************************************************************************

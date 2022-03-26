@@ -32,6 +32,17 @@ public class DBUniverse {
         static final String MAPCOST = "mapcost";
     }
     //**********************************************************************
+    public static class SubsetTemplate {
+        static final String TABLE = "templatesubset";
+        static final String SUBSETID = "subsetid";
+        static final String UNIVERSEID = "universeid";
+        static final String PARENTSUBSET = "parentsubset";
+        static final String NAME = "name";
+        static final String POPULATION = "population";
+        static final String WEIGHT = "weight";
+        static final String MAPSTATUS = "mapstatus";
+    }
+    //**********************************************************************
     public static class SubsetMapFeature {
         static final String TABLE = "subsetmapfeature";
         static final String OBJECTID = "featureid";
@@ -47,10 +58,6 @@ public class DBUniverse {
         static final String LATITUDE = "latitude";
         static final String LONGITUDE = "longitude";
     }
-    //**********************************************************************
-
-    //**********************************************************************
-    
     //**********************************************************************
 }
 //**************************************************************************
