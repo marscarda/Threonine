@@ -6,7 +6,7 @@ import methionine.Alcyone;
 import methionine.sql.MySQLEngine;
 import methionine.sql.SQLCreateTable;
 //**************************************************************************
-public class QueryUniverseTabs extends Alcyone {
+public class TabsUniverse extends Alcyone {
     //***********************************************************************
     public void ensureTables() throws Exception {
         String[] tables;// = getTables();
@@ -20,6 +20,7 @@ public class QueryUniverseTabs extends Alcyone {
         }
         //===================================================================
         if (!checkTableExists(DBUniverse.Universe.TABLE, tables)) createUniverses();
+        if (!checkTableExists(DBUniverse.UniverseTemplate.TABLE, tables)) createTemplateUniverse();
         if (!checkTableExists(DBUniverse.SubSets.TABLE, tables)) createSubSets();
         if (!checkTableExists(DBUniverse.SubsetMapFeature.TABLE, tables)) createMapObject();
         if (!checkTableExists(DBUniverse.LocationPoints.TABLE, tables)) createLocationPoints();
@@ -35,8 +36,6 @@ public class QueryUniverseTabs extends Alcyone {
         create.addField(DBUniverse.Universe.NAME, "VARCHAR (100) NOT NULL");
         create.addField(DBUniverse.Universe.DESCRIPTION, "VARCHAR (300) NOT NULL");
         create.addField(DBUniverse.Universe.WEIGHTED, "INTEGER NOT NULL DEFAULT 0");
-        create.addField(DBUniverse.Universe.PUBLIC, "INTEGER NOT NULL DEFAULT 0");
-        create.addField(DBUniverse.Universe.PRICE, "FLOAT (10,6) NOT NULL DEFAULT 0");
         create.addUnique(DBUniverse.Universe.UNIVERSEID);
         //-------------------------------------------------------------------
         PreparedStatement st = null;
@@ -56,6 +55,35 @@ public class QueryUniverseTabs extends Alcyone {
             try { if (st != null) st.close(); } catch (Exception e) {}
         }
         //-------------------------------------------------------------------
+    }
+    //***********************************************************************
+    private void createTemplateUniverse () throws Exception {
+        //-------------------------------------------------------------------
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.UniverseTemplate.TABLE);
+        create.setEngine(MySQLEngine.INNODB);
+        create.addField(DBUniverse.UniverseTemplate.UNIVERSEID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.UniverseTemplate.NAME, "VARCHAR (100) NOT NULL");
+        create.addField(DBUniverse.UniverseTemplate.DESCRIPTION, "VARCHAR (300) NOT NULL");
+        create.addField(DBUniverse.UniverseTemplate.WEIGHTED, "INTEGER NOT NULL DEFAULT 0");
+        create.addUnique(DBUniverse.UniverseTemplate.UNIVERSEID);
+        //-------------------------------------------------------------------
+        PreparedStatement st = null;
+        this.setDataBase();
+        try {
+            st = connection.prepareStatement(create.getText());
+            st.execute();
+        }
+        catch (SQLException e) {
+            StringBuilder err = new StringBuilder("Failed to create ");
+            err.append(DBUniverse.Universe.TABLE);
+            err.append(" table\n");
+            err.append(e.getMessage());
+            throw new Exception(err.toString());
+        }
+        finally {
+            try { if (st != null) st.close(); } catch (Exception e) {}
+        }
+        //-------------------------------------------------------------------        
     }
     //***********************************************************************
     private void createSubSets () throws Exception {

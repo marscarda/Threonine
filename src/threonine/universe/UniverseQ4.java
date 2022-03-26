@@ -3,9 +3,11 @@ package threonine.universe;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import methionine.sql.SQLCondition;
+import methionine.sql.SQLInsert;
 import methionine.sql.SQLLimit;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
@@ -17,6 +19,38 @@ public class UniverseQ4 extends UniverseQ3 {
     //**********************************************************************
     protected static final int PUBLICCOUNT = 15;
     //**********************************************************************
+    //TEMPLATE SUBSET
+    //**********************************************************************
+    /**
+     * Inserts a new Universe Template.
+     * @param universe
+     * @throws java.sql.SQLIntegrityConstraintViolationException
+     * @throws Exception 
+     */
+    protected void insertTemplateUniverse (Universe universe) throws SQLIntegrityConstraintViolationException, Exception {
+        SQLInsert insert = new SQLInsert(DBUniverse.UniverseTemplate.TABLE);
+        insert.addValue(DBUniverse.UniverseTemplate.UNIVERSEID, universe.univerid);
+        insert.addValue(DBUniverse.UniverseTemplate.NAME, universe.name);
+        insert.addValue(DBUniverse.UniverseTemplate.DESCRIPTION, universe.description);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(insert.getText());
+            insert.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to insert universe template \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
+    }
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
+    //**********************************************************************
     /**
      * 
      * @param universeid
@@ -24,11 +58,10 @@ public class UniverseQ4 extends UniverseQ3 {
      * @param price
      * @throws Exception 
      */
+    @Deprecated
     protected void updatePubStatus (long universeid, int status, float price) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLUpdate update = new SQLUpdate(DBUniverse.Universe.TABLE);
-        update.addSetColumn(DBUniverse.Universe.PUBLIC, status);
-        update.addSetColumn(DBUniverse.Universe.PRICE, price);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.Universe.UNIVERSEID, "=", universeid));
         sql.addClause(update);
@@ -54,12 +87,13 @@ public class UniverseQ4 extends UniverseQ3 {
      * @return
      * @throws Exception 
      */
+    @Deprecated
     protected int selectPublicCount () throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBUniverse.Universe.TABLE);
         select.addItem("COUNT", "*", "C");
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.Universe.PUBLIC, "!=", 0));
+        //whr.addCondition(new SQLCondition(DBUniverse.Universe.PUBLIC, "!=", 0));
         sql.addClause(select);
         sql.addClause(whr);
         //-------------------------------------------------------
@@ -91,6 +125,7 @@ public class UniverseQ4 extends UniverseQ3 {
      * @return
      * @throws Exception 
      */
+    @Deprecated
     protected Universe[] selectPublicUniverses (String search, int offset) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBUniverse.Universe.TABLE);
@@ -98,11 +133,8 @@ public class UniverseQ4 extends UniverseQ3 {
         select.addItem(DBUniverse.Universe.PROJECTID);
         select.addItem(DBUniverse.Universe.NAME);
         select.addItem(DBUniverse.Universe.DESCRIPTION);
-        select.addItem(DBUniverse.Universe.PUBLIC);
-        select.addItem(DBUniverse.Universe.PRICE);
         //-------------------------------------------------------
         SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.Universe.PUBLIC, "!=", 0));
         if (search != null)
             whr.addCondition(new SQLCondition(DBUniverse.Universe.NAME, "LIKE", "%" + search + "%"));
         //-------------------------------------------------------
@@ -133,8 +165,6 @@ public class UniverseQ4 extends UniverseQ3 {
                 universe.projectid = rs.getLong(DBUniverse.Universe.PROJECTID);
                 universe.name = rs.getString(DBUniverse.Universe.NAME);
                 universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
-                universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
-                universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
                 universes.add(universe);
             }
             return universes.toArray(new Universe[0]);

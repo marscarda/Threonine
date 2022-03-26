@@ -9,9 +9,15 @@ public class DBUniverse {
         static final String NAME = "univname";
         static final String DESCRIPTION = "description";
         static final String WEIGHTED = "weighted";
-        static final String PUBLIC = "public";
-        static final String PRICE = "price";
     }
+    //======================================================================
+    public static class UniverseTemplate {
+        static final String TABLE = "templateuniverse";
+        static final String UNIVERSEID = "universeid";
+        static final String NAME = "name";
+        static final String DESCRIPTION = "description";
+        static final String WEIGHTED = "weighted";
+    }    
     //**********************************************************************
     public static class SubSets {
         static final String TABLE = "subset";
@@ -41,6 +47,10 @@ public class DBUniverse {
         static final String LATITUDE = "latitude";
         static final String LONGITUDE = "longitude";
     }
+    //**********************************************************************
+
+    //**********************************************************************
+    
     //**********************************************************************
 }
 //**************************************************************************

@@ -7,7 +7,7 @@ import methionine.Celaeno;
 import threonine.mapping.MapObject;
 import threonine.mapping.PointLocation;
 //**************************************************************************
-public class UniverseAtlas extends UniverseLock {
+public class UniverseAtlas extends UniverseAtlasTemplate {
     //**********************************************************************
     //UNIVERSES
     //**********************************************************************
@@ -19,10 +19,11 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception 
      */
     public void createUniverse (Universe universe, SubSet subset) throws AppException, Exception {
-        //------------------------------------------------------------------
-        connection = electra.masterConnection();
+        //==================================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
         setDataBase();
-        //------------------------------------------------------------------
+        //==================================================================
         //We create the universe in the database.
         while (true) {
             universe.univerid = Celaeno.getUniqueID();
@@ -30,9 +31,6 @@ public class UniverseAtlas extends UniverseLock {
         }
         //------------------------------------------------------------------
         //We now create the first subset.
-//        subset.name = universe.name;
-//        subset.description = universe.description;
-//        subset.weight = 1;
         subset.universeid = universe.univerid;
         while (true) {
             subset.subsetid = Celaeno.getUniqueID();
@@ -44,6 +42,7 @@ public class UniverseAtlas extends UniverseLock {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    //**********************************************************************
     /**
      * Returns a universe given its ID.
      * @param universeid
@@ -52,14 +51,14 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception UNIVERSENOTFOUND
      */
     public Universe getUniverse (long universeid) throws AppException, Exception {
-        //----------------------------------------------------------
+        //==================================================================
         if (rdmainsrv) connection = electra.mainSrvConnection();
         else connection = electra.nearSrvConnection();
         setDataBase();
-        //----------------------------------------------------------
+        //==================================================================
         Universe universe = this.selectUniverse(universeid);
         return universe;
-        //----------------------------------------------------------
+        //==================================================================
     }
     //**********************************************************************
     /**
@@ -69,11 +68,13 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception 
      */
     public Universe[] getUniverses (long projectid) throws Exception {
-        //----------------------------------------------------
-        connection = electra.slaveConnection();
+        //==================================================================
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
         setDataBase();
+        //==================================================================        
         return this.selectUniverses(projectid);
-        //----------------------------------------------------
+        //==================================================================        
     }
     //**********************************************************************
     /**
@@ -82,6 +83,7 @@ public class UniverseAtlas extends UniverseLock {
      * @param value
      * @throws Exception 
      */
+    @Deprecated
     public void setEditsToPub (long universeid, int value) throws Exception {
         //-------------------------------------------------------------------
         connection = electra.masterConnection();
@@ -112,6 +114,7 @@ public class UniverseAtlas extends UniverseLock {
      * @param universeid
      * @throws Exception 
      */
+    @Deprecated
     public void destroyUniverse (long universeid) throws Exception {
         connection = electra.masterConnection();
         setDataBase();
@@ -139,6 +142,7 @@ public class UniverseAtlas extends UniverseLock {
      * @param price
      * @throws Exception 
      */
+    @Deprecated
     public void setPublicStatus (long universeid, int status, float price) throws Exception {
         //-------------------------------------------------------------------
         connection = electra.masterConnection();
@@ -155,6 +159,7 @@ public class UniverseAtlas extends UniverseLock {
      * @throws AppException
      * @throws Exception 
      */
+    @Deprecated
     public Universe[] getPublicUniverseList (String search) throws AppException, Exception {
         //==========================================================
         if (usemaster) connection = electra.masterConnection();

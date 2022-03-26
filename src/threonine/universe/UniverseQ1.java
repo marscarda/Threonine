@@ -3,6 +3,7 @@ package threonine.universe;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
@@ -14,16 +15,17 @@ import methionine.sql.SQLSelect;
 import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
 //**************************************************************************
-public class UniverseQ1 extends QueryUniverseTabs {
+public class UniverseQ1 extends TabsUniverse {
     //******************************************************************
     //UNIVERSES
     //******************************************************************
     /**
      * Inserts a new item into the universes table
      * @param universe
+     * @throws java.sql.SQLIntegrityConstraintViolationException
      * @throws Exception 
      */
-    protected void insertUniverse (Universe universe) throws Exception {
+    protected void insertUniverse (Universe universe) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBUniverse.Universe.TABLE);
         insert.addValue(DBUniverse.Universe.UNIVERSEID, universe.univerid);
         insert.addValue(DBUniverse.Universe.PROJECTID, universe.projectid);
@@ -35,6 +37,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
             insert.setParameters(st, 1);
             st.execute();            
         }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to insert new universe \n");
             msg.append(e.getMessage());
@@ -42,7 +45,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
         }
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
-        }        
+        }
     }
     //******************************************************************
     /**
@@ -59,8 +62,6 @@ public class UniverseQ1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.PROJECTID);
         select.addItem(DBUniverse.Universe.NAME);
         select.addItem(DBUniverse.Universe.DESCRIPTION);
-        select.addItem(DBUniverse.Universe.PUBLIC);
-        select.addItem(DBUniverse.Universe.PRICE);
         sql.addClause(select);
         SQLWhere whr = new SQLWhere();
         whr.addCondition(new SQLCondition(DBUniverse.Universe.UNIVERSEID, "=", universeid));
@@ -80,8 +81,6 @@ public class UniverseQ1 extends QueryUniverseTabs {
             universe.projectid = rs.getLong(DBUniverse.Universe.PROJECTID);
             universe.name = rs.getString(DBUniverse.Universe.NAME);
             universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
-            universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
-            universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
             return universe;
         }
         catch (SQLException e) {
@@ -108,8 +107,6 @@ public class UniverseQ1 extends QueryUniverseTabs {
         select.addItem(DBUniverse.Universe.PROJECTID);
         select.addItem(DBUniverse.Universe.NAME);
         select.addItem(DBUniverse.Universe.DESCRIPTION);
-        select.addItem(DBUniverse.Universe.PUBLIC);
-        select.addItem(DBUniverse.Universe.PRICE);
         sql.addClause(select);
         if (projectid != 0) {
             SQLWhere whr = new SQLWhere();
@@ -132,8 +129,6 @@ public class UniverseQ1 extends QueryUniverseTabs {
                 universe.projectid = rs.getLong(DBUniverse.Universe.PROJECTID);
                 universe.name = rs.getString(DBUniverse.Universe.NAME);
                 universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
-                universe.ispublic = rs.getInt(DBUniverse.Universe.PUBLIC);
-                universe.price = rs.getFloat(DBUniverse.Universe.PRICE);
                 universes.add(universe);
             }
             return universes.toArray(new Universe[0]);
@@ -216,6 +211,7 @@ public class UniverseQ1 extends QueryUniverseTabs {
      * @param value
      * @throws Exception 
      */
+    @Deprecated
     protected void updateChangeToPub (long universeid, int value) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLUpdate update = new SQLUpdate(DBUniverse.Universe.TABLE);
