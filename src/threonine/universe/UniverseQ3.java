@@ -3,6 +3,7 @@ package threonine.universe;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import methionine.AppException;
@@ -21,11 +22,12 @@ public class UniverseQ3 extends UniverseQ2 {
     /**
      * Inserts a record in the universe map objects table.
      * @param object
+     * @throws java.sql.SQLIntegrityConstraintViolationException
      * @throws Exception 
      */
-    protected void insertMapObject (MapObject object) throws Exception {
+    protected void insertMapFeature (MapObject object) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBUniverse.SubsetMapFeature.TABLE);
-        insert.addValue(DBUniverse.SubsetMapFeature.OBJECTID, object.objectid);
+        insert.addValue(DBUniverse.SubsetMapFeature.FEATUREID, object.objectid);
         insert.addValue(DBUniverse.SubsetMapFeature.SUBSETID, object.recordid);
         insert.addValue(DBUniverse.SubsetMapFeature.OBJTYPE, object.objtype);
         PreparedStatement st = null;
@@ -39,10 +41,10 @@ public class UniverseQ3 extends UniverseQ2 {
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
-        finally {
-            if (st != null) try {st.close();} catch(Exception e){}
-        }        
+        finally { if (st != null) try {st.close();} catch(Exception e){} }
     }
+    //**********************************************************************
+    
     //**********************************************************************
     /**
      * Selects and returns an array of map objects given a subset id
@@ -55,7 +57,7 @@ public class UniverseQ3 extends UniverseQ2 {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBUniverse.SubsetMapFeature.TABLE);
-        select.addItem(DBUniverse.SubsetMapFeature.OBJECTID);
+        select.addItem(DBUniverse.SubsetMapFeature.FEATUREID);
         select.addItem(DBUniverse.SubsetMapFeature.SUBSETID);
         select.addItem(DBUniverse.SubsetMapFeature.OBJTYPE);
         //-------------------------------------------------------
@@ -76,7 +78,7 @@ public class UniverseQ3 extends UniverseQ2 {
             MapObject object;
             while (rs.next()) {
                 object = new MapObject();
-                object.objectid = rs.getLong(DBUniverse.SubsetMapFeature.OBJECTID);
+                object.objectid = rs.getLong(DBUniverse.SubsetMapFeature.FEATUREID);
                 object.recordid = rs.getLong(DBUniverse.SubsetMapFeature.SUBSETID);
                 object.objtype = rs.getInt(DBUniverse.SubsetMapFeature.OBJTYPE);
                 objects.add(object);

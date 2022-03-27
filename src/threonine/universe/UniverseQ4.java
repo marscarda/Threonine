@@ -12,8 +12,9 @@ import methionine.sql.SQLLimit;
 import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
-import methionine.sql.SQLUpdate;
 import methionine.sql.SQLWhere;
+import threonine.mapping.MapObject;
+import threonine.mapping.PointLocation;
 //**************************************************************************
 public class UniverseQ4 extends UniverseQ3 {
     //**********************************************************************
@@ -80,30 +81,47 @@ public class UniverseQ4 extends UniverseQ3 {
         finally { if (st != null) try {st.close();} catch(Exception e){} }
     }
     //**********************************************************************
+    //TEMPLATE MAP FEATURE
     //**********************************************************************
-    /**
-     * 
-     * @param universeid
-     * @param status
-     * @param price
-     * @throws Exception 
-     */
-    @Deprecated
-    protected void updatePubStatus (long universeid, int status, float price) throws Exception {
-        SQLQueryCmd sql = new SQLQueryCmd();
-        SQLUpdate update = new SQLUpdate(DBUniverse.Universe.TABLE);
-        SQLWhere whr = new SQLWhere();
-        whr.addCondition(new SQLCondition(DBUniverse.Universe.UNIVERSEID, "=", universeid));
-        sql.addClause(update);
-        sql.addClause(whr);
+    protected void insertTemplateFeature (MapObject feature) throws SQLIntegrityConstraintViolationException, Exception {
+        SQLInsert insert = new SQLInsert(DBUniverse.SubsetMapFeatureTemplate.TABLE);
+        insert.addValue(DBUniverse.SubsetMapFeatureTemplate.FEATUREID, feature.objectid);
+        insert.addValue(DBUniverse.SubsetMapFeatureTemplate.SUBSETID, feature.recordid);
+        insert.addValue(DBUniverse.SubsetMapFeatureTemplate.FEATURETYPE, feature.objtype);
         PreparedStatement st = null;
         try {
-            st = connection.prepareStatement(sql.getText());
-            sql.setParameters(st, 1);
+            st = connection.prepareStatement(insert.getText());
+            insert.setParameters(st, 1);
             st.execute();            
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to update project public status\n");
+            StringBuilder msg = new StringBuilder("Failed to insert map feature (Universe template) mantargan\n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally { if (st != null) try {st.close();} catch(Exception e){} }        
+    }
+    //**********************************************************************
+    /**
+     * Inserts a new map point into de DB.
+     * @param point
+     * @throws Exception 
+     */
+    protected void insertTemplatePointLocation (PointLocation point) throws Exception {
+        SQLInsert insert = new SQLInsert(DBUniverse.TemplateLocationPoints.TABLE);
+        insert.addValue(DBUniverse.TemplateLocationPoints.SUBSETID, point.recordid);
+        insert.addValue(DBUniverse.TemplateLocationPoints.FEATUREID, point.objectid);
+        insert.addValue(DBUniverse.TemplateLocationPoints.POINTINDEX, point.ptindex);
+        insert.addValue(DBUniverse.TemplateLocationPoints.LATITUDE, point.latitude);
+        insert.addValue(DBUniverse.TemplateLocationPoints.LONGITUDE, point.longitude);
+        PreparedStatement st = null;
+        try {
+            st = connection.prepareStatement(insert.getText());
+            insert.setParameters(st, 1);
+            st.execute();            
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to insert location point (Template)\n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
@@ -111,6 +129,8 @@ public class UniverseQ4 extends UniverseQ3 {
             if (st != null) try {st.close();} catch(Exception e){}
         }        
     }
+    //**********************************************************************
+    //**********************************************************************
     //**********************************************************************
     /**
      * 

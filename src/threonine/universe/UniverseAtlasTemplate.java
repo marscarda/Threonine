@@ -2,10 +2,12 @@ package threonine.universe;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
 import methionine.Celaeno;
+import threonine.mapping.MapObject;
+import threonine.mapping.PointLocation;
 //**************************************************************************
 public class UniverseAtlasTemplate extends UniverseLock {
     //**********************************************************************
-    public void addTemplate (Universe universe) throws Exception {
+    public void addTemplateUniverse (Universe universe) throws Exception {
         //==================================================================
         if (wrmainsrv) connection = electra.mainSrvConnection();
         else connection = electra.nearSrvConnection();
@@ -39,6 +41,38 @@ public class UniverseAtlasTemplate extends UniverseLock {
         //==================================================================
     }
     //**********************************************************************
+    /**
+     * 
+     * @param subsetid
+     * @param points
+     * @throws Exception 
+     */
+    public void templateAddFeature (long subsetid, PointLocation[] points) throws Exception {
+        //==================================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //==================================================================
+        MapObject feature = new MapObject();
+        feature.recordid = subsetid;
+        //------------------------------------------------------------------
+        while (true) {
+            try {
+                feature.objectid = Celaeno.getUniqueID();
+                this.insertTemplateFeature(feature);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }
+        //------------------------------------------------------------------
+        //We insert the points for the object
+        for (PointLocation point : points) {
+            point.recordid = feature.recordid;
+            point.objectid = feature.objectid;
+            this.insertTemplatePointLocation(point);
+        }
+        //------------------------------------------------------------------
+    }
     //**********************************************************************
 }
 //**************************************************************************

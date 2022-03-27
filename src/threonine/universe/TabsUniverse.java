@@ -23,8 +23,10 @@ public class TabsUniverse extends Alcyone {
         if (!checkTableExists(DBUniverse.UniverseTemplate.TABLE, tables)) createTemplateUniverse();
         if (!checkTableExists(DBUniverse.SubSets.TABLE, tables)) createSubSets();
         if (!checkTableExists(DBUniverse.SubsetTemplate.TABLE, tables)) createTemplateSubSets();
-        if (!checkTableExists(DBUniverse.SubsetMapFeature.TABLE, tables)) createMapObject();
+        if (!checkTableExists(DBUniverse.SubsetMapFeature.TABLE, tables)) createMapFeature();
+        if (!checkTableExists(DBUniverse.SubsetMapFeatureTemplate.TABLE, tables)) createTemplateMapFeature();
         if (!checkTableExists(DBUniverse.LocationPoints.TABLE, tables)) createLocationPoints();
+        if (!checkTableExists(DBUniverse.TemplateLocationPoints.TABLE, tables)) createTemplateLocationPoints();
         //===================================================================
     }
     //***********************************************************************
@@ -147,14 +149,14 @@ public class TabsUniverse extends Alcyone {
         //-------------------------------------------------------------------
     }
     //***********************************************************************
-    private void createMapObject () throws Exception {
+    private void createMapFeature () throws Exception {
         //-------------------------------------------------------------------
         SQLCreateTable create = new SQLCreateTable(DBUniverse.SubsetMapFeature.TABLE);
         create.setEngine(MySQLEngine.INNODB);
-        create.addField(DBUniverse.SubsetMapFeature.OBJECTID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetMapFeature.FEATUREID, "BIGINT NOT NULL");
         create.addField(DBUniverse.SubsetMapFeature.SUBSETID, "BIGINT NOT NULL");
         create.addField(DBUniverse.SubsetMapFeature.OBJTYPE, "INTEGER NOT NULL");
-        create.addUnique(DBUniverse.SubsetMapFeature.OBJECTID);
+        create.addUnique(DBUniverse.SubsetMapFeature.FEATUREID);
         //-------------------------------------------------------------------
         PreparedStatement st = null;
         this.setDataBase();
@@ -165,6 +167,32 @@ public class TabsUniverse extends Alcyone {
         catch (SQLException e) {
             StringBuilder err = new StringBuilder("Failed to create ");
             err.append(DBUniverse.SubsetMapFeature.TABLE);
+            err.append(" table\n");
+            err.append(e.getMessage());
+            throw new Exception(err.toString());
+        }
+        finally { try { if (st != null) st.close(); } catch (Exception e) {} }
+        //-------------------------------------------------------------------
+    }
+    //***********************************************************************
+    private void createTemplateMapFeature () throws Exception {
+        //-------------------------------------------------------------------
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.SubsetMapFeatureTemplate.TABLE);
+        create.setEngine(MySQLEngine.INNODB);
+        create.addField(DBUniverse.SubsetMapFeatureTemplate.FEATUREID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetMapFeatureTemplate.SUBSETID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.SubsetMapFeatureTemplate.FEATURETYPE, "INTEGER NOT NULL");
+        create.addUnique(DBUniverse.SubsetMapFeatureTemplate.FEATUREID);
+        //-------------------------------------------------------------------
+        PreparedStatement st = null;
+        this.setDataBase();
+        try {
+            st = connection.prepareStatement(create.getText());
+            st.execute();
+        }
+        catch (SQLException e) {
+            StringBuilder err = new StringBuilder("Failed to create ");
+            err.append(DBUniverse.SubsetMapFeatureTemplate.TABLE);
             err.append(" table\n");
             err.append(e.getMessage());
             throw new Exception(err.toString());
@@ -198,7 +226,34 @@ public class TabsUniverse extends Alcyone {
         }
         finally { try { if (st != null) st.close(); } catch (Exception e) {} }
         //-------------------------------------------------------------------
-    }    
+    }
+    //***********************************************************************
+    private void createTemplateLocationPoints () throws Exception {
+        //-------------------------------------------------------------------
+        SQLCreateTable create = new SQLCreateTable(DBUniverse.TemplateLocationPoints.TABLE);
+        create.setEngine(MySQLEngine.INNODB);
+        create.addField(DBUniverse.TemplateLocationPoints.SUBSETID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.TemplateLocationPoints.FEATUREID, "BIGINT NOT NULL");
+        create.addField(DBUniverse.TemplateLocationPoints.POINTINDEX, "INTEGER NOT NULL");
+        create.addField(DBUniverse.TemplateLocationPoints.LATITUDE, "FLOAT (10,6) NOT NULL DEFAULT 0");
+        create.addField(DBUniverse.TemplateLocationPoints.LONGITUDE, "FLOAT (10,6) NOT NULL DEFAULT 0");
+        //-------------------------------------------------------------------
+        PreparedStatement st = null;
+        this.setDataBase();
+        try {
+            st = connection.prepareStatement(create.getText());
+            st.execute();
+        }
+        catch (SQLException e) {
+            StringBuilder err = new StringBuilder("Failed to create ");
+            err.append(DBUniverse.TemplateLocationPoints.TABLE);
+            err.append(" table\n");
+            err.append(e.getMessage());
+            throw new Exception(err.toString());
+        }
+        finally { try { if (st != null) st.close(); } catch (Exception e) {} }
+        //-------------------------------------------------------------------
+    }
     //***********************************************************************
 }
 //***************************************************************************

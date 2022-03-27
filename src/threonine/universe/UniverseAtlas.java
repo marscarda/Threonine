@@ -1,7 +1,6 @@
 package threonine.universe;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Random;
 import methionine.AppException;
 import methionine.Celaeno;
 import threonine.mapping.MapObject;
@@ -78,22 +77,6 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
     }
     //**********************************************************************
     /**
-     * 
-     * @param universeid
-     * @param value
-     * @throws Exception 
-     */
-    @Deprecated
-    public void setEditsToPub (long universeid, int value) throws Exception {
-        //-------------------------------------------------------------------
-        connection = electra.masterConnection();
-        this.setDataBase();
-        //-------------------------------------------------------------------
-        this.updateChangeToPub(universeid, value);
-        //-------------------------------------------------------------------
-    }
-    //**********************************************************************
-    /**
      * Updates a universe given its ID.
      * @param universeid
      * @param universe
@@ -107,74 +90,6 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
         //-------------------------------------------------------------------
         super.updateUniverse(universeid, universe);
         //-------------------------------------------------------------------
-    }
-    //**********************************************************************
-    /**
-     * Destroy a universe and all it children subsets
-     * @param universeid
-     * @throws Exception 
-     */
-    @Deprecated
-    public void destroyUniverse (long universeid) throws Exception {
-        connection = electra.masterConnection();
-        setDataBase();
-        //-------------------------------------------------------------------
-        this.startTransaction();
-        try {
-            this.deleteUniverse(universeid);
-            this.deleteSubsetsByUniverse(universeid);
-        }
-        catch (Exception e) {
-            this.rollbackTransaction();
-            throw e;
-        }
-        //-------------------------------------------------------------------
-        this.commitTransaction();
-        //-------------------------------------------------------------------
-    }
-    //**********************************************************************
-    //** PUBLIC **
-    //**********************************************************************
-    /**
-     * Sets the public status for a given universe.
-     * @param universeid
-     * @param status
-     * @param price
-     * @throws Exception 
-     */
-    @Deprecated
-    public void setPublicStatus (long universeid, int status, float price) throws Exception {
-        //-------------------------------------------------------------------
-        connection = electra.masterConnection();
-        setDataBase();
-        //-------------------------------------------------------------------
-        this.updatePubStatus(universeid, status, price);
-        //-------------------------------------------------------------------
-    }
-    //**********************************************************************
-    /**
-     * 
-     * @param search
-     * @return
-     * @throws AppException
-     * @throws Exception 
-     */
-    @Deprecated
-    public Universe[] getPublicUniverseList (String search) throws AppException, Exception {
-        //==========================================================
-        if (usemaster) connection = electra.masterConnection();
-        else connection = electra.slaveConnection();
-        setDataBase();
-        //==========================================================
-        int publiccount = this.selectPublicCount();
-        int offset = 0;
-        if (publiccount > PUBLICCOUNT) {
-            Random rand = new Random();
-            offset = rand.nextInt(publiccount - PUBLICCOUNT);
-        }
-        //==========================================================
-        return this.selectPublicUniverses(search, offset);
-        //==========================================================
     }
     //**********************************************************************
     //** SUBSETS **
@@ -207,7 +122,7 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
                 break;
             }
             catch (SQLIntegrityConstraintViolationException e) {}
-        }        
+        }
         //-------------------------------------------------------------------
     }
     //**********************************************************************
@@ -296,7 +211,7 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
     //**********************************************************************
     //*** MAP PART ***
     //**********************************************************************
-    public void addMapObject (long subsetid, PointLocation[] points) throws Exception {
+    public void addMapFeature (long subsetid, PointLocation[] points) throws Exception {
         //==================================================================
         if (wrmainsrv) connection = electra.mainSrvConnection();
         else connection = electra.nearSrvConnection();
@@ -306,20 +221,22 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
         if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subsetid) == 0)
             throw new AppException("Subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
         //-------------------------------------------------------------------
-        MapObject object = new MapObject();
-        object.recordid = subsetid;
-        while(true) {
-            object.objectid = Celaeno.getUniqueID();
-            if (checkValueCount(DBUniverse.SubsetMapFeature.TABLE, DBUniverse.SubsetMapFeature.OBJECTID, object.objectid) == 0) break;
+        MapObject feature = new MapObject();
+        feature.recordid = subsetid;
+        //-------------------------------------------------------------------
+        while (true) {
+            try {
+                feature.recordid = Celaeno.getUniqueID();
+                this.insertMapFeature(feature);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
         }
-        //-------------------------------------------------------------------
-        //We insert the map object.
-        this.insertMapObject(object);
-        //-------------------------------------------------------------------
+        //-------------------------------------------------------------------        
         //We insert the points for the object
         for (PointLocation point : points) {
-            point.recordid = object.recordid;
-            point.objectid = object.objectid;
+            point.recordid = feature.recordid;
+            point.objectid = feature.objectid;
             this.insertPointLocation(point);
         }
         //-------------------------------------------------------------------

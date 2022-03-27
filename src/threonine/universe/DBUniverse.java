@@ -31,7 +31,7 @@ public class DBUniverse {
         static final String SUBSETCOST = "subsetcost";
         static final String MAPCOST = "mapcost";
     }
-    //**********************************************************************
+    //======================================================================
     public static class SubsetTemplate {
         static final String TABLE = "templatesubset";
         static final String SUBSETID = "subsetid";
@@ -45,15 +45,31 @@ public class DBUniverse {
     //**********************************************************************
     public static class SubsetMapFeature {
         static final String TABLE = "subsetmapfeature";
-        static final String OBJECTID = "featureid";
+        static final String FEATUREID = "featureid";
         static final String SUBSETID = "subsetid";
         static final String OBJTYPE = "featuretype";
     }
+    //======================================================================
+    public static class SubsetMapFeatureTemplate {
+        static final String TABLE = "templatemapfeature";
+        static final String FEATUREID = "featureid";
+        static final String SUBSETID = "subsetid";
+        static final String FEATURETYPE = "featuretype";
+    }    
     //**********************************************************************
     public static class LocationPoints {
         static final String TABLE = "ulocationpoint";
         static final String SUBSETID = "subsetid";
         static final String OBJECTID = "objectid";
+        static final String POINTINDEX = "pointindex";
+        static final String LATITUDE = "latitude";
+        static final String LONGITUDE = "longitude";
+    }
+    //======================================================================
+    public static class TemplateLocationPoints {
+        static final String TABLE = "templatelocationpoint";
+        static final String SUBSETID = "subsetid";
+        static final String FEATUREID = "featureid";
         static final String POINTINDEX = "pointindex";
         static final String LATITUDE = "latitude";
         static final String LONGITUDE = "longitude";
