@@ -15,8 +15,6 @@ import methionine.sql.SQLWhere;
 //**************************************************************************
 public class MappingQ4 extends MappingQ3 {
     //**********************************************************************
-    protected int PUBLICCOUNT = 15;
-    //**********************************************************************
     /**
      * 
      * @return
@@ -60,6 +58,9 @@ public class MappingQ4 extends MappingQ3 {
      * @return
      * @throws Exception 
      */
+    
+    
+    /*
     protected MapFolder[] selectPublicFolders (String search, int offset) throws Exception {
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.FolderTree.TABLE);
@@ -119,6 +120,7 @@ public class MappingQ4 extends MappingQ3 {
         }
         //-------------------------------------------------------
     }
+    */
     //**********************************************************************
 }
 //**************************************************************************

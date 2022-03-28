@@ -305,6 +305,8 @@ public class MapCenter {
      * @throws Exception
      * @deprecated Use the class ExcMapping in Lycine
      */
+    
+    /*
     @Deprecated
     public MapFolder[] searchFolders (String searchkey) throws Exception {
         //-------------------------------------------------
@@ -322,6 +324,7 @@ public class MapCenter {
         return folders;
         //-------------------------------------------------
     }
+    */
     //**********************************************************************
     public MapFolder createFolderUsage (FolderUsage usage, long userid) throws AppException, Exception {
         //------------------------------------------------------------------

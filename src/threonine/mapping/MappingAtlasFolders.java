@@ -183,6 +183,8 @@ public class MappingAtlasFolders extends LockMap {
      * @return
      * @throws Exception 
      */
+    
+    /*
     public MapFolder[] getPublicList (String searchkey) throws Exception {
         //------------------------------------------------------------------
         if (usemaster) connection = electra.masterConnection();
@@ -198,6 +200,7 @@ public class MappingAtlasFolders extends LockMap {
         //==========================================================
         return this.selectPublicFolders(searchkey, offset);
     }
+    */
     //**********************************************************************
     /**
      * Returns the list of folders used in a given project.

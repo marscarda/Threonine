@@ -1,6 +1,7 @@
 package threonine.universe;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Random;
 import methionine.Celaeno;
 import threonine.mapping.MapObject;
 import threonine.mapping.PointLocation;
@@ -72,6 +73,30 @@ public class UniverseAtlasTemplate extends UniverseLock {
             this.insertTemplatePointLocation(point);
         }
         //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Returns a list of universe templates.
+     * @return
+     * @throws Exception 
+     */
+    public Universe[] getTemplates () throws Exception {
+        
+        //------------------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //------------------------------------------------------------------
+        int templcount = this.selectTemplateCount();
+        int offset = 0;
+        //------------------------------------------------------------------
+        if (templcount > PUBLICCOUNT) {
+            Random rand = new Random();
+            offset = rand.nextInt(templcount - PUBLICCOUNT);
+        }
+        //------------------------------------------------------------------
+        return selectUniverseTemplates(offset);
+        //------------------------------------------------------------------        
     }
     //**********************************************************************
 }

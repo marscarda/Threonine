@@ -130,35 +130,27 @@ public class UniverseQ4 extends UniverseQ3 {
         }        
     }
     //**********************************************************************
-    //**********************************************************************
-    //**********************************************************************
     /**
-     * 
+     * Returns the count of univese templates
      * @return
      * @throws Exception 
      */
-    @Deprecated
-    protected int selectPublicCount () throws Exception {
-        SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBUniverse.Universe.TABLE);
+    protected int selectTemplateCount () throws Exception {
+        SQLSelect select = new SQLSelect(DBUniverse.UniverseTemplate.TABLE);
         select.addItem("COUNT", "*", "C");
-        SQLWhere whr = new SQLWhere();
-        //whr.addCondition(new SQLCondition(DBUniverse.Universe.PUBLIC, "!=", 0));
-        sql.addClause(select);
-        sql.addClause(whr);
         //-------------------------------------------------------
         PreparedStatement st = null;
         ResultSet rs = null;
         //-------------------------------------------------------
         try {
-            st = connection.prepareStatement(sql.getText());
-            sql.setParameters(st, 1);
+            st = connection.prepareStatement(select.getText());
+            select.setParameters(st, 1);
             rs = st.executeQuery();
             rs.next();
             return rs.getInt(1);
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to select public universe count\n");
+            StringBuilder msg = new StringBuilder("Failed to select universe template count\n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
@@ -168,37 +160,22 @@ public class UniverseQ4 extends UniverseQ3 {
         }
     }
     //**********************************************************************
-    /**
-     * Selects a list of public universes.
-     * @param search
-     * @param offset
-     * @return
-     * @throws Exception 
-     */
-    @Deprecated
-    protected Universe[] selectPublicUniverses (String search, int offset) throws Exception {
-        SQLQueryCmd sql = new SQLQueryCmd();
-        SQLSelect select = new SQLSelect(DBUniverse.Universe.TABLE);
-        select.addItem(DBUniverse.Universe.UNIVERSEID);
-        select.addItem(DBUniverse.Universe.PROJECTID);
-        select.addItem(DBUniverse.Universe.NAME);
-        select.addItem(DBUniverse.Universe.DESCRIPTION);
+    protected Universe[] selectUniverseTemplates (int offset) throws Exception {
         //-------------------------------------------------------
-        SQLWhere whr = new SQLWhere();
-        if (search != null)
-            whr.addCondition(new SQLCondition(DBUniverse.Universe.NAME, "LIKE", "%" + search + "%"));
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBUniverse.UniverseTemplate.TABLE);
+        select.addItem(DBUniverse.UniverseTemplate.UNIVERSEID);
+        select.addItem(DBUniverse.UniverseTemplate.NAME);
+        select.addItem(DBUniverse.UniverseTemplate.DESCRIPTION);
         //-------------------------------------------------------
         SQLOrderBy order = new SQLOrderBy();
-        order.addColumn(DBUniverse.Universe.NAME);
+        order.addColumn(DBUniverse.UniverseTemplate.NAME);
+        //-------------------------------------------------------
+        SQLLimit limit = new SQLLimit(offset, PUBLICCOUNT);
         //-------------------------------------------------------
         sql.addClause(select);
-        sql.addClause(whr);
         sql.addClause(order);
-        //-------------------------------------------------------
-        if (search == null) {
-            SQLLimit limit = new SQLLimit(offset, PUBLICCOUNT);
-            sql.addClause(limit);
-        }
+        sql.addClause(limit);
         //-------------------------------------------------------
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -211,23 +188,23 @@ public class UniverseQ4 extends UniverseQ3 {
             Universe universe;
             while (rs.next()) {
                 universe = new Universe();
-                universe.univerid = rs.getLong(DBUniverse.Universe.UNIVERSEID);
-                universe.projectid = rs.getLong(DBUniverse.Universe.PROJECTID);
-                universe.name = rs.getString(DBUniverse.Universe.NAME);
-                universe.description = rs.getString(DBUniverse.Universe.DESCRIPTION);
+                universe.univerid = rs.getLong(DBUniverse.UniverseTemplate.UNIVERSEID);
+                universe.name = rs.getString(DBUniverse.UniverseTemplate.NAME);
+                universe.description = rs.getString(DBUniverse.UniverseTemplate.DESCRIPTION);
                 universes.add(universe);
             }
             return universes.toArray(new Universe[0]);
         }
         catch (SQLException e) {
-            StringBuilder msg = new StringBuilder("Failed to select universe \n");
+            StringBuilder msg = new StringBuilder("Failed to select universe templates \n");
             msg.append(e.getMessage());
             throw new Exception(msg.toString());
         }
         finally {
             if (st != null) try {st.close();} catch(Exception e){}
             if (rs != null) try {rs.close();} catch(Exception e){}
-        }        
+        }
+        //-------------------------------------------------------
     }
     //**********************************************************************
 }
