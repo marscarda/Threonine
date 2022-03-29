@@ -236,7 +236,7 @@ public class MappingAttlas extends MappingAtlasFolders {
         if (checkValueCount(DBMaps.MapRecords.TABLE, DBMaps.MapRecords.RECORDID, recordid) == 0)
             throw new AppException("Map Record not found", MapErrorCodes.MAPRECORDNOTFOUND);
         //=============================================================
-        MapObject object = new MapObject();
+        MapFeature object = new MapFeature();
         object.recordid = recordid;
         object.cost = cost;
         while (true) {
@@ -334,16 +334,16 @@ public class MappingAttlas extends MappingAtlasFolders {
      * @return
      * @throws Exception 
      */
-    public MapObject[] getObjectsByRecord (long recordid, boolean fillpoints) throws Exception {
+    public MapFeature[] getObjectsByRecord (long recordid, boolean fillpoints) throws Exception {
         //------------------------------------------------------------------
         if (usemaster) connection = electra.masterConnection();
         else connection = electra.slaveConnection();
         setDataBase();
         //------------------------------------------------------------------
-        MapObject[] objects = this.selectMapObjects(recordid);
+        MapFeature[] objects = this.selectMapObjects(recordid);
         if (!fillpoints) return objects;
         //------------------------------------------------------------------
-        for (MapObject object : objects)
+        for (MapFeature object : objects)
             object.points = this.selectPointLocations(object.objectid);
         //------------------------------------------------------------------
         return objects;

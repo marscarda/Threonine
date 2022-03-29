@@ -2,8 +2,9 @@ package threonine.universe;
 //**************************************************************************
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Random;
+import methionine.AppException;
 import methionine.Celaeno;
-import threonine.mapping.MapObject;
+import threonine.mapping.MapFeature;
 import threonine.mapping.PointLocation;
 //**************************************************************************
 public class UniverseAtlasTemplate extends UniverseLock {
@@ -54,7 +55,7 @@ public class UniverseAtlasTemplate extends UniverseLock {
         else connection = electra.nearSrvConnection();
         setDataBase();
         //==================================================================
-        MapObject feature = new MapObject();
+        MapFeature feature = new MapFeature();
         feature.recordid = subsetid;
         //------------------------------------------------------------------
         while (true) {
@@ -74,6 +75,24 @@ public class UniverseAtlasTemplate extends UniverseLock {
         }
         //------------------------------------------------------------------
     }
+    //**********************************************************************
+    /**
+     * Returns a universe given its ID.
+     * @param universeid
+     * @return
+     * @throws AppException
+     * @throws Exception UNIVERSENOTFOUND
+     */
+    public Universe getTemplate (long universeid) throws AppException, Exception {
+        //==================================================================
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //==================================================================
+        Universe universe = this.selectUniverseTemplate(universeid);
+        return universe;
+        //==================================================================
+    }    
     //**********************************************************************
     /**
      * Returns a list of universe templates.

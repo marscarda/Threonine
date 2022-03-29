@@ -194,7 +194,7 @@ public class MappingQ2 extends MappingQ1 {
      * @throws java.sql.SQLIntegrityConstraintViolationException
      * @throws Exception 
      */
-    protected void insertMapObject (MapObject object) throws SQLIntegrityConstraintViolationException, Exception {
+    protected void insertMapObject (MapFeature object) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBMaps.MapFeature.TABLE);
         insert.addValue(DBMaps.MapFeature.FEATUREID, object.objectid);
         insert.addValue(DBMaps.MapFeature.RECORDID, object.recordid);
@@ -302,13 +302,13 @@ public class MappingQ2 extends MappingQ1 {
     }
     //**********************************************************************
     /**
-     * Selects a MapObject given its ID.
+     * Selects a MapFeature given its ID.
      * @param objectid
      * @return
      * @throws AppException
      * @throws Exception 
      */
-    protected MapObject selectMapObject (long objectid) throws AppException, Exception {
+    protected MapFeature selectMapObject (long objectid) throws AppException, Exception {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapFeature.TABLE);
@@ -331,7 +331,7 @@ public class MappingQ2 extends MappingQ1 {
             rs = st.executeQuery();
             if (!rs.next())
                 throw new AppException("Map Object not found", MapErrorCodes.MAPOBJECTNOTFOUND);
-            MapObject object = new MapObject();
+            MapFeature object = new MapFeature();
             object.objectid = rs.getLong(DBMaps.MapFeature.FEATUREID);
             object.recordid = rs.getLong(DBMaps.MapFeature.RECORDID);
             object.objtype = rs.getInt(DBMaps.MapFeature.OBJTYPE);
@@ -356,7 +356,7 @@ public class MappingQ2 extends MappingQ1 {
      * @throws AppException
      * @throws Exception 
      */
-    protected MapObject[] selectMapObjects (long recordid) throws AppException, Exception {
+    protected MapFeature[] selectMapObjects (long recordid) throws AppException, Exception {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBMaps.MapFeature.TABLE);
@@ -378,17 +378,17 @@ public class MappingQ2 extends MappingQ1 {
             st = connection.prepareStatement(sql.getText());
             sql.setParameters(st, 1);
             rs = st.executeQuery();
-            List<MapObject> objects = new ArrayList<>();
-            MapObject object;
+            List<MapFeature> objects = new ArrayList<>();
+            MapFeature object;
             while (rs.next()) {
-                object = new MapObject();
+                object = new MapFeature();
                 object.objectid = rs.getLong(DBMaps.MapFeature.FEATUREID);
                 object.recordid = rs.getLong(DBMaps.MapFeature.RECORDID);
                 object.objtype = rs.getInt(DBMaps.MapFeature.OBJTYPE);
                 object.cost = rs.getFloat(DBMaps.MapFeature.COST);
                 objects.add(object);
             }            
-            return objects.toArray(new MapObject[0]);
+            return objects.toArray(new MapFeature[0]);
         }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to select objects map record. Code: vtefyztrfh\n");

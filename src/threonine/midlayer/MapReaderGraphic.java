@@ -2,7 +2,7 @@ package threonine.midlayer;
 //**************************************************************************
 import methionine.AppException;
 import methionine.project.ProjectLambda;
-import threonine.mapping.MapObject;
+import threonine.mapping.MapFeature;
 import threonine.mapping.MapRecord;
 import threonine.mapping.MappingAttlas;
 import threonine.universe.SubSet;
@@ -123,7 +123,7 @@ public class MapReaderGraphic {
     public MapRecordDraw subsetGetRecord (long subsetid) throws AppException, Exception {
         MapRecordDraw recordg = new MapRecordDraw();
         recordg.relationid = subsetid;
-        MapObject[] mapobjs = universerlambda.getObjectsBySubset(subsetid, true);
+        MapFeature[] mapobjs = universerlambda.getObjectsBySubset(subsetid, true);
         recordg.setObjects(mapobjs);
         return recordg;
     }

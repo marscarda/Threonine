@@ -1,6 +1,6 @@
 package threonine.midlayer;
 //**************************************************************************
-import threonine.mapping.MapObject;
+import threonine.mapping.MapFeature;
 //**************************************************************************
 public class MapRecordDraw {
     //**********************************************************************
@@ -10,7 +10,7 @@ public class MapRecordDraw {
     //**********************************************************************
     public void setObjects (MapObjectGraphic[] objects) { mapobjects = objects; }
     //======================================================================
-    public void setObjects (MapObject[] objects) {
+    public void setObjects (MapFeature[] objects) {
         objcount = objects.length;
         mapobjects = new MapObjectGraphic[objcount];
         for (int n = 0; n < objcount; n++) {

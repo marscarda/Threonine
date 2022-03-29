@@ -1,6 +1,6 @@
 package threonine.mapping;
 //*************************************************************************
-public class MapObject {
+public class MapFeature {
     //*********************************************************
     public long objectid = 0;
     public long recordid = 0;

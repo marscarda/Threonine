@@ -14,7 +14,7 @@ import methionine.sql.SQLOrderBy;
 import methionine.sql.SQLQueryCmd;
 import methionine.sql.SQLSelect;
 import methionine.sql.SQLWhere;
-import threonine.mapping.MapObject;
+import threonine.mapping.MapFeature;
 import threonine.mapping.PointLocation;
 //**************************************************************************
 public class UniverseQ3 extends UniverseQ2 {
@@ -25,7 +25,7 @@ public class UniverseQ3 extends UniverseQ2 {
      * @throws java.sql.SQLIntegrityConstraintViolationException
      * @throws Exception 
      */
-    protected void insertMapFeature (MapObject object) throws SQLIntegrityConstraintViolationException, Exception {
+    protected void insertMapFeature (MapFeature object) throws SQLIntegrityConstraintViolationException, Exception {
         SQLInsert insert = new SQLInsert(DBUniverse.SubsetMapFeature.TABLE);
         insert.addValue(DBUniverse.SubsetMapFeature.FEATUREID, object.objectid);
         insert.addValue(DBUniverse.SubsetMapFeature.SUBSETID, object.recordid);
@@ -53,7 +53,7 @@ public class UniverseQ3 extends UniverseQ2 {
      * @throws AppException
      * @throws Exception 
      */
-    protected MapObject[] selectMapObjects (long subsetid) throws AppException, Exception {
+    protected MapFeature[] selectMapObjects (long subsetid) throws AppException, Exception {
         //-------------------------------------------------------
         SQLQueryCmd sql = new SQLQueryCmd();
         SQLSelect select = new SQLSelect(DBUniverse.SubsetMapFeature.TABLE);
@@ -74,16 +74,16 @@ public class UniverseQ3 extends UniverseQ2 {
             st = connection.prepareStatement(sql.getText());
             sql.setParameters(st, 1);
             rs = st.executeQuery();
-            List<MapObject> objects = new ArrayList<>();
-            MapObject object;
+            List<MapFeature> objects = new ArrayList<>();
+            MapFeature object;
             while (rs.next()) {
-                object = new MapObject();
+                object = new MapFeature();
                 object.objectid = rs.getLong(DBUniverse.SubsetMapFeature.FEATUREID);
                 object.recordid = rs.getLong(DBUniverse.SubsetMapFeature.SUBSETID);
                 object.objtype = rs.getInt(DBUniverse.SubsetMapFeature.OBJTYPE);
                 objects.add(object);
             }            
-            return objects.toArray(new MapObject[0]);
+            return objects.toArray(new MapFeature[0]);
         }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to select map objects for subset. Code: vrbcqwdrfh\n");

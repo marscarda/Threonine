@@ -3,7 +3,7 @@ package threonine.universe;
 import java.sql.SQLIntegrityConstraintViolationException;
 import methionine.AppException;
 import methionine.Celaeno;
-import threonine.mapping.MapObject;
+import threonine.mapping.MapFeature;
 import threonine.mapping.PointLocation;
 //**************************************************************************
 public class UniverseAtlas extends UniverseAtlasTemplate {
@@ -55,7 +55,7 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
         else connection = electra.nearSrvConnection();
         setDataBase();
         //==================================================================
-        Universe universe = this.selectUniverse(universeid);
+        Universe universe = this.selectUniverseTemplate(universeid);
         return universe;
         //==================================================================
     }
@@ -221,7 +221,7 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
         if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subsetid) == 0)
             throw new AppException("Subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
         //-------------------------------------------------------------------
-        MapObject feature = new MapObject();
+        MapFeature feature = new MapFeature();
         feature.recordid = subsetid;
         //-------------------------------------------------------------------
         while (true) {
@@ -257,16 +257,16 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
         //-------------------------------------------------------------------
     }
     //**********************************************************************
-    public MapObject[] getObjectsBySubset (long recordid, boolean fillpoints) throws Exception {
+    public MapFeature[] getObjectsBySubset (long recordid, boolean fillpoints) throws Exception {
         //----------------------------------------------------------
         if (rdmainsrv) connection = electra.mainSrvConnection();
         else connection = electra.nearSrvConnection();
         setDataBase();
         //----------------------------------------------------------        
-        MapObject[] objects = this.selectMapObjects(recordid);
+        MapFeature[] objects = this.selectMapObjects(recordid);
         if (!fillpoints) return objects;
         //------------------------------------------------------------------
-        for (MapObject object : objects)
+        for (MapFeature object : objects)
             object.points = this.selectPointLocations(object.objectid);
         //------------------------------------------------------------------
         return objects;
