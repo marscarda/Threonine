@@ -55,7 +55,7 @@ public class UniverseAtlas extends UniverseAtlasTemplate {
         else connection = electra.nearSrvConnection();
         setDataBase();
         //==================================================================
-        Universe universe = this.selectUniverseTemplate(universeid);
+        Universe universe = this.selectUniverse(universeid);
         return universe;
         //==================================================================
     }
