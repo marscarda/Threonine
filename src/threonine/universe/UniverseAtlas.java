@@ -6,7 +6,7 @@ import methionine.Celaeno;
 import threonine.mapping.MapFeature;
 import threonine.mapping.PointLocation;
 //**************************************************************************
-public class UniverseAtlas extends UniverseAtlasTemplate {
+public class UniverseAtlas extends UniverseLock {
     //**********************************************************************
     //UNIVERSES
     //**********************************************************************
