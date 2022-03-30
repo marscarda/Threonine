@@ -139,5 +139,18 @@ public class TemplateAtlas extends TemplateLock {
         return subset;
     }    
     //**********************************************************************
+    
+    public SubSet[] getSubsets (long universid, long parentid) throws Exception {
+        //----------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //----------------------------------------------------------        
+        SubSet[] subsets = this.selectSubsets(universid, parentid);
+        for (SubSet subset : subsets)
+            subset.valid = true;
+        return subsets;
+    }    
+    //**********************************************************************
 }
 //**************************************************************************
