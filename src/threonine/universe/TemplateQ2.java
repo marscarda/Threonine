@@ -160,5 +160,80 @@ public class TemplateQ2 extends TemplateQ1 {
         }
     }
     //**********************************************************************
+    /**
+     * 
+     * @param universeid
+     * @return
+     * @throws Exception 
+     */
+    protected int selectSubsetCount (long universeid) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBUniverse.SubsetTemplate.TABLE);
+        select.addItem("COUNT", "*", "C");
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubsetTemplate.UNIVERSEID, "=", universeid));
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select subset count \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }        
+        //-------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * 
+     * @param universeid
+     * @return
+     * @throws Exception 
+     */
+    protected int selectSubsetMapCount (long universeid) throws Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBUniverse.SubsetTemplate.TABLE);
+        select.addItem("COUNT", "*", "C");
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubsetTemplate.UNIVERSEID, "=", universeid));
+        whr.addCondition(new SQLCondition(DBUniverse.SubsetTemplate.MAPSTATUS, "!=", 0));
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select subset map status count \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }        
+        //-------------------------------------------------------
+    }    
+    //**********************************************************************
 }
 //**************************************************************************

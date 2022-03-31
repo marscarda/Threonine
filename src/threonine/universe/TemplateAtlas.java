@@ -4,6 +4,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Random;
 import methionine.AppException;
 import methionine.Celaeno;
+import methionine.finance.FinanceRules;
 import threonine.mapping.MapFeature;
 import threonine.mapping.PointLocation;
 //**************************************************************************
@@ -167,7 +168,7 @@ public class TemplateAtlas extends TemplateLock {
         if (rdmainsrv) connection = electra.mainSrvConnection();
         else connection = electra.nearSrvConnection();
         setDataBase();
-        //----------------------------------------------------------        
+        //----------------------------------------------------------
         MapFeature[] features = this.selectMapFeatures(subsetid);
         if (!fillpoints) return features;
         //------------------------------------------------------------------
@@ -176,6 +177,27 @@ public class TemplateAtlas extends TemplateLock {
         //------------------------------------------------------------------
         return features;
         //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    //Special
+    //**********************************************************************
+    /**
+     * 
+     * @param templateid
+     * @return
+     * @throws Exception 
+     */
+    public float universeCost (long templateid) throws Exception {
+        //----------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //----------------------------------------------------------
+        int subsetcount = this.selectSubsetCount(templateid);
+        int mappedcount = this.selectSubsetMapCount(templateid);
+        float subsetcost = subsetcount * FinanceRules.UNIVSUBSET;
+        float mapcost = mappedcount * FinanceRules.UNIVSUBSETMAP;
+        return subsetcost + mapcost;
     }
     //**********************************************************************
 }
