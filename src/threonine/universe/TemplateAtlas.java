@@ -9,6 +9,8 @@ import threonine.mapping.PointLocation;
 //**************************************************************************
 public class TemplateAtlas extends TemplateLock {
     //**********************************************************************
+    //UNIVERSES
+    //**********************************************************************
     public void addTemplateUniverse (Universe universe) throws Exception {
         //==================================================================
         if (wrmainsrv) connection = electra.mainSrvConnection();
@@ -24,56 +26,6 @@ public class TemplateAtlas extends TemplateLock {
             catch (SQLIntegrityConstraintViolationException e) {}
         }
         //==================================================================
-    }
-    //**********************************************************************
-    public void templateAddSubset (SubSet subset) throws Exception {
-        //==================================================================
-        if (wrmainsrv) connection = electra.mainSrvConnection();
-        else connection = electra.nearSrvConnection();
-        setDataBase();        
-        //==================================================================
-        while (true) {
-            try {
-                subset.subsetid = Celaeno.getUniqueID();
-                this.insertTemplateSubset(subset);
-                break;
-            }
-            catch (SQLIntegrityConstraintViolationException e) {}
-        }
-        //==================================================================
-    }
-    //**********************************************************************
-    /**
-     * 
-     * @param subsetid
-     * @param points
-     * @throws Exception 
-     */
-    public void templateAddFeature (long subsetid, PointLocation[] points) throws Exception {
-        //==================================================================
-        if (wrmainsrv) connection = electra.mainSrvConnection();
-        else connection = electra.nearSrvConnection();
-        setDataBase();
-        //==================================================================
-        MapFeature feature = new MapFeature();
-        feature.recordid = subsetid;
-        //------------------------------------------------------------------
-        while (true) {
-            try {
-                feature.objectid = Celaeno.getUniqueID();
-                this.insertTemplateFeature(feature);
-                break;
-            }
-            catch (SQLIntegrityConstraintViolationException e) {}
-        }
-        //------------------------------------------------------------------
-        //We insert the points for the object
-        for (PointLocation point : points) {
-            point.recordid = feature.recordid;
-            point.objectid = feature.objectid;
-            this.insertTemplatePointLocation(point);
-        }
-        //------------------------------------------------------------------
     }
     //**********************************************************************
     /**
@@ -118,7 +70,24 @@ public class TemplateAtlas extends TemplateLock {
         //------------------------------------------------------------------        
     }
     //**********************************************************************
-    
+    //** SUBSETS **
+    //**********************************************************************
+    public void templateAddSubset (SubSet subset) throws Exception {
+        //==================================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();        
+        //==================================================================
+        while (true) {
+            try {
+                subset.subsetid = Celaeno.getUniqueID();
+                this.insertTemplateSubset(subset);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }
+        //==================================================================
+    }
     //**********************************************************************
     /**
      * Returns a subset.
@@ -139,7 +108,6 @@ public class TemplateAtlas extends TemplateLock {
         return subset;
     }    
     //**********************************************************************
-    
     public SubSet[] getSubsets (long universid, long parentid) throws Exception {
         //----------------------------------------------------------
         if (rdmainsrv) connection = electra.mainSrvConnection();
@@ -151,6 +119,64 @@ public class TemplateAtlas extends TemplateLock {
             subset.valid = true;
         return subsets;
     }    
+    //**********************************************************************
+    //MAP FEATURES
+    //**********************************************************************
+    /**
+     * 
+     * @param subsetid
+     * @param points
+     * @throws Exception 
+     */
+    public void templateAddFeature (long subsetid, PointLocation[] points) throws Exception {
+        //==================================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //==================================================================
+        MapFeature feature = new MapFeature();
+        feature.recordid = subsetid;
+        //------------------------------------------------------------------
+        while (true) {
+            try {
+                feature.objectid = Celaeno.getUniqueID();
+                this.insertTemplateFeature(feature);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }
+        //------------------------------------------------------------------
+        //We insert the points for the object
+        for (PointLocation point : points) {
+            point.recordid = feature.recordid;
+            point.objectid = feature.objectid;
+            this.insertTemplatePointLocation(point);
+        }
+        //------------------------------------------------------------------
+    }
+    //**********************************************************************
+    /**
+     * Returns the maps features of a given subset.
+     * @param subsetid
+     * @param fillpoints
+     * @return
+     * @throws Exception 
+     */
+    public MapFeature[] getFeaturesBySubset (long subsetid, boolean fillpoints) throws Exception {
+        //----------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //----------------------------------------------------------        
+        MapFeature[] features = this.selectMapFeatures(subsetid);
+        if (!fillpoints) return features;
+        //------------------------------------------------------------------
+        for (MapFeature object : features)
+            object.points = this.selectPointLocations(object.objectid);
+        //------------------------------------------------------------------
+        return features;
+        //------------------------------------------------------------------
+    }
     //**********************************************************************
 }
 //**************************************************************************
