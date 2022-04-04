@@ -134,13 +134,15 @@ public class UniverseAtlas extends UniverseLock {
      * @throws Exception 
      */
     public SubSet getTopSubset (long universeid) throws AppException, Exception {
-        //-------------------------------------------------------------------
-        connection = electra.slaveConnection();
-        this.setDataBase();
-        //-------------------------------------------------------------------
+        //----------------------------------------------------------
+        if (rdmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //----------------------------------------------------------
         SubSet subset = this.selectTopSubset(universeid);
         subset.valid = true;
         return subset;
+        //----------------------------------------------------------
     }
     //**********************************************************************
     /**
@@ -157,7 +159,7 @@ public class UniverseAtlas extends UniverseLock {
         if (rdmainsrv) connection = electra.mainSrvConnection();
         else connection = electra.nearSrvConnection();
         setDataBase();
-        //----------------------------------------------------------        
+        //----------------------------------------------------------
         SubSet subset = this.selectSubset(universeid, subsetid);
         subset.valid = true;
         return subset;

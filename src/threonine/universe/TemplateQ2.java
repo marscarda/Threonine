@@ -101,6 +101,62 @@ public class TemplateQ2 extends TemplateQ1 {
         }
     }    
     //**********************************************************************
+    
+    //******************************************************************
+    /**
+     * Selects the root subset for a given universe.
+     * @param universeid
+     * @return
+     * @throws AppException
+     * @throws Exception 
+     */
+    protected SubSet selectTopSubset (long universeid) throws AppException, Exception {
+        SQLQueryCmd sql = new SQLQueryCmd();
+        SQLSelect select = new SQLSelect(DBUniverse.SubsetTemplate.TABLE);
+        select.addItem(DBUniverse.SubsetTemplate.SUBSETID);
+        select.addItem(DBUniverse.SubsetTemplate.UNIVERSEID);
+        select.addItem(DBUniverse.SubsetTemplate.PARENTSUBSET);
+        select.addItem(DBUniverse.SubsetTemplate.NAME);
+        select.addItem(DBUniverse.SubsetTemplate.POPULATION);
+        select.addItem(DBUniverse.SubsetTemplate.WEIGHT);
+        select.addItem(DBUniverse.SubsetTemplate.MAPSTATUS);
+        SQLWhere whr = new SQLWhere();
+        whr.addCondition(new SQLCondition(DBUniverse.SubsetTemplate.PARENTSUBSET, "=", 0));
+        whr.addCondition(new SQLCondition(DBUniverse.SubsetTemplate.UNIVERSEID, "=", universeid));
+        sql.addClause(select);
+        sql.addClause(whr);
+        //-------------------------------------------------------
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        //-------------------------------------------------------
+        try {
+            st = connection.prepareStatement(sql.getText());
+            sql.setParameters(st, 1);
+            rs = st.executeQuery();
+            if (!rs.next())
+                throw new AppException("Subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
+            SubSet subset;
+            subset = new SubSet();
+            subset.subsetid = rs.getLong(DBUniverse.SubsetTemplate.SUBSETID);
+            subset.universeid = rs.getLong(DBUniverse.SubsetTemplate.UNIVERSEID);
+            subset.parentsubset = rs.getLong(DBUniverse.SubsetTemplate.PARENTSUBSET);
+            subset.name = rs.getString(DBUniverse.SubsetTemplate.NAME);
+            subset.population = rs.getInt(DBUniverse.SubsetTemplate.POPULATION);
+            subset.weight = rs.getInt(DBUniverse.SubsetTemplate.WEIGHT);
+            subset.mapstatus = rs.getInt(DBUniverse.SubsetTemplate.MAPSTATUS);
+            return subset;
+        }
+        catch (SQLException e) {
+            StringBuilder msg = new StringBuilder("Failed to select template top subset \n");
+            msg.append(e.getMessage());
+            throw new Exception(msg.toString());
+        }
+        finally {
+            if (st != null) try {st.close();} catch(Exception e){}
+            if (rs != null) try {rs.close();} catch(Exception e){}
+        }
+    }
+    //******************************************************************
     /**
      * Selects an array of subsets.
      * @param universeid
