@@ -41,6 +41,27 @@ public class UniverseAtlas extends UniverseLock {
         //------------------------------------------------------------------
     }
     //**********************************************************************
+    /**
+     * Creates a universe with no subset.
+     * @param universe
+     * @throws Exception 
+     */
+    public void addUniverse (Universe universe) throws Exception {
+        //==================================================================
+        if (wrmainsrv) connection = electra.mainSrvConnection();
+        else connection = electra.nearSrvConnection();
+        setDataBase();
+        //==================================================================
+        while (true) {
+            try {
+                universe.univerid = Celaeno.getUniqueID();
+                this.insertUniverse(universe);
+                break;
+            }
+            catch (SQLIntegrityConstraintViolationException e) {}
+        }        
+        //==================================================================
+    }
     //**********************************************************************
     /**
      * Returns a universe given its ID.
@@ -106,13 +127,13 @@ public class UniverseAtlas extends UniverseLock {
         else connection = electra.nearSrvConnection();
         setDataBase();
         //================================================================
-        if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, subset.universeid) == 0) {
+        if (checkValueCount(DBUniverse.Universe.TABLE, DBUniverse.Universe.UNIVERSEID, subset.universeid) == 0)
             throw new AppException("Universe not found", UniverseErrorCodes.UNIVERSENOTFOUND);
-        }
         //-------------------------------------------------------------------
-        if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.parentsubset,
-            DBUniverse.SubSets.UNIVERSEID, subset.universeid) == 0) {
-            throw new AppException("Parent subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
+        if (subset.parentsubset != 0) {
+            if (checkValueCount(DBUniverse.SubSets.TABLE, DBUniverse.SubSets.SUBSETID, subset.parentsubset,
+                DBUniverse.SubSets.UNIVERSEID, subset.universeid) == 0)
+                throw new AppException("Parent subset not found", UniverseErrorCodes.SUBSETNOTFOUND);
         }
         //-------------------------------------------------------------------
         while (true) {
@@ -228,7 +249,7 @@ public class UniverseAtlas extends UniverseLock {
         //-------------------------------------------------------------------
         while (true) {
             try {
-                feature.recordid = Celaeno.getUniqueID();
+                feature.objectid = Celaeno.getUniqueID();
                 this.insertMapFeature(feature);
                 break;
             }

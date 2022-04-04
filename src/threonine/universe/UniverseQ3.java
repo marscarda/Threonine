@@ -36,6 +36,7 @@ public class UniverseQ3 extends UniverseQ2 {
             insert.setParameters(st, 1);
             st.execute();            
         }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to insert new map object (universe subset) efghfd\n");
             msg.append(e.getMessage());
