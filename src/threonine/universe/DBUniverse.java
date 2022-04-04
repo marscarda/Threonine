@@ -12,7 +12,7 @@ public class DBUniverse {
     }
     //======================================================================
     public static class UniverseTemplate {
-        static final String TABLE = "templateuniverse";
+        static final String TABLE = "template";
         static final String UNIVERSEID = "universeid";
         static final String NAME = "name";
         static final String DESCRIPTION = "description";
@@ -33,7 +33,7 @@ public class DBUniverse {
     }
     //======================================================================
     public static class SubsetTemplate {
-        static final String TABLE = "templatesubset";
+        static final String TABLE = "tsubset";
         static final String SUBSETID = "subsetid";
         static final String UNIVERSEID = "universeid";
         static final String PARENTSUBSET = "parentsubset";
@@ -44,14 +44,14 @@ public class DBUniverse {
     }
     //**********************************************************************
     public static class SubsetMapFeature {
-        static final String TABLE = "subsetmapfeature";
+        static final String TABLE = "umapfeature";
         static final String FEATUREID = "featureid";
         static final String SUBSETID = "subsetid";
         static final String OBJTYPE = "featuretype";
     }
     //======================================================================
     public static class SubsetMapFeatureTemplate {
-        static final String TABLE = "templatemapfeature";
+        static final String TABLE = "tmapfeature";
         static final String FEATUREID = "featureid";
         static final String SUBSETID = "subsetid";
         static final String FEATURETYPE = "featuretype";
@@ -67,7 +67,7 @@ public class DBUniverse {
     }
     //======================================================================
     public static class TemplateLocationPoints {
-        static final String TABLE = "templatelocationpoint";
+        static final String TABLE = "tlocationpoint";
         static final String SUBSETID = "subsetid";
         static final String FEATUREID = "featureid";
         static final String POINTINDEX = "pointindex";
