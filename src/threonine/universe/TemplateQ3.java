@@ -35,6 +35,7 @@ public class TemplateQ3 extends TemplateQ2 {
             insert.setParameters(st, 1);
             st.execute();            
         }
+        catch (SQLIntegrityConstraintViolationException e) { throw e; }
         catch (SQLException e) {
             StringBuilder msg = new StringBuilder("Failed to insert map feature (Universe template) mantargan\n");
             msg.append(e.getMessage());
